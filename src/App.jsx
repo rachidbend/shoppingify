@@ -1,35 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter } from 'react-router-dom';
+
+import { AnimatePresence } from 'framer-motion';
+import RoutesWithAnimation from './UI/RoutesWithAnimation';
+import { createGlobalStyle } from 'styled-components';
+
+/*
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      {
+        path: '/items',
+        element: <Items />,
+      },
+      {
+        path: '/history',
+        element: <History />,
+      },
+      {
+        path: '/statistics',
+        element: <Statistics />,
+      },
+    ],
+  },
+]); 
+*/
+
+const styled = { createGlobalStyle };
+
+export const GlobalStyle = styled.createGlobalStyle`
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  html {
+    font-size: 62.5%;
+  }
+  :root {
+    --font-main: 'Quicksand', sans-serif;
+
+    --color-background: #fafafe;
+    --color-nav-background: #fff;
+    --color-shopping-list-background: #fff0de;
+    /* background: #FAFAFE
+
+sidebar nav background: #FFF
+
+accent color :#F9A109
+
+main text color: #000
+
+input placeholder color : #BDBDBD
+
+input border color: #BDBDBD
+
+title main color #34333A:
+
+white text : #FFF
+
+shopping list category text color: #828282
+
+shopping list background: #FFF0DE
+
+shopping list add item background color :#80485B
+
+history list completed : #56CCF2
+
+history list cancelled : #EB5757
+
+history date color : #C1C1C4 */
+  }
+`;
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <GlobalStyle />
+      <AnimatePresence>
+        <RoutesWithAnimation />
+      </AnimatePresence>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
