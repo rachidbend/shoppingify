@@ -40,6 +40,8 @@ const CategoryContainer = styled.div`
 `;
 const CategoryItemsContianer = styled.div`
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 1.96rem;
   flex-grow: 0;
