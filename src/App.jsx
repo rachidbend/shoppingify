@@ -46,6 +46,13 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-background: #fafafe;
     --color-nav-background: #fff;
     --color-shopping-list-background: #fff0de;
+
+    --color-white: #fff;
+
+    --color-gray-100: #454545;
+    --color-accent: #f9a109;
+
+    --color-red: #eb5757;
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
