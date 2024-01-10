@@ -53,6 +53,8 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-accent: #f9a109;
 
     --color-red: #eb5757;
+
+    --color-title: #34333a;
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
