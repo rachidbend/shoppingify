@@ -48,8 +48,10 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-shopping-list-background: #fff0de;
 
     --color-white: #fff;
+    --color-black: #000;
 
     --color-gray-100: #454545;
+
     --color-accent: #f9a109;
 
     --color-red: #eb5757;
@@ -58,7 +60,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
-
+hsla(240, 2%, 76%, 1)
 accent color :#F9A109
 
 main text color: #000
