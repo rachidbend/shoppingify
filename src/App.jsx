@@ -3,6 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import RoutesWithAnimation from './UI/RoutesWithAnimation';
 import { createGlobalStyle } from 'styled-components';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 /*
 const router = createBrowserRouter([
@@ -74,14 +76,19 @@ history date color : #C1C1C4 */
   }
 `;
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-      <AnimatePresence>
-        <RoutesWithAnimation />
-      </AnimatePresence>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
+      <BrowserRouter>
+        <GlobalStyle />
+        <AnimatePresence>
+          <RoutesWithAnimation />
+        </AnimatePresence>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
