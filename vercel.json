@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/items", "destination": "/" },
+    { "source": "/history", "destination": "/" },
+    { "source": "/statistics", "destination": "/" }
+  ]
+}

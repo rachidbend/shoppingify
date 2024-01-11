@@ -14,6 +14,16 @@ const StyledItem = styled.div`
   align-items: flex-start;
   flex-grow: 0;
   flex-shrink: 0;
+
+  cursor: pointer;
+  transform: scale(100%);
+
+  transition: 260ms ease-in-out;
+
+  &:hover {
+    transform: scale(103%);
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  }
 `;
 const Name = styled.p`
   color: var(--color-black);
