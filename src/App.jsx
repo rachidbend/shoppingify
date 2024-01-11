@@ -60,9 +60,9 @@ export const GlobalStyle = styled.createGlobalStyle`
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
-hsla(240, 2%, 76%, 1)
+hsl(240, 2%, 76%)
 accent color :#F9A109
-
+hsl(249, 6%, 21% )
 main text color: #000
 
 input placeholder color : #BDBDBD
