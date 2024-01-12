@@ -8,4 +8,13 @@ async function getAllItems() {
   return items;
 }
 
-export { getAllItems };
+async function getShoppingList() {
+  let { data: shoppingList, error } = await supabase
+    .from('shopping_list')
+    .select('*');
+  if (error) throw new Error('There was an error fetching the items');
+
+  return shoppingList;
+}
+
+export { getAllItems, getShoppingList };

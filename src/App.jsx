@@ -5,6 +5,7 @@ import RoutesWithAnimation from './UI/RoutesWithAnimation';
 import { createGlobalStyle } from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SidePageProvider } from './Context/SidePageProvider';
 
 /*
 const router = createBrowserRouter([
@@ -51,12 +52,16 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-black: #000;
 
     --color-gray-100: #454545;
+    --color-gray-200: #bdbdbd;
+    --color-gray-300: #c1c1c4;
 
     --color-accent: #f9a109;
 
     --color-red: #eb5757;
+    --color-shopping-add-item-background: #80485b;
 
     --color-title: #34333a;
+
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
@@ -93,12 +98,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
-      <BrowserRouter>
-        <GlobalStyle />
-        <AnimatePresence>
-          <RoutesWithAnimation />
-        </AnimatePresence>
-      </BrowserRouter>
+      <SidePageProvider>
+        <BrowserRouter>
+          <GlobalStyle />
+          <AnimatePresence>
+            <RoutesWithAnimation />
+          </AnimatePresence>
+        </BrowserRouter>
+      </SidePageProvider>
     </QueryClientProvider>
   );
 }
