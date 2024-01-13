@@ -4,6 +4,7 @@ import { useGetShoppingList } from '../../Hooks/useGetShoppingList';
 
 import illustration from './../../assets/source.svg';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
+import { useGetAppData } from '../../UI/AppLayout';
 
 const StyledShoppingList = styled.div`
   background-color: var(--color-shopping-list-background);
@@ -134,16 +135,39 @@ const NoItemsIllustration = styled.img`
 `;
 
 function ShoppingList({ onchangePage }) {
-  const { shoppingList, isLoading, error } = useGetShoppingList();
+  // const { shoppingList, isLoading, error } = useGetShoppingList();
+  const { shoppingList, isLoadingShoppingList, shoppingListError } =
+    useGetAppData();
 
-  if (isLoading) return <p>Loading </p>;
-  if (error) return <p>{error.message} </p>;
+  if (isLoadingShoppingList) return <p>Loading </p>;
+  if (shoppingListError) return <p>{shoppingListError.message} </p>;
 
   const emtyList =
-    shoppingList.items === null ||
-    shoppingList.length === 0 ||
-    shoppingList.items === undefined;
-  console.log(emtyList);
+    shoppingList[0].items === null ||
+    shoppingList[0].length === 0 ||
+    shoppingList[0].items === undefined;
+  // console.log(shoppingList[0].length === 0);
+  // console.log('emty list', emtyList);
+
+  //  chat gpt's help //////
+  // get all the available item categories without duplicates
+  const availableCategories = shoppingList.reduce(
+    (accumulator, currentObject) => {
+      const { category } = currentObject;
+
+      // Check if the category is already a key in the accumulator
+      if (!accumulator[category]) {
+        accumulator[category] = [];
+      }
+
+      // Push the current object to the array corresponding to the category
+      accumulator[category].push(currentObject);
+
+      return accumulator;
+    },
+    {}
+  );
+
   return (
     <StyledShoppingList>
       <AddItemContainer>
@@ -157,6 +181,8 @@ function ShoppingList({ onchangePage }) {
       </AddItemContainer>
 
       {emtyList && <NoItems>No items</NoItems>}
+      {!emtyList &&
+        shoppingList[0]?.items.map(item => <p key={item.id}>{item.name}</p>)}
       <NameInputContainer>
         {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
         <Container>
