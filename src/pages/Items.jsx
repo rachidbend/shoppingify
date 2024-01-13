@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { childrenVariants, routeVariants } from '../Variables/variables';
-import { useGetAllItems } from '../Hooks/useGetAllItems';
 import Item from '../UI/Item';
 import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';

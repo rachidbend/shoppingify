@@ -1,15 +1,20 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import { useGetShoppingList } from '../../Hooks/useGetShoppingList';
 
 import illustration from './../../assets/source.svg';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
 import { useGetAppData } from '../../UI/AppLayout';
+import ShoppingItem from '../../UI/ShoppingItem';
+import { childrenVariants, routeVariants } from '../../Variables/variables';
+import { motion } from 'framer-motion';
 
-const StyledShoppingList = styled.div`
+const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
-  padding: 4.37rem 3.19rem 4.37rem 4.84rem;
-  min-height: 100%;
+  /* padding: 4.37rem 3.19rem 4.37rem 4.84rem; */
+  padding: 0;
+  display: flex;
+  /* padding-bottom: 13rem; */
+  height: 100vh;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
@@ -20,7 +25,17 @@ const StyledShoppingList = styled.div`
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  overflow-y: scroll;
+  overflow: hidden;
+`;
+// animated all children in the page
+const ChildrenContainer = styled(motion.div)`
+  padding-bottom: 13rem;
+  padding: 4.37rem 3.19rem 0 4.84rem;
+  height: 100vh;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
 `;
 
 const AddItemContainer = styled.div`
@@ -76,7 +91,7 @@ const NameInputContainer = styled.div`
   bottom: 0;
   width: 38.9rem;
 
-  margin: 0 -3.19rem 0 -4.84rem;
+  /* margin: 0 -3.19rem 0 -4.84rem; */
 `;
 
 const NameInput = styled.input`
@@ -134,6 +149,50 @@ const NoItemsIllustration = styled.img`
   top: -19.1rem;
 `;
 
+// Shopping list items
+// title
+const Title = styled.h2`
+  color: var(--color-title);
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-top: 4.4rem;
+  margin-bottom: 3.93rem;
+`;
+// category container
+const CategoryContainer = styled.div`
+  margin-bottom: 5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+// category title
+const CategoryTitle = styled.h3`
+  color: var(--color-gray-400);
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 1.68rem;
+`;
+
+const ShoppingListItemsContainer = styled.div`
+  /* overflow-y: scroll;
+  height: 60%; */
+  height: 100%;
+  overflow: scroll;
+  padding-bottom: 13rem;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+`;
+
 function ShoppingList({ onchangePage }) {
   // const { shoppingList, isLoading, error } = useGetShoppingList();
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
@@ -151,49 +210,78 @@ function ShoppingList({ onchangePage }) {
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
-  const availableCategories = shoppingList.reduce(
-    (accumulator, currentObject) => {
-      const { category } = currentObject;
+  const availableCategories = emtyList
+    ? []
+    : shoppingList[0]?.items.reduce((accumulator, currentObject) => {
+        const { category } = currentObject;
 
-      // Check if the category is already a key in the accumulator
-      if (!accumulator[category]) {
-        accumulator[category] = [];
-      }
+        // Check if the category is already a key in the accumulator
+        if (!accumulator[category]) {
+          accumulator[category] = [];
+        }
 
-      // Push the current object to the array corresponding to the category
-      accumulator[category].push(currentObject);
+        // Push the current object to the array corresponding to the category
+        accumulator[category].push(currentObject);
 
-      return accumulator;
-    },
-    {}
-  );
+        return accumulator;
+      }, {});
+
+  // ShoppingItem
 
   return (
-    <StyledShoppingList>
-      <AddItemContainer>
-        <AddItemIllustration src={illustration} />
-        <div>
-          <AddItemParagraph>Didn&apos;t find what you need?</AddItemParagraph>
-          <AddItemButton onClick={() => onchangePage('add-new-item')}>
-            Add item
-          </AddItemButton>
-        </div>
-      </AddItemContainer>
+    <StyledShoppingList
+      variants={routeVariants}
+      initial="initial"
+      animate="final"
+    >
+      <ChildrenContainer
+        variants={childrenVariants}
+        initial="initial"
+        animate="final"
+      >
+        <AddItemContainer>
+          <AddItemIllustration src={illustration} />
+          <div>
+            <AddItemParagraph>Didn&apos;t find what you need?</AddItemParagraph>
+            <AddItemButton onClick={() => onchangePage('add-new-item')}>
+              Add item
+            </AddItemButton>
+          </div>
+        </AddItemContainer>
 
-      {emtyList && <NoItems>No items</NoItems>}
-      {!emtyList &&
-        shoppingList[0]?.items.map(item => <p key={item.id}>{item.name}</p>)}
-      <NameInputContainer>
-        {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
-        <Container>
-          <NameInput
-            disabled={emtyList}
-            type="text"
-            placeholder="Enter a name"
-          />
-          <SaveButton disabled={emtyList}>save</SaveButton>
-        </Container>
-      </NameInputContainer>
+        {emtyList && <NoItems>No items</NoItems>}
+        {/* {!emtyList && } */}
+
+        {!emtyList && (
+          <>
+            <Title>Shopping list</Title>
+            <ShoppingListItemsContainer>
+              {Object.keys(availableCategories).map(key => (
+                <CategoryContainer key={`shopping list ${key}`}>
+                  <CategoryTitle>{key} </CategoryTitle>
+                  {availableCategories[key].map(item => (
+                    <ShoppingItem
+                      key={`shopping itel ${item.id}`}
+                      item={item}
+                    />
+                  ))}
+                </CategoryContainer>
+              ))}
+            </ShoppingListItemsContainer>
+          </>
+        )}
+        <NameInputContainer>
+          {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
+          <Container>
+            <NameInput
+              disabled={emtyList}
+              type="text"
+              placeholder="Enter a name"
+            />
+            <SaveButton disabled={emtyList}>save</SaveButton>
+          </Container>
+        </NameInputContainer>
+      </ChildrenContainer>
     </StyledShoppingList>
   );
 }

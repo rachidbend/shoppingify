@@ -54,6 +54,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-gray-100: #454545;
     --color-gray-200: #bdbdbd;
     --color-gray-300: #c1c1c4;
+    --color-gray-400: #828282;
 
     --color-accent: #f9a109;
 
