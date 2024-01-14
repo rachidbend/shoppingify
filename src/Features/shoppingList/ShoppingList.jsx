@@ -3,10 +3,16 @@ import styled from 'styled-components';
 
 import illustration from './../../assets/source.svg';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
-import { useGetAppData } from '../../UI/AppLayout';
+
 import ShoppingItem from '../../UI/ShoppingItem';
-import { childrenVariants, routeVariants } from '../../Variables/variables';
+import {
+  childrenVariants,
+  listChildrenVariants,
+  routeVariants,
+} from '../../Variables/variables';
 import { motion } from 'framer-motion';
+import { useGetAppData } from '../../Context/AppContext';
+import { memo } from 'react';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -174,7 +180,7 @@ const CategoryTitle = styled.h3`
   margin-bottom: 1.68rem;
 `;
 
-const ShoppingListItemsContainer = styled.div`
+const ShoppingListItemsContainer = styled(motion.div)`
   /* overflow-y: scroll;
   height: 60%; */
   height: 100%;
@@ -193,12 +199,19 @@ const ShoppingListItemsContainer = styled.div`
   }
 `;
 
-function ShoppingList({ onchangePage }) {
+const ShoppingListLoader = styled.div`
+  height: 100%;
+  width: 100%;
+  /* background-color: var(--color-white); */
+`;
+
+const ShoppingList = memo(function ShoppingList({ onchangePage }) {
   // const { shoppingList, isLoading, error } = useGetShoppingList();
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
 
-  if (isLoadingShoppingList) return <p>Loading </p>;
+  if (isLoadingShoppingList)
+    return <ShoppingListLoader>Loading </ShoppingListLoader>;
   if (shoppingListError) return <p>{shoppingListError.message} </p>;
 
   const emtyList =
@@ -228,17 +241,17 @@ function ShoppingList({ onchangePage }) {
 
   // ShoppingItem
 
+  // variants={routeVariants}
+  // initial="initial"
+  // animate="final"
+
+  // variants={listChildrenVariants}
+  // initial="initial"
+  // animate="final"
+
   return (
-    <StyledShoppingList
-      variants={routeVariants}
-      initial="initial"
-      animate="final"
-    >
-      <ChildrenContainer
-        variants={childrenVariants}
-        initial="initial"
-        animate="final"
-      >
+    <StyledShoppingList>
+      <ChildrenContainer>
         <AddItemContainer>
           <AddItemIllustration src={illustration} />
           <div>
@@ -260,10 +273,7 @@ function ShoppingList({ onchangePage }) {
                 <CategoryContainer key={`shopping list ${key}`}>
                   <CategoryTitle>{key} </CategoryTitle>
                   {availableCategories[key].map(item => (
-                    <ShoppingItem
-                      key={`shopping itel ${item.id}`}
-                      item={item}
-                    />
+                    <ShoppingItem item={item} />
                   ))}
                 </CategoryContainer>
               ))}
@@ -284,6 +294,6 @@ function ShoppingList({ onchangePage }) {
       </ChildrenContainer>
     </StyledShoppingList>
   );
-}
+});
 
 export default ShoppingList;

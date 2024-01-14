@@ -1,7 +1,8 @@
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 // item
-const StyledShoppingItem = styled.div`
+const StyledShoppingItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -34,7 +35,12 @@ const QuantityPcs = styled.span`
 
 function ShoppingItem({ item }) {
   return (
-    <StyledShoppingItem>
+    <StyledShoppingItem
+      initial={{ x: -200, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ opacity: 0 }}
+      key={`shopping itel ${item.id}`}
+    >
       <Name>{item.name} </Name>
       <Quantity>
         {item.quantity}

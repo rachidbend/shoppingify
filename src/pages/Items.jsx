@@ -4,7 +4,7 @@ import { childrenVariants, routeVariants } from '../Variables/variables';
 import Item from '../UI/Item';
 import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';
-import { useGetAppData } from '../UI/AppLayout';
+import { useGetAppData } from '../Context/AppContext';
 
 // page container
 const StyledItems = styled(motion.div)`
@@ -171,6 +171,7 @@ function Items() {
         variants={childrenVariants}
         initial="initial"
         animate="final"
+        exit={{ opacity: 0, y: '30px' }}
       >
         <HeaderContainer>
           <Title>
