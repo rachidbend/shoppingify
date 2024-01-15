@@ -51,11 +51,31 @@ async function updateShoppingListItems({ id, item, oldList }) {
     .select();
 
   if (error) throw new Error('There was an error updating your shopping list.');
-  // console.log('data', data);
+
   return data;
 }
 
-export { getAllItems, getShoppingList, updateShoppingListItems };
+async function updateShopplingListName({ id, listName }) {
+  const { data, error } = await supabase
+    .from('shopping_list')
+    .update({ name: listName })
+    .eq('id', id)
+    .select();
+
+  if (error)
+    throw new Error(
+      'There was an error updating the name of your shopping list .'
+    );
+
+  return data;
+}
+
+export {
+  getAllItems,
+  getShoppingList,
+  updateShoppingListItems,
+  updateShopplingListName,
+};
 
 /*
 {
