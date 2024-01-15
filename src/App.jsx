@@ -1,10 +1,17 @@
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AnimatePresence } from 'framer-motion';
 import RoutesWithAnimation from './UI/RoutesWithAnimation';
 import { createGlobalStyle } from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SidePageProvider } from './Context/SidePageProvider';
+import AppProvider from './Context/AppContext';
+import AppLayout from './UI/AppLayout';
+import Items from './pages/Items';
+import History from './pages/History';
+import Statistics from './pages/Statistics';
+import PageNotFound from './UI/PageNotFound';
 
 /*
 const router = createBrowserRouter([
@@ -51,12 +58,17 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-black: #000;
 
     --color-gray-100: #454545;
+    --color-gray-200: #bdbdbd;
+    --color-gray-300: #c1c1c4;
+    --color-gray-400: #828282;
 
     --color-accent: #f9a109;
 
     --color-red: #eb5757;
+    --color-shopping-add-item-background: #80485b;
 
     --color-title: #34333a;
+
     /* background: #FAFAFE
 
 sidebar nav background: #FFF
@@ -95,12 +107,46 @@ function App() {
       <ReactQueryDevtools />
       <BrowserRouter>
         <GlobalStyle />
-        <AnimatePresence>
-          <RoutesWithAnimation />
-        </AnimatePresence>
+
+        <AppProvider>
+          <SidePageProvider>
+            <Routes location={location} key={location.key}>
+              <Route element={<AppLayout />}>
+                <Route index path="/" element={<Navigate to={'/items'} />} />
+                <Route path="/items" element={<Items />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/statistics" element={<Statistics />} />
+
+                <Route path="*" element={<PageNotFound />} />
+              </Route>
+            </Routes>
+          </SidePageProvider>
+        </AppProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
 }
 
 export default App;
+
+// const queryClient = new QueryClient();
+
+// function App() {
+//   return (
+//     <QueryClientProvider client={queryClient}>
+//       <ReactQueryDevtools />
+//       <BrowserRouter>
+//         <GlobalStyle />
+//         <AnimatePresence>
+//           <AppProvider>
+//             <SidePageProvider>
+//               <RoutesWithAnimation />
+//             </SidePageProvider>
+//           </AppProvider>
+//         </AnimatePresence>
+//       </BrowserRouter>
+//     </QueryClientProvider>
+//   );
+// }
+
+// export default App;

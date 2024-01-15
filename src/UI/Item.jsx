@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
 
@@ -36,11 +37,15 @@ const Icon = styled(MdAdd)`
   color: var(--color-gray-100);
 `;
 
-function Item({ id, name }) {
+function Item({ itemDetails, onAddItem }) {
+  const { id, created_at, name, note, image, category } = itemDetails;
+
   return (
     <StyledItem>
       <Name>{name}</Name>
-      <Icon />
+      <div onClick={() => onAddItem(itemDetails)}>
+        <Icon />
+      </div>
     </StyledItem>
   );
 }

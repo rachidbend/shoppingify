@@ -26,6 +26,22 @@ export const childrenVariants = {
     transition: {
       duration: 0.6,
       delay: 0.4,
+      staggerChildren: 0.5,
+    },
+  },
+};
+
+export const listChildrenVariants = {
+  initial: {
+    opacity: 0,
+    x: '30px',
+  },
+  final: {
+    opacity: 1,
+    x: '0px',
+    transition: {
+      duration: 0.6,
+      delay: 0.4,
     },
   },
 };

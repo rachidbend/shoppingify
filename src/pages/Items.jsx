@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { childrenVariants, routeVariants } from '../Variables/variables';
-import { useGetAllItems } from '../Hooks/useGetAllItems';
 import Item from '../UI/Item';
 import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';
+import { useGetAppData } from '../Context/AppContext';
 
 // page container
 const StyledItems = styled(motion.div)`
@@ -129,10 +129,12 @@ function Items() {
   }
 
   // all the items data
-  const { items, isLoading, error } = useGetAllItems();
+  // const { items, isLoading, error } = useGetAllItems();
+  const { items, isLoadingAllItems, allItemsError, addItemToList } =
+    useGetAppData();
 
-  if (isLoading) return <p>Loading</p>;
-  if (error) return <p>{error.message}</p>;
+  if (isLoadingAllItems) return <p>Loading</p>;
+  if (allItemsError) return <p>{allItemsError.message}</p>;
 
   // filtering for the query
   // if there is no search query, return all the items
@@ -169,6 +171,7 @@ function Items() {
         variants={childrenVariants}
         initial="initial"
         animate="final"
+        exit={{ opacity: 0, y: '30px' }}
       >
         <HeaderContainer>
           <Title>
@@ -185,18 +188,22 @@ function Items() {
           </SearchInputContainer>
         </HeaderContainer>
 
-        {Object.keys(availableCategories).map(key => {
-          return (
-            <CategoryContainer key={key}>
-              <CategoryTitle>{key}</CategoryTitle>
-              <CategoryItemsContianer>
-                {availableCategories[key].map(item => {
-                  return <Item id={item.id} name={item.name} key={item.id} />;
-                })}
-              </CategoryItemsContianer>
-            </CategoryContainer>
-          );
-        })}
+        {Object.keys(availableCategories).map(key => (
+          <CategoryContainer key={key}>
+            <CategoryTitle>{key}</CategoryTitle>
+            <CategoryItemsContianer>
+              {availableCategories[key].map(item => {
+                return (
+                  <Item
+                    onAddItem={addItemToList}
+                    itemDetails={item}
+                    key={item.id}
+                  />
+                );
+              })}
+            </CategoryItemsContianer>
+          </CategoryContainer>
+        ))}
       </ChildrenContainer>
     </StyledItems>
   );
