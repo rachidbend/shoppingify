@@ -9,6 +9,7 @@ import Items from './pages/Items';
 import History from './pages/History';
 import Statistics from './pages/Statistics';
 import PageNotFound from './UI/PageNotFound';
+import { AnimatePresence } from 'framer-motion';
 
 /*
 const router = createBrowserRouter([
@@ -107,16 +108,18 @@ function App() {
 
         <AppProvider>
           <SidePageProvider>
-            <Routes location={location} key={location.key}>
-              <Route element={<AppLayout />}>
-                <Route index path="/" element={<Navigate to={'/items'} />} />
-                <Route path="/items" element={<Items />} />
-                <Route path="/history" element={<History />} />
-                <Route path="/statistics" element={<Statistics />} />
+            <AnimatePresence>
+              <Routes location={location} key={location.key}>
+                <Route element={<AppLayout />}>
+                  <Route index path="/" element={<Navigate to={'/items'} />} />
+                  <Route path="/items" element={<Items />} />
+                  <Route path="/history" element={<History />} />
+                  <Route path="/statistics" element={<Statistics />} />
 
-                <Route path="*" element={<PageNotFound />} />
-              </Route>
-            </Routes>
+                  <Route path="*" element={<PageNotFound />} />
+                </Route>
+              </Routes>
+            </AnimatePresence>
           </SidePageProvider>
         </AppProvider>
       </BrowserRouter>
