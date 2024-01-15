@@ -36,9 +36,13 @@ const QuantityPcs = styled.span`
 function ShoppingItem({ item }) {
   return (
     <StyledShoppingItem
-      initial={{ x: -200, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{
+        duration: 0.6,
+        delay: 0.2,
+      }}
       key={`shopping itel ${item.id}`}
     >
       <Name>{item.name} </Name>

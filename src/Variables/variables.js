@@ -26,6 +26,7 @@ export const childrenVariants = {
     transition: {
       duration: 0.6,
       delay: 0.4,
+      staggerChildren: 0.5,
     },
   },
 };

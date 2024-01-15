@@ -97,7 +97,7 @@ const NameInputContainer = styled.div`
   bottom: 0;
   width: 38.9rem;
 
-  /* margin: 0 -3.19rem 0 -4.84rem; */
+  margin: 0 -3.19rem 0 -4.84rem;
 `;
 
 const NameInput = styled.input`
@@ -205,7 +205,7 @@ const ShoppingListLoader = styled.div`
   /* background-color: var(--color-white); */
 `;
 
-const ShoppingList = memo(function ShoppingList({ onchangePage }) {
+const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   // const { shoppingList, isLoading, error } = useGetShoppingList();
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
@@ -273,7 +273,7 @@ const ShoppingList = memo(function ShoppingList({ onchangePage }) {
                 <CategoryContainer key={`shopping list ${key}`}>
                   <CategoryTitle>{key} </CategoryTitle>
                   {availableCategories[key].map(item => (
-                    <ShoppingItem item={item} />
+                    <ShoppingItem key={item.id} item={item} />
                   ))}
                 </CategoryContainer>
               ))}
