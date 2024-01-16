@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { color, motion } from 'framer-motion';
+import { AnimatePresence, color, motion } from 'framer-motion';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -24,7 +24,7 @@ const Name = styled.p`
   font-weight: 500;
 `;
 // item qantity
-const Quantity = styled.button`
+const Quantity = styled(motion.button)`
   color: var(--color-accent);
   font-size: 1.2rem;
   font-weight: 700;
@@ -47,6 +47,7 @@ const QuantityPcs = styled.span`
 const Button = styled(motion.button)`
   border: none;
   background: none;
+  position: relative;
 `;
 const ItemEditContianer = styled(motion.div)`
   border-radius: 1.2rem;
@@ -102,26 +103,96 @@ function ShoppingItem({ item }) {
     >
       <Name>{item.name} </Name>
 
-      <ItemEditContianer edit={showEdit}>
-        {showEdit && (
-          <ItemDelete layout>
-            <TrashIcon />
-          </ItemDelete>
-        )}
-        {showEdit && (
-          <ItemDecreaseQuantity layout>
-            <RemoveIcon />
-          </ItemDecreaseQuantity>
-        )}
-        <Quantity layout onClick={handleShowEdit}>
-          {item.quantity}
-          <QuantityPcs> pcs</QuantityPcs>
-        </Quantity>
-        {showEdit && (
-          <ItemIncreaseQuantity layout>
-            <AddIcon />
-          </ItemIncreaseQuantity>
-        )}
+      <ItemEditContianer
+        initial={{
+          width: 'auto',
+          backgroundColor: 'transparent',
+        }}
+        animate={{
+          width: showEdit ? 'auto' : 'auto',
+
+          backgroundColor: showEdit
+            ? 'rgba(255,255,255, 1)'
+            : 'rgba(255,255,255, 0)',
+        }}
+        transition={{
+          duration: 0.6,
+          delay: 0.2,
+        }}
+        edit={showEdit}
+      >
+        <AnimatePresence>
+          {showEdit && (
+            <ItemDelete
+              layout
+              key={`delete-${item.id}`}
+              initial={{
+                opacity: 0,
+                left: '1rem',
+              }}
+              animate={{
+                opacity: 1,
+                left: '0rem',
+              }}
+              transition={{
+                duration: 0.4,
+                delay: 0,
+              }}
+              exit={{
+                opacity: 0,
+                left: '1rem',
+              }}
+            >
+              <TrashIcon />
+            </ItemDelete>
+          )}
+          {showEdit && (
+            <ItemDecreaseQuantity
+              layout
+              key={`decrease-${item.id}`}
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.2,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+            >
+              <RemoveIcon />
+            </ItemDecreaseQuantity>
+          )}
+          <Quantity layout onClick={handleShowEdit}>
+            {item.quantity}
+            <QuantityPcs> pcs</QuantityPcs>
+          </Quantity>
+          {showEdit && (
+            <ItemIncreaseQuantity
+              layout
+              key={`increase-${item.id}`}
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.2,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+            >
+              <AddIcon />
+            </ItemIncreaseQuantity>
+          )}
+        </AnimatePresence>
       </ItemEditContianer>
     </StyledShoppingItem>
   );
