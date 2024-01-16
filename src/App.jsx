@@ -1,7 +1,4 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-
-import { AnimatePresence } from 'framer-motion';
-import RoutesWithAnimation from './UI/RoutesWithAnimation';
 import { createGlobalStyle } from 'styled-components';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -12,6 +9,7 @@ import Items from './pages/Items';
 import History from './pages/History';
 import Statistics from './pages/Statistics';
 import PageNotFound from './UI/PageNotFound';
+import { AnimatePresence } from 'framer-motion';
 
 /*
 const router = createBrowserRouter([
@@ -110,16 +108,18 @@ function App() {
 
         <AppProvider>
           <SidePageProvider>
-            <Routes location={location} key={location.key}>
-              <Route element={<AppLayout />}>
-                <Route index path="/" element={<Navigate to={'/items'} />} />
-                <Route path="/items" element={<Items />} />
-                <Route path="/history" element={<History />} />
-                <Route path="/statistics" element={<Statistics />} />
+            <AnimatePresence>
+              <Routes location={location} key={location.key}>
+                <Route element={<AppLayout />}>
+                  <Route index path="/" element={<Navigate to={'/items'} />} />
+                  <Route path="/items" element={<Items />} />
+                  <Route path="/history" element={<History />} />
+                  <Route path="/statistics" element={<Statistics />} />
 
-                <Route path="*" element={<PageNotFound />} />
-              </Route>
-            </Routes>
+                  <Route path="*" element={<PageNotFound />} />
+                </Route>
+              </Routes>
+            </AnimatePresence>
           </SidePageProvider>
         </AppProvider>
       </BrowserRouter>

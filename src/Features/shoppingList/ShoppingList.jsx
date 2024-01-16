@@ -12,7 +12,9 @@ import {
 } from '../../Variables/variables';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
+import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
+import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -165,7 +167,7 @@ const Title = styled.h2`
   margin-bottom: 3.93rem;
 `;
 // category container
-const CategoryContainer = styled.div`
+const CategoryContainer = styled(motion.div)`
   margin-bottom: 5rem;
 
   &:last-child {
@@ -206,9 +208,73 @@ const ShoppingListLoader = styled.div`
 `;
 
 const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
-  // const { shoppingList, isLoading, error } = useGetShoppingList();
+  const [listName, setListName] = useState('');
+
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
+
+  const {
+    updateShoppingList,
+    isLoading: isUpdatingListItem,
+    error: listItemError,
+  } = useUpdateShoppingList();
+
+  const {
+    updateListName,
+    isLoading: isUpdatingListName,
+    error: listNameError,
+  } = useUpdateShoppingListName();
+
+  // when the user changes the list name
+  function listNameChangeHandler(e) {
+    if (!e) return;
+
+    setListName(e.target.value);
+  }
+
+  function updateListItemQuantity(itemId, incease) {
+    if (isLoadingShoppingList) return;
+    updateShoppingList({
+      id: shoppingList[0].id,
+      oldList: shoppingList[0].items,
+      updateQuantity: {
+        itemId,
+        update: incease ? 'increase' : 'decrease',
+      },
+    });
+    // id, item, oldList, updateQuantity
+  }
+
+  function onRemoveItem(deleteId) {
+    if (isLoadingShoppingList) return;
+    updateShoppingList({
+      id: shoppingList[0].id,
+      oldList: shoppingList[0].items,
+      deleteItemId: deleteId,
+    });
+  }
+
+  // when the user saves the list name
+  function listNameSaveHandler() {
+    // to make sure we have the id
+    if (isLoadingShoppingList) return;
+    updateListName({ id: shoppingList[0].id, listName: listName });
+  }
+
+  // let emtyList;
+
+  // useEffect(
+  //   function () {
+  //     if (isLoadingShoppingList) return;
+  //     emtyList =
+  //       shoppingList[0].items === null ||
+  //       shoppingList[0].length === 0 ||
+  //       shoppingList[0].items === undefined;
+
+  //     console.log(emtyList);
+  //   },
+  //   [shoppingList]
+  // );
 
   if (isLoadingShoppingList)
     return <ShoppingListLoader>Loading </ShoppingListLoader>;
@@ -217,9 +283,8 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   const emtyList =
     shoppingList[0].items === null ||
     shoppingList[0].length === 0 ||
-    shoppingList[0].items === undefined;
-  // console.log(shoppingList[0].length === 0);
-  // console.log('emty list', emtyList);
+    shoppingList[0].items === undefined ||
+    shoppingList[0].items.length === 0;
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
@@ -250,7 +315,11 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   // animate="final"
 
   return (
-    <StyledShoppingList>
+    <StyledShoppingList
+      variants={routeVariants}
+      initial="initial"
+      animate="final"
+    >
       <ChildrenContainer>
         <AddItemContainer>
           <AddItemIllustration src={illustration} />
@@ -270,10 +339,24 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
             <Title>Shopping list</Title>
             <ShoppingListItemsContainer>
               {Object.keys(availableCategories).map(key => (
-                <CategoryContainer key={`shopping list ${key}`}>
+                <CategoryContainer
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.2,
+                  }}
+                  key={`shopping list ${key}`}
+                >
                   <CategoryTitle>{key} </CategoryTitle>
                   {availableCategories[key].map(item => (
-                    <ShoppingItem key={item.id} item={item} />
+                    <ShoppingItem
+                      onUpdateQuantity={updateListItemQuantity}
+                      onDelete={onRemoveItem}
+                      key={item.id}
+                      item={item}
+                    />
                   ))}
                 </CategoryContainer>
               ))}
@@ -284,11 +367,18 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
           {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
           <Container>
             <NameInput
-              disabled={emtyList}
+              disabled={emtyList || isUpdatingListName || shoppingList[0].name}
               type="text"
               placeholder="Enter a name"
+              value={listName}
+              onChange={e => listNameChangeHandler(e)}
             />
-            <SaveButton disabled={emtyList}>save</SaveButton>
+            <SaveButton
+              onClick={listNameSaveHandler}
+              disabled={emtyList || isUpdatingListName || shoppingList[0].name}
+            >
+              save
+            </SaveButton>
           </Container>
         </NameInputContainer>
       </ChildrenContainer>

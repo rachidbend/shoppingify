@@ -1,15 +1,15 @@
 export const routeVariants = {
   initial: {
     opacity: 0,
-    y: '20vh',
+    y: '30px',
   },
   final: {
     opacity: 1,
-    y: '0vh',
+    y: '0px',
     transition: {
-      type: 'spring',
-      mass: 0.2,
-      duration: 0.6,
+      type: 'linear',
+      mass: 0.4,
+      duration: 0.8,
       delay: 0.2,
     },
   },

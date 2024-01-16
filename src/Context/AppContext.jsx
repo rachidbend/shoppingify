@@ -3,6 +3,9 @@ import { useGetAllItems } from '../Hooks/useGetAllItems';
 import { useGetShoppingList } from '../Hooks/useGetShoppingList';
 import { useUpdateShoppingList } from '../Hooks/useUpdateShoppingList';
 
+/* 
+the reason i created this context is to be able to get the item data and the list data to be able to add an item into the shopping list
+*/
 const AppContext = createContext();
 
 export default function AppProvider({ children }) {
@@ -27,6 +30,7 @@ export default function AppProvider({ children }) {
   function addItemToList(item) {
     // id, newitem, oldList
 
+    // this is what adds the item to the shopping list
     if (isLoadingShoppingList) return;
     if (isLoadingAllItems) return;
     updateShoppingList({
