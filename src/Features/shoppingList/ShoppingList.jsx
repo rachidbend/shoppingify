@@ -12,8 +12,9 @@ import {
 } from '../../Variables/variables';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
+import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -213,6 +214,12 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     useGetAppData();
 
   const {
+    updateShoppingList,
+    isLoading: isUpdatingListItem,
+    error: listItemError,
+  } = useUpdateShoppingList();
+
+  const {
     updateListName,
     isLoading: isUpdatingListName,
     error: listNameError,
@@ -225,12 +232,49 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     setListName(e.target.value);
   }
 
+  function updateListItemQuantity(itemId, incease) {
+    if (isLoadingShoppingList) return;
+    updateShoppingList({
+      id: shoppingList[0].id,
+      oldList: shoppingList[0].items,
+      updateQuantity: {
+        itemId,
+        update: incease ? 'increase' : 'decrease',
+      },
+    });
+    // id, item, oldList, updateQuantity
+  }
+
+  function onRemoveItem(deleteId) {
+    if (isLoadingShoppingList) return;
+    updateShoppingList({
+      id: shoppingList[0].id,
+      oldList: shoppingList[0].items,
+      deleteItemId: deleteId,
+    });
+  }
+
   // when the user saves the list name
   function listNameSaveHandler() {
     // to make sure we have the id
     if (isLoadingShoppingList) return;
     updateListName({ id: shoppingList[0].id, listName: listName });
   }
+
+  // let emtyList;
+
+  // useEffect(
+  //   function () {
+  //     if (isLoadingShoppingList) return;
+  //     emtyList =
+  //       shoppingList[0].items === null ||
+  //       shoppingList[0].length === 0 ||
+  //       shoppingList[0].items === undefined;
+
+  //     console.log(emtyList);
+  //   },
+  //   [shoppingList]
+  // );
 
   if (isLoadingShoppingList)
     return <ShoppingListLoader>Loading </ShoppingListLoader>;
@@ -239,7 +283,8 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   const emtyList =
     shoppingList[0].items === null ||
     shoppingList[0].length === 0 ||
-    shoppingList[0].items === undefined;
+    shoppingList[0].items === undefined ||
+    shoppingList[0].items.length === 0;
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
@@ -306,7 +351,12 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
                 >
                   <CategoryTitle>{key} </CategoryTitle>
                   {availableCategories[key].map(item => (
-                    <ShoppingItem key={item.id} item={item} />
+                    <ShoppingItem
+                      onUpdateQuantity={updateListItemQuantity}
+                      onDelete={onRemoveItem}
+                      key={item.id}
+                      item={item}
+                    />
                   ))}
                 </CategoryContainer>
               ))}

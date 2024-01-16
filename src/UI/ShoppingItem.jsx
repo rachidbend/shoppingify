@@ -83,13 +83,13 @@ const RemoveIcon = styled(MdOutlineRemove)`
   color: var(--color-accent);
 `;
 
-function ShoppingItem({ item }) {
+function ShoppingItem({ item, onUpdateQuantity, onDelete }) {
   const [showEdit, setSHowEdit] = useState(false);
 
   function handleShowEdit() {
     setSHowEdit(!showEdit);
   }
-
+  // itemId, incease
   return (
     <StyledShoppingItem
       initial={{ y: 10, opacity: 0 }}
@@ -142,6 +142,7 @@ function ShoppingItem({ item }) {
                 opacity: 0,
                 left: '1rem',
               }}
+              onClick={() => onDelete(item.id)}
             >
               <TrashIcon />
             </ItemDelete>
@@ -163,6 +164,7 @@ function ShoppingItem({ item }) {
               exit={{
                 opacity: 0,
               }}
+              onClick={() => onUpdateQuantity(item.id, false)}
             >
               <RemoveIcon />
             </ItemDecreaseQuantity>
@@ -188,6 +190,7 @@ function ShoppingItem({ item }) {
               exit={{
                 opacity: 0,
               }}
+              onClick={() => onUpdateQuantity(item.id, true)}
             >
               <AddIcon />
             </ItemIncreaseQuantity>
