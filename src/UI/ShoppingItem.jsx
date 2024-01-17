@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
-import { AnimatePresence, color, motion } from 'framer-motion';
+import { AnimatePresence, motion, sync } from 'framer-motion';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { MdDeleteOutline } from 'react-icons/md';
 import { MdAdd } from 'react-icons/md';
 import { MdOutlineRemove } from 'react-icons/md';
+import { MdCheck } from 'react-icons/md';
 
 // item
 const StyledShoppingItem = styled(motion.div)`
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   flex-wrap: nowrap;
   flex-grow: 0;
@@ -22,6 +23,9 @@ const Name = styled(motion.p)`
   color: var(--color-black);
   font-size: 1.8rem;
   font-weight: 500;
+
+  text-decoration: ${props =>
+    props.ischecked === 'true' ? 'line-through' : 'none'};
 `;
 // item qantity
 const Quantity = styled(motion.button)`
@@ -57,6 +61,7 @@ const ItemEditContianer = styled(motion.div)`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  margin-left: auto;
 `;
 
 const ItemIncreaseQuantity = styled(Button)``;
@@ -83,11 +88,56 @@ const RemoveIcon = styled(MdOutlineRemove)`
   color: var(--color-accent);
 `;
 
-function ShoppingItem({ item, onUpdateQuantity, onDelete }) {
+// chech if an item is purchased
+const PurchasedCheckbox = styled.input`
+  appearance: none;
+  height: 2.4rem;
+  width: 2.4rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const PurchasedCheckboxCustom = styled.span`
+  display: inline-block;
+  height: 2.4rem;
+  width: 2.4rem;
+  border: 0.2rem solid var(--color-accent);
+  border-radius: 0.4rem;
+  margin-right: 1.51rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CheckedIcon = styled(MdCheck)`
+  color: var(--color-accent);
+  width: 100%;
+  height: 100%;
+
+  display: ${props => (props.ischecked === 'true' ? 'inline-block' : 'none')};
+  opacity: ${props => (props.ischecked === 'true' ? 1 : 0)};
+`;
+
+const PurchasedCheckboxContainer = styled.div`
+  position: relative;
+`;
+
+function ShoppingItem({
+  item,
+  onUpdateQuantity,
+  onDelete,
+  isEditing,
+  onPurchase,
+}) {
   const [showEdit, setSHowEdit] = useState(false);
 
   function handleShowEdit() {
-    setSHowEdit(!showEdit);
+    if (isEditing === false) return;
+    else {
+      setSHowEdit(!showEdit);
+    }
   }
   // itemId, incease
   return (
@@ -101,7 +151,24 @@ function ShoppingItem({ item, onUpdateQuantity, onDelete }) {
       }}
       key={`shopping itel ${item.id}`}
     >
-      <Name layout>{item.name} </Name>
+      {!isEditing && (
+        <PurchasedCheckboxContainer>
+          <PurchasedCheckbox
+            checked={item.isPurchased}
+            onChange={() =>
+              onPurchase(item.id, item.isPurchased ? false : true)
+            }
+            type="checkbox"
+          />
+          <PurchasedCheckboxCustom>
+            <CheckedIcon ischecked={item.isPurchased ? 'true' : 'false'} />
+          </PurchasedCheckboxCustom>
+        </PurchasedCheckboxContainer>
+      )}
+
+      <Name ischecked={item.isPurchased ? 'true' : 'false'} layout>
+        {item.name}{' '}
+      </Name>
 
       <ItemEditContianer
         initial={{

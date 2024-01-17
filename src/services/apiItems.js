@@ -27,6 +27,7 @@ async function updateShoppingListItems({
   oldList,
   updateQuantity,
   deleteItemId,
+  itemIsPurchased,
 }) {
   // i get a json object
   // when an item is added, add the new item to the current list of items
@@ -48,7 +49,7 @@ async function updateShoppingListItems({
     newList =
       oldList === undefined || oldList === null
         ? [{ ...item, quantity: 1 }]
-        : [...oldList, { ...item, quantity: 1 }];
+        : [...oldList, { ...item, quantity: 1, isPurchased: false }];
   } else {
     newList = oldList;
   }
@@ -89,6 +90,17 @@ async function updateShoppingListItems({
   // filter out that item form the list
   console.log(deleteItemId);
   if (deleteItemId) newList = oldList.filter(item => deleteItemId !== item.id);
+
+  // Update the purchased state
+  // 1. check if the item purchased state is changed
+  // 2. change the isPurchased for that specific item, and return the list
+  if (itemIsPurchased)
+    updatedList = oldList.map(item => {
+      if (item.id === itemIsPurchased.id)
+        return { ...item, isPurchased: itemIsPurchased.value };
+
+      return item;
+    });
 
   const { data, error } = await supabase
     .from('shopping_list')

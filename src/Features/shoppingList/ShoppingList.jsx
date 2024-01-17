@@ -266,6 +266,18 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     });
   }
 
+  function itemPurchaseStatehandler(id, value) {
+    if (isLoadingShoppingList) return;
+    updateShoppingList({
+      id: shoppingList[0].id,
+      oldList: shoppingList[0].items,
+      itemIsPurchased: {
+        id,
+        value,
+      },
+    });
+  }
+
   // when the user saves the list name
   function listNameSaveHandler() {
     // to make sure we have the id
@@ -363,6 +375,8 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
                     <ShoppingItem
                       onUpdateQuantity={updateListItemQuantity}
                       onDelete={onRemoveItem}
+                      isEditing={isEditMode}
+                      onPurchase={itemPurchaseStatehandler}
                       key={item.id}
                       item={item}
                     />
