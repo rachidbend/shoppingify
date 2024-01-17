@@ -134,8 +134,10 @@ function ShoppingItem({
   const [showEdit, setSHowEdit] = useState(false);
 
   function handleShowEdit() {
-    if (isEditing === false) return;
-    else {
+    if (isEditing === false) {
+      setSHowEdit(false);
+      return;
+    } else {
       setSHowEdit(!showEdit);
     }
   }
