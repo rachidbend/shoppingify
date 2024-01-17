@@ -227,11 +227,8 @@ const ButtonsContainer = styled.div`
 
 const CancelButton = styled.button`
   color: var(--color-title);
-
   font-size: 1.6rem;
-
   font-weight: 700;
-
   background: none;
   border: none;
   cursor: pointer;
@@ -245,11 +242,9 @@ const CompleteButton = styled.button`
   background-color: var(--color-blue);
   border-radius: 1.2rem;
   padding: 1.86rem 1.83rem 1.58rem 2.14rem;
-
   color: var(--color-white);
   font-size: 1.6rem;
   font-weight: 700;
-
   border: 2px solid var(--color-blue);
   cursor: pointer;
   transition: color 260ms ease-in-out, background 260ms ease-in-out;
