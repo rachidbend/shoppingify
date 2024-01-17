@@ -218,6 +218,48 @@ const ShoppingListTitleContianer = styled.div`
   align-items: flex-end;
 `;
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3.96rem;
+`;
+
+const CancelButton = styled.button`
+  color: var(--color-title);
+
+  font-size: 1.6rem;
+
+  font-weight: 700;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 260ms ease-in-out;
+  &:hover {
+    color: var(--color-gray-300);
+  }
+`;
+
+const CompleteButton = styled.button`
+  background-color: var(--color-blue);
+  border-radius: 1.2rem;
+  padding: 1.86rem 1.83rem 1.58rem 2.14rem;
+
+  color: var(--color-white);
+  font-size: 1.6rem;
+  font-weight: 700;
+
+  border: 2px solid var(--color-blue);
+  cursor: pointer;
+  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+
+  &:hover {
+    background-color: transparent;
+    color: var(--color-blue);
+  }
+`;
+
 const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   const [listName, setListName] = useState('');
   const [isEditMode, setIsEditMode] = useState(true);
@@ -317,16 +359,7 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
         return accumulator;
       }, {});
 
-  // ShoppingItem
-
-  // variants={routeVariants}
-  // initial="initial"
-  // animate="final"
-
-  // variants={listChildrenVariants}
-  // initial="initial"
-  // animate="final"
-
+  console.log(shoppingList[0].name.length === 0);
   return (
     <StyledShoppingList
       variants={routeVariants}
@@ -388,21 +421,34 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
         )}
         <NameInputContainer>
           {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
-          <Container>
-            <NameInput
-              disabled={emtyList || isUpdatingListName || shoppingList[0].name}
-              type="text"
-              placeholder="Enter a name"
-              value={listName}
-              onChange={e => listNameChangeHandler(e)}
-            />
-            <SaveButton
-              onClick={listNameSaveHandler}
-              disabled={emtyList || isUpdatingListName || shoppingList[0].name}
-            >
-              save
-            </SaveButton>
-          </Container>
+          {shoppingList[0].name.length === 0 && (
+            <Container>
+              <NameInput
+                disabled={
+                  emtyList || isUpdatingListName || shoppingList[0].name
+                }
+                type="text"
+                placeholder="Enter a name"
+                value={listName}
+                onChange={e => listNameChangeHandler(e)}
+              />
+              <SaveButton
+                onClick={listNameSaveHandler}
+                disabled={
+                  emtyList || isUpdatingListName || shoppingList[0].name
+                }
+              >
+                save
+              </SaveButton>
+            </Container>
+          )}
+
+          {shoppingList[0].name.length > 0 && (
+            <ButtonsContainer>
+              <CancelButton>cancel</CancelButton>
+              <CompleteButton>Complete</CompleteButton>
+            </ButtonsContainer>
+          )}
         </NameInputContainer>
       </ChildrenContainer>
     </StyledShoppingList>

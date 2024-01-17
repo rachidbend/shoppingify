@@ -63,6 +63,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-accent: #f9a109;
 
     --color-red: #eb5757;
+    --color-blue: #56ccf2;
     --color-shopping-add-item-background: #80485b;
 
     --color-title: #34333a;
