@@ -18,7 +18,7 @@ const StyledShoppingItem = styled(motion.div)`
   min-height: 4.4903rem;
 `;
 // item name
-const Name = styled.p`
+const Name = styled(motion.p)`
   color: var(--color-black);
   font-size: 1.8rem;
   font-weight: 500;
@@ -101,7 +101,7 @@ function ShoppingItem({ item, onUpdateQuantity, onDelete }) {
       }}
       key={`shopping itel ${item.id}`}
     >
-      <Name>{item.name} </Name>
+      <Name layout>{item.name} </Name>
 
       <ItemEditContianer
         initial={{

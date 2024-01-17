@@ -3,16 +3,12 @@ import styled from 'styled-components';
 
 import illustration from './../../assets/source.svg';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
-
+import { MdCreate } from 'react-icons/md';
 import ShoppingItem from '../../UI/ShoppingItem';
-import {
-  childrenVariants,
-  listChildrenVariants,
-  routeVariants,
-} from '../../Variables/variables';
+import { listChildrenVariants, routeVariants } from '../../Variables/variables';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 
@@ -163,8 +159,6 @@ const Title = styled.h2`
   color: var(--color-title);
   font-size: 2.4rem;
   font-weight: 700;
-  margin-top: 4.4rem;
-  margin-bottom: 3.93rem;
 `;
 // category container
 const CategoryContainer = styled(motion.div)`
@@ -207,8 +201,26 @@ const ShoppingListLoader = styled.div`
   /* background-color: var(--color-white); */
 `;
 
+const CreateIcon = styled(MdCreate)`
+  color: var(--color-title);
+  width: 2.4rem;
+  height: 2.4rem;
+  transform: translateY(0.4rem);
+  cursor: pointer;
+`;
+
+const ShoppingListTitleContianer = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-top: 4.4rem;
+  margin-bottom: 3.93rem;
+  align-items: flex-end;
+`;
+
 const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
   const [listName, setListName] = useState('');
+  const [isEditMode, setIsEditMode] = useState(true);
 
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
@@ -261,20 +273,9 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     updateListName({ id: shoppingList[0].id, listName: listName });
   }
 
-  // let emtyList;
-
-  // useEffect(
-  //   function () {
-  //     if (isLoadingShoppingList) return;
-  //     emtyList =
-  //       shoppingList[0].items === null ||
-  //       shoppingList[0].length === 0 ||
-  //       shoppingList[0].items === undefined;
-
-  //     console.log(emtyList);
-  //   },
-  //   [shoppingList]
-  // );
+  function handeListState() {
+    setIsEditMode(!isEditMode);
+  }
 
   if (isLoadingShoppingList)
     return <ShoppingListLoader>Loading </ShoppingListLoader>;
@@ -320,7 +321,11 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
       initial="initial"
       animate="final"
     >
-      <ChildrenContainer>
+      <ChildrenContainer
+        variants={listChildrenVariants}
+        initial="initial"
+        animate="final"
+      >
         <AddItemContainer>
           <AddItemIllustration src={illustration} />
           <div>
@@ -336,10 +341,14 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
 
         {!emtyList && (
           <>
-            <Title>Shopping list</Title>
+            <ShoppingListTitleContianer>
+              <Title>Shopping list</Title>
+              <CreateIcon onClick={handeListState} />
+            </ShoppingListTitleContianer>
             <ShoppingListItemsContainer>
               {Object.keys(availableCategories).map(key => (
                 <CategoryContainer
+                  layout
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ opacity: 0 }}
