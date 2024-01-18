@@ -251,6 +251,8 @@ function AddNewItem({ onchangePage }) {
     console.log({ ...data, category: selectedCategory });
     if (data.name.length === 0 && selectedCategory.length === 0) return;
     addItem({ ...data, category: selectedCategory });
+    reset();
+    setSelectedCategory('');
   };
 
   function onOptionSelect(e) {
