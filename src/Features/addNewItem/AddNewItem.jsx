@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useGetCategories } from '../../Hooks/useGetCategories';
 import { motion } from 'framer-motion';
 import { useAddNewItem } from '../../Hooks/useAddNewItem';
+import { MdClose } from 'react-icons/md';
 
 const StyledAddNewItem = styled.div`
   padding: 0 4.01rem;
@@ -118,6 +119,11 @@ const Select = styled.div`
   transition: border 260ms ease-in-out;
   outline: none;
 
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+
   &:focus,
   &:hover,
   &:active {
@@ -201,11 +207,26 @@ const ButtonsContainer = styled.div`
   width: 100%;
 
   margin-top: auto;
-  /* margin-bottom: auto; */
-  /* position: fixed;
-  bottom: 0;
-  right: 0; */
-  /* left: 0; */
+`;
+
+const CloseIcon = styled(MdClose)`
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--color-gray-400);
+  cursor: pointer;
+`;
+
+const CloseIconContainer = styled.div`
+  width: 2.4rem;
+  height: 2.4rem;
+  display: inline-block;
+  cursor: pointer;
+`;
+
+const CategoryPlaceHolder = styled.p`
+  color: var(--color-gray-200);
+  font-size: 1.4rem;
+  font-weight: 500;
 `;
 
 function AddNewItem({ onchangePage }) {
@@ -228,11 +249,13 @@ function AddNewItem({ onchangePage }) {
 
   const onSubmit = data => {
     console.log({ ...data, category: selectedCategory });
+    if (data.name.length === 0 && selectedCategory.length === 0) return;
     addItem({ ...data, category: selectedCategory });
   };
 
   function onOptionSelect(e) {
     setSelectedCategory(e.target.innerText);
+    setIsOpen(false);
   }
 
   function onSelectOpen() {
@@ -257,7 +280,7 @@ function AddNewItem({ onchangePage }) {
             placeholder="Enter a name"
             type="text"
             name="name"
-            {...register('name')}
+            {...register('name', { required: true })}
           />
         </InputContainer>
         <InputContainer marginbottom="2.43rem">
@@ -283,8 +306,9 @@ function AddNewItem({ onchangePage }) {
             name="category"
             id=""
             value={selectedCategory}
-            {...register('category')}
+            {...register('category', { required: true })}
           >
+            <option value={null}>no category</option>
             {categories.map(category => (
               <option key={`category-${category.id}`} value={category.name}>
                 {category.name}
@@ -300,7 +324,19 @@ function AddNewItem({ onchangePage }) {
               isopen={isOpen ? 'true' : 'false'}
               onClick={onSelectOpen}
             >
-              {selectedCategory ? selectedCategory : 'Enter a category'}
+              {selectedCategory ? (
+                selectedCategory
+              ) : (
+                <CategoryPlaceHolder>Enter a category</CategoryPlaceHolder>
+              )}
+              <CloseIconContainer
+                onClick={() => {
+                  setIsOpen(false);
+                  setSelectedCategory('');
+                }}
+              >
+                <CloseIcon />
+              </CloseIconContainer>
             </Select>
             {isOpen && (
               <OptionsContainer>
