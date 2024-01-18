@@ -5,8 +5,9 @@ import { useGetCategories } from '../../Hooks/useGetCategories';
 import { motion } from 'framer-motion';
 import { useAddNewItem } from '../../Hooks/useAddNewItem';
 import { MdClose } from 'react-icons/md';
+import { itemVariantes } from '../../Variables/variables';
 
-const StyledAddNewItem = styled.div`
+const StyledAddNewItem = styled(motion.div)`
   padding: 0 4.01rem;
   /* padding-top: 3.45rem; */
   position: relative;
@@ -21,7 +22,7 @@ const Title = styled.h2`
   margin-bottom: 3.38rem;
 `;
 
-const Form = styled.form`
+const Form = styled(motion.form)`
   width: 100%;
   height: 100%;
   display: flex;
@@ -77,12 +78,13 @@ const TextArea = styled.textarea`
   }
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   flex-grow: 0;
   flex-shrink: 0;
+
   margin-bottom: ${props =>
     props.marginbottom ? props.marginbottom : '1.8rem'};
 `;
@@ -267,6 +269,7 @@ function AddNewItem({ onchangePage }) {
   function onReset() {
     reset();
     setSelectedCategory('');
+    onchangePage('shopping-list');
   }
 
   if (isLoading) return <p>Loading</p>;
@@ -276,7 +279,11 @@ function AddNewItem({ onchangePage }) {
     <StyledAddNewItem>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title>Add a new item</Title>
-        <InputContainer>
+        <InputContainer
+          variants={itemVariantes}
+          initial="initial"
+          animate="final"
+        >
           <Label>Name</Label>
           <Input
             placeholder="Enter a name"
@@ -285,7 +292,12 @@ function AddNewItem({ onchangePage }) {
             {...register('name', { required: true })}
           />
         </InputContainer>
-        <InputContainer marginbottom="2.43rem">
+        <InputContainer
+          variants={itemVariantes}
+          initial="initial"
+          animate="final"
+          marginbottom="2.43rem"
+        >
           <Label>Note (optional)</Label>
           <TextArea
             placeholder="Enter a note"
@@ -293,7 +305,12 @@ function AddNewItem({ onchangePage }) {
             {...register('note')}
           />
         </InputContainer>
-        <InputContainer marginbottom="3.38rem">
+        <InputContainer
+          variants={itemVariantes}
+          initial="initial"
+          animate="final"
+          marginbottom="3.38rem"
+        >
           <Label>Image (optional)</Label>
           <Input
             placeholder="Enter a url"
@@ -302,7 +319,11 @@ function AddNewItem({ onchangePage }) {
             {...register('image')}
           />
         </InputContainer>
-        <InputContainer>
+        <InputContainer
+          variants={itemVariantes}
+          initial="initial"
+          animate="final"
+        >
           <Label>Category</Label>
           <StyledSelect
             name="category"

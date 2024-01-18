@@ -5,7 +5,7 @@ import illustration from './../../assets/source.svg';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
 import { MdCreate } from 'react-icons/md';
 import ShoppingItem from '../../UI/ShoppingItem';
-import { listChildrenVariants, routeVariants } from '../../Variables/variables';
+import { listChildrenVariants } from '../../Variables/variables';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
 import { memo, useState } from 'react';
@@ -354,13 +354,8 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
         return accumulator;
       }, {});
 
-  console.log(shoppingList[0].name.length === 0);
   return (
-    <StyledShoppingList
-      variants={routeVariants}
-      initial="initial"
-      animate="final"
-    >
+    <StyledShoppingList>
       <ChildrenContainer
         variants={listChildrenVariants}
         initial="initial"

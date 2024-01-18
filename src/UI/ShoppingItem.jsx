@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { AnimatePresence, motion, sync } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { MdDeleteOutline } from 'react-icons/md';

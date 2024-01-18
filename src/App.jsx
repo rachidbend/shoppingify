@@ -66,7 +66,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-blue: #56ccf2;
     --color-shopping-add-item-background: #80485b;
 
-    --color-title: #030303;
+    --color-title: #34333a;
 
     /* background: #FAFAFE
   
