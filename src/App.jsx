@@ -66,10 +66,10 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-blue: #56ccf2;
     --color-shopping-add-item-background: #80485b;
 
-    --color-title: #34333a;
+    --color-title: #030303;
 
     /* background: #FAFAFE
-
+  
 sidebar nav background: #FFF
 hsl(240, 2%, 76%)
 accent color :#F9A109

@@ -88,7 +88,6 @@ async function updateShoppingListItems({
   // DELETE ITEM FROM LIST
   // get the id of the item we want to remove
   // filter out that item form the list
-  console.log(deleteItemId);
   if (deleteItemId) newList = oldList.filter(item => deleteItemId !== item.id);
 
   // Update the purchased state
@@ -122,10 +121,39 @@ async function updateShopplingListName({ id, listName }) {
 
   if (error)
     throw new Error(
-      'There was an error updating the name of your shopping list .'
+      'There was an error updating the name of your shopping list.'
     );
 
   return data;
+}
+
+async function addNewItem(item) {
+  // const { name, image, note, category } = item;
+
+  const { data, error } = await supabase
+    .from('items')
+    .insert([
+      {
+        name: item.name,
+        image: item.image,
+        note: item.note,
+        category: item.category,
+      },
+    ])
+    .select();
+
+  if (error) throw new Error('There was an error adding the new item.');
+
+  return data;
+}
+
+async function getAllCategories() {
+  let { data: categories, error } = await supabase
+    .from('categories')
+    .select('*');
+  if (error) throw new Error('There was an error getting the categories.');
+
+  return categories;
 }
 
 export {
@@ -133,6 +161,8 @@ export {
   getShoppingList,
   updateShoppingListItems,
   updateShopplingListName,
+  addNewItem,
+  getAllCategories,
 };
 
 /*

@@ -5,6 +5,7 @@ import ShoppingList from '../Features/shoppingList/ShoppingList';
 
 // import AddNewItem from '../Features/addNewItem/AddNewItem';
 import { useSidePage } from '../Context/SidePageProvider';
+import AddNewItem from '../Features/addNewItem/AddNewItem';
 // import { createContext, useContext } from 'react';
 // import { useGetAllItems } from '../Hooks/useGetAllItems';
 // import { useGetShoppingList } from '../Hooks/useGetShoppingList';
@@ -33,7 +34,8 @@ function AppLayout() {
             <ShoppingList onchangePage={goTo => handleChangePage(goTo)} />
           )} */}
       {/* <ShoppingList onchangePage={goTo => handleChangePage(goTo)} /> */}
-      <ShoppingList />
+      <AddNewItem />
+      {/* <ShoppingList /> */}
       {/* {page === 'add-new-item' && (
             <AddNewItem onchangePage={goTo => handleChangePage(goTo)} />
           )} */}
