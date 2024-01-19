@@ -5,6 +5,7 @@ import Item from '../UI/Item';
 import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';
 import { useGetAppData } from '../Context/AppContext';
+import Spinner from '../UI/Spinner';
 
 // page container
 const StyledItems = styled(motion.div)`
@@ -133,7 +134,7 @@ function Items() {
   const { items, isLoadingAllItems, allItemsError, addItemToList } =
     useGetAppData();
 
-  if (isLoadingAllItems) return <p>Loading</p>;
+  if (isLoadingAllItems) return <Spinner />;
   if (allItemsError) return <p>{allItemsError.message}</p>;
 
   // filtering for the query

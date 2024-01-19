@@ -11,6 +11,7 @@ import { useGetAppData } from '../../Context/AppContext';
 import { memo, useState } from 'react';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
+import Spinner from '../../UI/Spinner';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -326,8 +327,7 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     setIsEditMode(!isEditMode);
   }
 
-  if (isLoadingShoppingList)
-    return <ShoppingListLoader>Loading </ShoppingListLoader>;
+  if (isLoadingShoppingList) return <Spinner />;
   if (shoppingListError) return <p>{shoppingListError.message} </p>;
 
   const emtyList =
