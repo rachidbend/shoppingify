@@ -10,6 +10,7 @@ import History from './pages/History';
 import Statistics from './pages/Statistics';
 import PageNotFound from './UI/PageNotFound';
 import { AnimatePresence } from 'framer-motion';
+import ItemDetails from './Features/itemDetails/ItemDetails';
 
 /*
 const router = createBrowserRouter([
@@ -113,7 +114,9 @@ function App() {
               <Routes location={location} key={location.key}>
                 <Route element={<AppLayout />}>
                   <Route index path="/" element={<Navigate to={'/items'} />} />
-                  <Route path="/items" element={<Items />} />
+                  <Route path="/items" element={<Items />}>
+                    <Route path=":itemId" element={null} />
+                  </Route>
                   <Route path="/history" element={<History />} />
                   <Route path="/statistics" element={<Statistics />} />
 

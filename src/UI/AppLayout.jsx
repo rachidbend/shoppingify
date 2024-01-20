@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import NavSideBar from './NavSideBar';
 import ShoppingList from '../Features/shoppingList/ShoppingList';
@@ -7,6 +7,7 @@ import ShoppingList from '../Features/shoppingList/ShoppingList';
 import { useSidePage } from '../Context/SidePageProvider';
 import AddNewItem from '../Features/addNewItem/AddNewItem';
 import { AnimatePresence, motion } from 'framer-motion';
+import ItemDetails from '../Features/itemDetails/ItemDetails';
 // import { createContext, useContext } from 'react';
 // import { useGetAllItems } from '../Hooks/useGetAllItems';
 // import { useGetShoppingList } from '../Hooks/useGetShoppingList';
@@ -25,6 +26,7 @@ const StyledAppLayout = styled(motion.div)`
 
 function AppLayout() {
   const { page, handleChangePage } = useSidePage();
+  const { itemId } = useParams();
 
   return (
     <StyledAppLayout>
@@ -32,18 +34,19 @@ function AppLayout() {
       <Outlet />
 
       {/* <AnimatePresence> */}
-      {page === 'shopping-list' && (
+      {page === 'shopping-list' && !itemId && (
         <ShoppingList
           key={'component-shopping-list'}
           onchangePage={goTo => handleChangePage(goTo)}
         />
       )}
-      {page === 'add-new-item' && (
+      {page === 'add-new-item' && !itemId && (
         <AddNewItem
           key={'component-add-new-item'}
           onchangePage={goTo => handleChangePage(goTo)}
         />
       )}
+      {itemId && <ItemDetails />}
       {/* </AnimatePresence> */}
     </StyledAppLayout>
   );

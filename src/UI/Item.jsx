@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const StyledItem = styled.div`
   width: 18.2rem;
@@ -16,7 +17,6 @@ const StyledItem = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
 
-  cursor: pointer;
   transform: scale(100%);
 
   transition: 260ms ease-in-out;
@@ -35,6 +35,12 @@ const Icon = styled(MdAdd)`
   width: 2.4rem;
   height: 2.4rem;
   color: var(--color-gray-100);
+  cursor: pointer;
+`;
+
+const StyledLink = styled(Link)`
+  cursor: pointer;
+  text-decoration: none;
 `;
 
 function Item({ itemDetails, onAddItem }) {
@@ -42,7 +48,9 @@ function Item({ itemDetails, onAddItem }) {
 
   return (
     <StyledItem>
-      <Name>{name}</Name>
+      <StyledLink to={`/items/${id}`}>
+        <Name>{name}</Name>
+      </StyledLink>
       <div onClick={() => onAddItem(itemDetails)}>
         <Icon />
       </div>
