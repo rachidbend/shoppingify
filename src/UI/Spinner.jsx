@@ -38,7 +38,6 @@ const SpinnerContainer = styled.div`
 function Spinner() {
   return (
     <SpinnerContainer>
-      {' '}
       <StyledSpinner></StyledSpinner>
     </SpinnerContainer>
   );
