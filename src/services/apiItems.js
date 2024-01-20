@@ -156,6 +156,23 @@ async function getAllCategories() {
   return categories;
 }
 
+async function getItemDetails(id) {
+  let { data: itemDetails, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('id', id);
+
+  if (error) throw new Error('There was an error getting the item details.');
+
+  return itemDetails;
+}
+
+async function deleteItem(itemId) {
+  const { error } = await supabase.from('items').delete().eq('id', itemId);
+
+  if (error) throw new Error('There was an error deleting the item.');
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -163,6 +180,8 @@ export {
   updateShopplingListName,
   addNewItem,
   getAllCategories,
+  getItemDetails,
+  deleteItem,
 };
 
 /*
