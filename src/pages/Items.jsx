@@ -189,7 +189,7 @@ function Items() {
           </SearchInputContainer>
         </HeaderContainer>
 
-        {Object.keys(availableCategories).map(key => (
+        {Object.keys(availableCategories)?.map(key => (
           <CategoryContainer key={key}>
             <CategoryTitle>{key}</CategoryTitle>
             <CategoryItemsContianer>

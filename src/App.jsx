@@ -12,6 +12,7 @@ import PageNotFound from './UI/PageNotFound';
 import { AnimatePresence } from 'framer-motion';
 import ItemDetails from './Features/itemDetails/ItemDetails';
 import EmptyContainer from './UI/EmptyContainer';
+import HistoryList from './UI/HistoryList';
 
 /*
 const router = createBrowserRouter([
@@ -89,12 +90,11 @@ function App() {
                 <Route element={<AppLayout />}>
                   <Route index path="/" element={<Navigate to={'/items'} />} />
                   <Route path="/items" element={<Items />}>
-                    <Route path=":itemId" element={<EmptyContainer />} />
+                    <Route path="/items/:itemId" element={<EmptyContainer />} />
                   </Route>
-                  <Route path="/history" element={<History />}>
-                    <Route path=":listId" element={<div>list</div>} />
-                  </Route>
+                  <Route path="/history" element={<History />} />
                   <Route path="/statistics" element={<Statistics />} />
+                  <Route path="/history/:listId" element={<HistoryList />} />
 
                   <Route path="*" element={<PageNotFound />} />
                 </Route>

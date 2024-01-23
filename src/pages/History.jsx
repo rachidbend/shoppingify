@@ -5,10 +5,21 @@ import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
 import { MdEventNote } from 'react-icons/md';
 import { MdArrowForwardIos } from 'react-icons/md';
+import { Link, Outlet } from 'react-router-dom';
 
 const StyledHistory = styled(motion.div)`
-  /* background-color: blue; */
   padding: 0 8rem;
+
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 `;
 const ChildrenContainer = styled(motion.div)``;
 
@@ -37,7 +48,7 @@ const GroupTitle = styled.p`
   font-weight: 500;
   margin-bottom: 1.74rem;
 `;
-const List = styled.div`
+const List = styled(Link)`
   background-color: var(--color-white);
   border-radius: 1.2rem;
   box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
@@ -49,6 +60,7 @@ const List = styled.div`
   flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
+  text-decoration: none;
 `;
 const ListName = styled.p`
   font-size: 1.6rem;
@@ -90,6 +102,11 @@ const Container = styled.div`
   flex-shrink: 0;
   align-items: center;
 `;
+const ListDate = styled.span`
+  color: var(--color-gray-300);
+  font-size: 1.2rem;
+  font-weight: 500;
+`;
 
 const monthsNames = [
   'January',
@@ -105,6 +122,8 @@ const monthsNames = [
   'November',
   'December',
 ];
+
+const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
 function History() {
   const { history, isLoading, error } = useGetHistory();
@@ -139,7 +158,6 @@ id
 
     return accumulator;
   }, {});
-  // console.log(filteredLists);
 
   return (
     <StyledHistory variants={routeVariants} initial="initial" animate="final">
@@ -154,13 +172,19 @@ id
           <GroupContainer key={key}>
             <GroupTitle>{key} </GroupTitle>
             <ListContainer>
-              {filteredLists[key].map(list => (
-                <List key={list.id}>
+              {filteredLists[key]?.map(list => (
+                <List to={`/history/${list.id}`} key={list.id}>
                   <ListName>{list.name}</ListName>
                   <Container>
                     <CalendarIcon />
                     <DateOfCompletion>
-                      {new Date(list.completed_at).toDateString()}
+                      <ListDate>
+                        {`${
+                          daysOfTheWeek[new Date(list.completed_at).getDay()]
+                        } ${new Date(list.completed_at).getDate()}.${
+                          new Date(list.completed_at).getMonth() + 1
+                        }.${new Date(list.completed_at).getFullYear()} `}
+                      </ListDate>
                     </DateOfCompletion>
                     <ListTag iscompleted={list.is_completed ? 'true' : 'false'}>
                       {list.is_completed ? 'completed' : 'canceled'}
@@ -172,6 +196,7 @@ id
             </ListContainer>
           </GroupContainer>
         ))}
+        <Outlet />
       </ChildrenContainer>
     </StyledHistory>
   );

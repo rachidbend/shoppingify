@@ -183,6 +183,20 @@ async function getHistory() {
   return shopping_history;
 }
 
+async function getHistoryList(id) {
+  let { data: list, error } = await supabase
+    .from('shopping_history')
+    .select('*')
+    .eq('id', id);
+
+  if (error)
+    throw new Error(
+      'There was an error getting the shopping list you requested.'
+    );
+
+  return list;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -193,6 +207,7 @@ export {
   getItemDetails,
   deleteItem,
   getHistory,
+  getHistoryList,
 };
 
 /*
