@@ -197,6 +197,40 @@ async function getHistoryList(id) {
   return list;
 }
 
+async function addListToHistory(list) {
+  /*
+id, 
+created_at,
+name, 
+shopping_list,
+is_completed,
+is_canceled, 
+completed_at
+*/
+
+  console.log(list);
+
+  const { data, error } = await supabase
+    .from('shopping_history')
+    .insert([
+      {
+        name: list.name,
+        shopping_list: list.shopping_list,
+        is_completed: list.is_completed,
+        is_canceled: list.is_canceled,
+        completed_at: list.completed_at,
+      },
+    ])
+    .select();
+
+  if (error)
+    throw new Error(
+      'There was an error adding the shopping list to the history.'
+    );
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -208,6 +242,7 @@ export {
   deleteItem,
   getHistory,
   getHistoryList,
+  addListToHistory,
 };
 
 /*

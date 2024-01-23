@@ -12,6 +12,7 @@ import { memo, useState } from 'react';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';
+import { useAddListToHistory } from '../../Hooks/useAddListToHistory';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -256,7 +257,7 @@ const CompleteButton = styled.button`
   }
 `;
 
-const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
+const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   const [listName, setListName] = useState('');
   const [isEditMode, setIsEditMode] = useState(true);
 
@@ -274,6 +275,8 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
     isLoading: isUpdatingListName,
     error: listNameError,
   } = useUpdateShoppingListName();
+
+  const { uploadList } = useAddListToHistory();
 
   // when the user changes the list name
   function listNameChangeHandler(e) {
@@ -325,6 +328,23 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
 
   function handeListState() {
     setIsEditMode(!isEditMode);
+  }
+
+  function onAddList() {
+    if (isLoadingShoppingList) return;
+    /*
+id, 
+created_at,
+
+*/
+    const list = {
+      name: shoppingList.at(0).name,
+      shopping_list: shoppingList.at(0).items,
+      is_completed: true,
+      is_canceled: false,
+      completed_at: new Date(),
+    };
+    uploadList(list);
   }
 
   if (isLoadingShoppingList) return <Spinner />;
@@ -436,13 +456,13 @@ const ShoppingList = memo(function ShoppingListOriginal({ onchangePage }) {
           {shoppingList[0].name.length > 0 && (
             <ButtonsContainer>
               <CancelButton>cancel</CancelButton>
-              <CompleteButton>Complete</CompleteButton>
+              <CompleteButton onClick={onAddList}>Complete</CompleteButton>
             </ButtonsContainer>
           )}
         </NameInputContainer>
       </ChildrenContainer>
     </StyledShoppingList>
   );
-});
+};
 
 export default ShoppingList;
