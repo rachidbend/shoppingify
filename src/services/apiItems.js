@@ -173,6 +173,16 @@ async function deleteItem(itemId) {
   if (error) throw new Error('There was an error deleting the item.');
 }
 
+async function getHistory() {
+  let { data: shopping_history, error } = await supabase
+    .from('shopping_history')
+    .select('*');
+
+  if (error) throw new Error('There was an error getting the shopping history');
+
+  return shopping_history;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -182,6 +192,7 @@ export {
   getAllCategories,
   getItemDetails,
   deleteItem,
+  getHistory,
 };
 
 /*
