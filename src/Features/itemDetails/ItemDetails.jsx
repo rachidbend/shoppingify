@@ -2,9 +2,9 @@ import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import { useGetItemDetails } from '../../Hooks/useGetItemDetails';
 import Spinner from '../../UI/Spinner';
-import { MdArrowRightAlt } from 'react-icons/md';
 import { useDeleteItem } from '../../Hooks/useDeleteItem';
 import { useGetAppData } from '../../Context/AppContext';
+import BackButton from '../../UI/BackButton';
 
 const StyledItemDetails = styled.div`
   background-color: var(--color-white);
@@ -14,28 +14,6 @@ const StyledItemDetails = styled.div`
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr auto;
   overflow: hidden;
-`;
-
-const BackButton = styled.button`
-  background: none;
-  border: none;
-  color: var(--color-accent);
-  font-size: 1.4rem;
-  font-weight: 700;
-
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: pointer;
-
-  margin-top: 2.48rem;
-  margin-bottom: 3.11rem;
-`;
-
-const ArrowIcon = styled(MdArrowRightAlt)`
-  width: 2.4rem;
-  height: 2.4rem;
-  transform: rotate(180deg);
 `;
 
 const Image = styled.img`
@@ -185,9 +163,7 @@ function ItemDetails() {
 
   return (
     <StyledItemDetails>
-      <BackButton onClick={() => navigate(-1)}>
-        <ArrowIcon /> back
-      </BackButton>
+      <BackButton />
       <DetailsContaner>
         {image ? <Image src={image} /> : <EmptyImage>No image</EmptyImage>}
 

@@ -12,6 +12,7 @@ import PageNotFound from './UI/PageNotFound';
 import { AnimatePresence } from 'framer-motion';
 import ItemDetails from './Features/itemDetails/ItemDetails';
 import EmptyContainer from './UI/EmptyContainer';
+import HistoryList from './UI/HistoryList';
 
 /*
 const router = createBrowserRouter([
@@ -61,6 +62,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-gray-200: #bdbdbd;
     --color-gray-300: #c1c1c4;
     --color-gray-400: #828282;
+    --color-gray-500: #c1c1c3;
 
     --color-accent: #f9a109;
 
@@ -69,34 +71,6 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-shopping-add-item-background: #80485b;
 
     --color-title: #34333a;
-
-    /* background: #FAFAFE
-  
-sidebar nav background: #FFF
-hsl(240, 2%, 76%)
-accent color :#F9A109
-hsl(249, 6%, 21% )
-main text color: #000
-
-input placeholder color : #BDBDBD
-
-input border color: #BDBDBD
-
-title main color #34333A:
-
-white text : #FFF
-
-shopping list category text color: #828282
-
-shopping list background: #FFF0DE
-
-shopping list add item background color :#80485B
-
-history list completed : #56CCF2
-
-history list cancelled : #EB5757
-
-history date color : #C1C1C4 */
   }
 `;
 
@@ -116,10 +90,11 @@ function App() {
                 <Route element={<AppLayout />}>
                   <Route index path="/" element={<Navigate to={'/items'} />} />
                   <Route path="/items" element={<Items />}>
-                    <Route path=":itemId" element={<EmptyContainer />} />
+                    <Route path="/items/:itemId" element={<EmptyContainer />} />
                   </Route>
                   <Route path="/history" element={<History />} />
                   <Route path="/statistics" element={<Statistics />} />
+                  <Route path="/history/:listId" element={<HistoryList />} />
 
                   <Route path="*" element={<PageNotFound />} />
                 </Route>

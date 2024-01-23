@@ -173,6 +173,64 @@ async function deleteItem(itemId) {
   if (error) throw new Error('There was an error deleting the item.');
 }
 
+async function getHistory() {
+  let { data: shopping_history, error } = await supabase
+    .from('shopping_history')
+    .select('*');
+
+  if (error) throw new Error('There was an error getting the shopping history');
+
+  return shopping_history;
+}
+
+async function getHistoryList(id) {
+  let { data: list, error } = await supabase
+    .from('shopping_history')
+    .select('*')
+    .eq('id', id);
+
+  if (error)
+    throw new Error(
+      'There was an error getting the shopping list you requested.'
+    );
+
+  return list;
+}
+
+async function addListToHistory(list) {
+  /*
+id, 
+created_at,
+name, 
+shopping_list,
+is_completed,
+is_canceled, 
+completed_at
+*/
+
+  console.log(list);
+
+  const { data, error } = await supabase
+    .from('shopping_history')
+    .insert([
+      {
+        name: list.name,
+        shopping_list: list.shopping_list,
+        is_completed: list.is_completed,
+        is_canceled: list.is_canceled,
+        completed_at: list.completed_at,
+      },
+    ])
+    .select();
+
+  if (error)
+    throw new Error(
+      'There was an error adding the shopping list to the history.'
+    );
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -182,6 +240,9 @@ export {
   getAllCategories,
   getItemDetails,
   deleteItem,
+  getHistory,
+  getHistoryList,
+  addListToHistory,
 };
 
 /*
