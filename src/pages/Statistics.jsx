@@ -4,6 +4,16 @@ import { childrenVariants, routeVariants } from '../Variables/variables';
 import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
 import TopItemsOrCategories from '../UI/TopItemsOrCategories';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 const StyledStatistics = styled(motion.div)`
   /* background-color: green; */
@@ -23,9 +33,43 @@ const TopContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6.51rem;
+  margin-bottom: 6.5rem;
 `;
 const TopItemsContainer = styled.div``;
 const TopCategoriesContainer = styled.div``;
+
+const ChartContianer = styled.div``;
+
+const fakeDate = [
+  {
+    name: 'January',
+    items: 35,
+  },
+  {
+    name: 'February',
+    items: 120,
+  },
+  {
+    name: 'March',
+    items: 34,
+  },
+  {
+    name: 'April',
+    items: 10,
+  },
+  {
+    name: 'May',
+    items: 30,
+  },
+  {
+    name: 'June',
+    items: 15,
+  },
+  {
+    name: 'July',
+    items: 45,
+  },
+];
 
 function Statistics() {
   const { history, isLoading, error } = useGetHistory();
@@ -128,6 +172,32 @@ function Statistics() {
             </div>
           </TopCategoriesContainer>
         </TopContainer>
+        <ChartContianer>
+          <Title>Monthly Summary</Title>
+          <ResponsiveContainer width={'100%'} height={302}>
+            <LineChart data={fakeDate}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                color="var(--color-gray-500)"
+                fontSize="1.4rem"
+                dataKey="name"
+              />
+              <YAxis color="var(--color-gray-500)" fontSize="1.4rem" />
+              <Line
+                type="monotone"
+                dataKey="items"
+                stroke="var(--color-accent)"
+              />
+              <Tooltip
+                contentStyle={{
+                  fontSize: '1.6rem',
+                  borderRadius: '1.2rem',
+                }}
+              />
+              <Legend fontSize="1.6rem" />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartContianer>
       </ChildrenContainer>
     </StyledStatistics>
   );
