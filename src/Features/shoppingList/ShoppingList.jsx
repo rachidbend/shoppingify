@@ -330,25 +330,21 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
     setIsEditMode(!isEditMode);
   }
 
-  function onAddList() {
+  function onAddList(isCompleted) {
     if (isLoadingShoppingList) return;
-    /*
-id, 
-created_at,
 
-*/
     const list = {
       name: shoppingList.at(0).name,
       shopping_list: shoppingList.at(0).items,
-      is_completed: true,
-      is_canceled: false,
+      is_completed: isCompleted ? true : false,
+      is_canceled: isCompleted ? false : true,
       completed_at: new Date(),
     };
     uploadList(list);
   }
 
   if (isLoadingShoppingList) return <Spinner />;
-  if (shoppingListError) return <p>{shoppingListError.message} </p>;
+  if (shoppingListError) return <p>{shoppingListError.message}</p>;
 
   const emtyList =
     shoppingList[0].items === null ||
@@ -431,7 +427,7 @@ created_at,
         )}
         <NameInputContainer>
           {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
-          {shoppingList[0].name.length === 0 && (
+          {shoppingList[0]?.name?.length === 0 && (
             <Container>
               <NameInput
                 disabled={
@@ -455,8 +451,12 @@ created_at,
 
           {shoppingList[0].name.length > 0 && (
             <ButtonsContainer>
-              <CancelButton>cancel</CancelButton>
-              <CompleteButton onClick={onAddList}>Complete</CompleteButton>
+              <CancelButton onClick={() => onAddList(false)}>
+                cancel
+              </CancelButton>
+              <CompleteButton onClick={() => onAddList(true)}>
+                Complete
+              </CompleteButton>
             </ButtonsContainer>
           )}
         </NameInputContainer>

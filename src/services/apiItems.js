@@ -41,8 +41,6 @@ async function updateShoppingListItems({
         ? [false]
         : oldList.map(oldItem => oldItem.name === item.name);
 
-    console.log('duplicate', duplicate);
-
     // if there is then don't add that item
     if (duplicate.includes(true)) return;
     // if there isn't a duplicate item then add it to the list

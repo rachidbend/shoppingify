@@ -159,6 +159,12 @@ id
     return accumulator;
   }, {});
 
+  const allItemsNames = history.reduce((acc, list) => {
+    const { shopping_list } = list;
+    let names = shopping_list.map(item => item.name);
+    return [...acc, ...names];
+  }, []);
+  // console.log(allItemsNames);
   return (
     <StyledHistory variants={routeVariants} initial="initial" animate="final">
       <ChildrenContainer
