@@ -5,6 +5,13 @@ import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
 import TopItemsOrCategories from '../UI/TopItemsOrCategories';
 import {
+  addMonths,
+  eachMonthOfInterval,
+  format,
+  isSameMonth,
+  subMonths,
+} from 'date-fns';
+import {
   CartesianGrid,
   Legend,
   Line,
@@ -40,65 +47,32 @@ const TopCategoriesContainer = styled.div``;
 
 const ChartContianer = styled.div``;
 
-const fakeDate = [
-  {
-    name: 'January',
-    items: 35,
-  },
-  {
-    name: 'February',
-    items: 120,
-  },
-  {
-    name: 'March',
-    items: 34,
-  },
-  {
-    name: 'April',
-    items: 10,
-  },
-  {
-    name: 'May',
-    items: 30,
-  },
-  {
-    name: 'June',
-    items: 15,
-  },
-  {
-    name: 'July',
-    items: 45,
-  },
-];
-
 function Statistics() {
   const { history, isLoading, error } = useGetHistory();
 
   if (isLoading) return <Spinner />;
   if (error) return <p>{error.message}</p>;
 
+  // getting all the names of the all the items in the history
   const allItemsNames = history.reduce((acc, list) => {
     const { shopping_list } = list;
     let names = shopping_list.map(item => item.name);
     return [...acc, ...names];
   }, []);
-
+  // getting all the names of the all the category in all the items in the history
   const allCategoryNames = history.reduce((acc, list) => {
     const { shopping_list } = list;
     let categories = shopping_list.map(item => item.category);
-
     return [...acc, ...categories];
   }, []);
 
   const filteredNameLists = allItemsNames.reduce((accumulator, name) => {
-    // Check if the category is already a key in the accumulator
+    // Check if the name is already a key in the accumulator
     if (!accumulator[name]) {
       accumulator[name] = [];
     }
-
-    // Push the current object to the array corresponding to the category
+    // Push the current object to the array corresponding to the name
     accumulator[name].push(name);
-
     return accumulator;
   }, {});
 
@@ -108,10 +82,8 @@ function Statistics() {
       if (!accumulator[category]) {
         accumulator[category] = [];
       }
-
       // Push the current object to the array corresponding to the category
       accumulator[category].push(category);
-
       return accumulator;
     },
     {}
@@ -128,9 +100,25 @@ function Statistics() {
   const topCategories = categoriesArray
     .sort((a, b) => b[1].length - a[1].length)
     .slice(0, 3);
-  // console.log(topItems);
-  // console.log(allItemsNames.length);
-  console.log(topCategories);
+
+  // orgensing the history by month and year
+  //  getting the months required, (current month, and past 6 months)
+  const allMonths = eachMonthOfInterval({
+    start: subMonths(new Date(), 6),
+    end: new Date(),
+  });
+  // creating the data based on the months
+  // for the .filter(), we get the lists that have been completed in the available months that we want to display
+  // then we .reduce() to get the number of items in all of the lists that have been completed in a month
+  const data = allMonths.map(month => {
+    return {
+      name: format(month, 'MMMM'),
+      items: history
+        .filter(list => isSameMonth(month, new Date(list.completed_at)))
+        .reduce((acc, cur) => acc + cur.shopping_list.length, 0),
+    };
+  });
+
   return (
     <StyledStatistics
       variants={routeVariants}
@@ -175,14 +163,19 @@ function Statistics() {
         <ChartContianer>
           <Title>Monthly Summary</Title>
           <ResponsiveContainer width={'100%'} height={302}>
-            <LineChart data={fakeDate}>
+            <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 color="var(--color-gray-500)"
                 fontSize="1.4rem"
                 dataKey="name"
+                strokeDasharray="3 3"
               />
-              <YAxis color="var(--color-gray-500)" fontSize="1.4rem" />
+              <YAxis
+                color="var(--color-gray-500)"
+                fontSize="1.4rem"
+                strokeDasharray="3 3"
+              />
               <Line
                 type="monotone"
                 dataKey="items"
