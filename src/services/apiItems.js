@@ -229,6 +229,16 @@ completed_at
   return data;
 }
 
+async function addCategory(category) {
+  const { data, error } = await supabase
+    .from('categories')
+    .insert([{ name: category }])
+    .select();
+  if (error) throw new Error('There was an error adding the category.');
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -241,6 +251,7 @@ export {
   getHistory,
   getHistoryList,
   addListToHistory,
+  addCategory,
 };
 
 /*
