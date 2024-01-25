@@ -13,6 +13,7 @@ import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';
 import { useAddListToHistory } from '../../Hooks/useAddListToHistory';
+import Modal from '../../UI/Model';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -260,6 +261,7 @@ const CompleteButton = styled.button`
 const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   const [listName, setListName] = useState('');
   const [isEditMode, setIsEditMode] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
@@ -341,6 +343,14 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
       completed_at: new Date(),
     };
     uploadList(list);
+  }
+
+  function onCloseModal() {
+    setIsModalOpen(false);
+  }
+  function onConfirmModal() {
+    setIsModalOpen(false);
+    onAddList(false);
   }
 
   if (isLoadingShoppingList) return <Spinner />;
@@ -451,7 +461,7 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
 
           {shoppingList[0].name.length > 0 && (
             <ButtonsContainer>
-              <CancelButton onClick={() => onAddList(false)}>
+              <CancelButton onClick={() => setIsModalOpen(true)}>
                 cancel
               </CancelButton>
               <CompleteButton onClick={() => onAddList(true)}>
@@ -460,6 +470,10 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
             </ButtonsContainer>
           )}
         </NameInputContainer>
+
+        {isModalOpen && (
+          <Modal onClose={onCloseModal} onConfirm={onConfirmModal} />
+        )}
       </ChildrenContainer>
     </StyledShoppingList>
   );
