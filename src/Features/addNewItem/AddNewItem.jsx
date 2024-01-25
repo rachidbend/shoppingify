@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -6,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useAddNewItem } from '../../Hooks/useAddNewItem';
 import { MdClose } from 'react-icons/md';
 import { itemVariantes } from '../../Variables/variables';
+import { useAddCategory } from '../../Hooks/useAddCategory';
 
 const StyledAddNewItem = styled(motion.div)`
   padding: 0 4.01rem;
@@ -231,9 +233,63 @@ const CategoryPlaceHolder = styled.p`
   font-weight: 500;
 `;
 
+// add new category
+
+const AddCategoryButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--color-gray-100);
+  margin-top: 4rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: color 260ms ease-in-out;
+
+  &:hover {
+    color: var(--color-blue);
+    text-decoration: underline;
+  }
+`;
+
+const AddCategoryContainer = styled.div`
+  position: relative;
+  margin-top: 2.4rem;
+`;
+const AddCategoryInput = styled(Input)`
+  width: 100%;
+  padding-right: 9rem;
+`;
+
+const AddCategoryAdd = styled.button`
+  padding: 2.06rem 2.32rem 2.06rem 2.42rem;
+  color: var(--color-white);
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-radius: 1.2rem;
+  background-color: var(--color-accent);
+  text-transform: capitalize;
+
+  border: 0.2rem solid var(--color-accent);
+  cursor: pointer;
+  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  &:hover {
+    background-color: transparent;
+    color: var(--color-accent);
+  }
+`;
+
 function AddNewItem({ onchangePage }) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
+  const [addedCategory, setAddedCategory] = useState('');
 
   const { categories, isLoading, error } = useGetCategories();
   const {
@@ -248,6 +304,8 @@ function AddNewItem({ onchangePage }) {
     reset,
     formState: { errors },
   } = useForm();
+
+  const { addCategory } = useAddCategory();
 
   const onSubmit = data => {
     console.log({ ...data, category: selectedCategory });
@@ -270,6 +328,17 @@ function AddNewItem({ onchangePage }) {
     reset();
     setSelectedCategory('');
     onchangePage('shopping-list');
+  }
+
+  function onAddCategoryChange(e) {
+    if (!e) return;
+
+    setAddedCategory(e.target.value);
+  }
+
+  function onAddCategory() {
+    addCategory(addedCategory);
+    setShowCategoryInput(false);
   }
 
   if (isLoading) return <p>Loading</p>;
@@ -377,6 +446,22 @@ function AddNewItem({ onchangePage }) {
               </OptionsContainer>
             )}
           </CustomSelectContainer>
+
+          <AddCategoryButton
+            onClick={() => setShowCategoryInput(!showCategoryInput)}
+          >
+            Add a new category!
+          </AddCategoryButton>
+          {showCategoryInput && (
+            <AddCategoryContainer>
+              <AddCategoryInput
+                onChange={e => onAddCategoryChange(e)}
+                value={addedCategory}
+                placeholder="Add category"
+              />
+              <AddCategoryAdd onClick={onAddCategory}>Add</AddCategoryAdd>
+            </AddCategoryContainer>
+          )}
         </InputContainer>
         <ButtonsContainer>
           <Cancel type="reset" value="cancel" onClick={onReset} />
