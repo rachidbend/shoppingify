@@ -13,6 +13,8 @@ import { AnimatePresence } from 'framer-motion';
 import ItemDetails from './Features/itemDetails/ItemDetails';
 import EmptyContainer from './UI/EmptyContainer';
 import HistoryList from './UI/HistoryList';
+import Login from './Features/authentication/Login';
+import Signup from './Features/authentication/Signup';
 
 /*
 const router = createBrowserRouter([
@@ -99,6 +101,8 @@ function App() {
 
                   <Route path="*" element={<PageNotFound />} />
                 </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
               </Routes>
             </AnimatePresence>
           </SidePageProvider>
