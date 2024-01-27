@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { useLogin } from '../../Hooks/useLogin';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -166,11 +167,16 @@ const SignupText = styled.p`
 `;
 
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const { login, isLoading: isLoggingIn } = useLogin();
 
   function onSubmit(data) {
-    console.log(data);
+    login(data, {
+      onSettled: () => {
+        reset();
+      },
+    });
   }
 
   return (
@@ -198,7 +204,7 @@ function Login() {
             })}
           />
 
-          <LoginButton type="submit" value="LOGIN" />
+          <LoginButton disabled={isLoggingIn} type="submit" value="LOGIN" />
         </Form>
         <ForgotPasswordContainer>
           <ForgotPassword>Forgot password?</ForgotPassword>

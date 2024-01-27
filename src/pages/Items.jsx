@@ -136,7 +136,7 @@ function Items() {
 
   if (isLoadingAllItems) return <Spinner />;
   if (allItemsError) return <p>{allItemsError.message}</p>;
-
+  console.log(items);
   // filtering for the query
   // if there is no search query, return all the items
   // if there is a search query, return the items that have the query in their name
@@ -149,7 +149,7 @@ function Items() {
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
-  const availableCategories = filteredItems.reduce(
+  const availableCategories = filteredItems?.reduce(
     (accumulator, currentObject) => {
       const { category } = currentObject;
 

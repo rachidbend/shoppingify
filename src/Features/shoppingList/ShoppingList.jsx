@@ -355,12 +355,13 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
 
   if (isLoadingShoppingList) return <Spinner />;
   if (shoppingListError) return <p>{shoppingListError.message}</p>;
-
+  console.log(shoppingList);
   const emtyList =
-    shoppingList[0].items === null ||
-    shoppingList[0].length === 0 ||
-    shoppingList[0].items === undefined ||
-    shoppingList[0].items.length === 0;
+    !shoppingList ||
+    shoppingList[0]?.items === null ||
+    shoppingList[0]?.length === 0 ||
+    shoppingList[0]?.items === undefined ||
+    shoppingList[0]?.items.length === 0;
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
