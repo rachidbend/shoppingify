@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import { useGetAllItems } from '../Hooks/useGetAllItems';
 import { useGetShoppingList } from '../Hooks/useGetShoppingList';
 import { useUpdateShoppingList } from '../Hooks/useUpdateShoppingList';
+import { useUser } from '../Hooks/useUser';
 
 /* 
 the reason i created this context is to be able to get the item data and the list data to be able to add an item into the shopping list
@@ -27,6 +28,8 @@ export default function AppProvider({ children }) {
     error: updateSoppingListError,
   } = useUpdateShoppingList();
 
+  const { user } = useUser();
+
   function addItemToList(item) {
     // id, newitem, oldList
 
@@ -34,9 +37,11 @@ export default function AppProvider({ children }) {
     if (isLoadingShoppingList) return;
     if (isLoadingAllItems) return;
     updateShoppingList({
-      id: shoppingList[0].id,
+      userId: user.id,
+      id: shoppingList.id,
       item: item,
-      oldList: shoppingList[0].items,
+      oldList: shoppingList.items,
+      shoppingList: shoppingList,
     });
   }
 

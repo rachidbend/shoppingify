@@ -158,7 +158,6 @@ function ItemDetails() {
 
   if (isLoading) return <Spinner />;
   if (error) return <p>{error.message}</p>;
-
   const { id, name, image, note, category } = itemDetails.at(0);
 
   return (

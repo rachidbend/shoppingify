@@ -38,6 +38,6 @@ export default function ProtectedRoute({ children }) {
     );
 
   // 4. if there is an authenticated user, render the app
-
+  if (!isAuthenticated) return <p>you must be authenticated first</p>;
   if (isAuthenticated) return children;
 }

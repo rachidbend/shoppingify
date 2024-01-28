@@ -87,8 +87,8 @@ function App() {
       <BrowserRouter>
         <GlobalStyle />
 
-        <AppProvider>
-          <SidePageProvider>
+        <SidePageProvider>
+          <AppProvider>
             <AnimatePresence>
               <Routes location={location} key={location.key}>
                 <Route
@@ -112,8 +112,8 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
               </Routes>
             </AnimatePresence>
-          </SidePageProvider>
-        </AppProvider>
+          </AppProvider>
+        </SidePageProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
