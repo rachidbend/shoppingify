@@ -8,7 +8,7 @@ import ShoppingItem from '../../UI/ShoppingItem';
 import { listChildrenVariants } from '../../Variables/variables';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';

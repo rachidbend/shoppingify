@@ -9,6 +9,7 @@ import logo from './../assets/logo.svg';
 
 import styled from 'styled-components';
 import { useGetShoppingList } from '../Hooks/useGetShoppingList';
+import { useMobileSide } from '../Context/MobileSideContext';
 
 const StyledNavSideBar = styled.div`
   background-color: var(--color-nav-background);
@@ -164,7 +165,7 @@ const Logo = styled.img`
 
 function NavSideBar() {
   const { shoppingList, isLoading } = useGetShoppingList();
-
+  const { onOpenMobileSide } = useMobileSide();
   return (
     <StyledNavSideBar>
       <Logo src={logo} alt="Shoppingify logo" />
@@ -180,7 +181,7 @@ function NavSideBar() {
           <StyledStatisticsIcon />
         </StyledNavLink>
       </NavContianer>
-      <ShoppingCartContainer>
+      <ShoppingCartContainer onClick={onOpenMobileSide}>
         <ShoppingCart />
         <ShoppingCount>
           {isLoading
