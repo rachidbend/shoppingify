@@ -31,13 +31,17 @@ const StyledAppLayout = styled(motion.div)`
 `;
 
 const SideContainer = styled.div`
-  width: calc(100% - 6.1581rem);
+  width: 100%;
   position: ${props => (props.ismobile === 'true' ? 'absolute' : 'static')};
 
   /* left: 6.1581rem; */
   left: ${props => (props.isopen === 'true' ? '6.1581rem' : '100%')};
   top: 0;
   right: 0;
+
+  @media screen and (max-width: 480px) {
+    width: calc(100% - 6.1581rem);
+  }
 `;
 
 function AppLayout() {
