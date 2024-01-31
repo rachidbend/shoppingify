@@ -30,9 +30,7 @@ function useUpdateShoppingList() {
         itemIsPurchased,
         shoppingList: shopping,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries('shopping_list');
-    },
+    onSuccess: () => {},
     onSettled: () => {
       queryClient.invalidateQueries('shopping_list');
     },

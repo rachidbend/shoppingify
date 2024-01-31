@@ -183,7 +183,11 @@ function NavSideBar() {
       <ShoppingCartContainer>
         <ShoppingCart />
         <ShoppingCount>
-          {isLoading ? 0 : shoppingList?.items?.length}
+          {isLoading
+            ? 0
+            : shoppingList?.items?.length === 0
+            ? 0
+            : shoppingList?.items?.length}
         </ShoppingCount>
       </ShoppingCartContainer>
     </StyledNavSideBar>

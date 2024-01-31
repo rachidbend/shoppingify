@@ -12,8 +12,14 @@ function useUpdateShoppingListName() {
     isLoading,
     error,
   } = useMutation({
-    mutationFn: ({ userId = user.id, shoppingList = shopping, id, listName }) =>
-      updateShopplingListName({ userId, shoppingList, id, listName }),
+    mutationFn: ({
+      userId = user.id,
+      shoppingList = shopping,
+      id,
+      listName,
+      reset,
+    }) =>
+      updateShopplingListName({ userId, shoppingList, id, listName, reset }),
     onSuccess: () => {},
     onSettled: () => {
       queryClient.invalidateQueries('shopping_list');

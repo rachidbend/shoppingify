@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { useSignup } from '../../Hooks/useSignup';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -145,9 +146,12 @@ const SignupText = styled.p`
 function Signup() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { signup, isLoading, error } = useSignup();
 
   function onSubmit(data) {
     console.log(data);
+    if (data.password === data.confirm)
+      signup({ email: data.email, password: data.password });
   }
 
   return (
@@ -177,9 +181,9 @@ function Signup() {
 
           <Label>Confirm password</Label>
           <Input
-            type="confirm password"
-            placeholder="password"
-            {...register('password', {
+            type="password"
+            placeholder="confirm password"
+            {...register('confirm', {
               required: true,
               minLength: 6,
               maxLength: 16,
@@ -194,8 +198,11 @@ function Signup() {
         </OrContainer>
         <SignupText>
           already have an account?
-          <SignupButton onClick={() => navigate('/login')}>LOGIN</SignupButton>
+          <SignupButton disabled={isLoading} onClick={() => navigate('/login')}>
+            LOGIN
+          </SignupButton>
         </SignupText>
+        {error && <p>{error.message}</p>}
       </Container>
     </StyledLogin>
   );

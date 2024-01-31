@@ -30,8 +30,8 @@ function useAddListToHistory() {
     mutationFn: ({ userId, shoppingHistory, list }) =>
       addListToHistory({ userId, shoppingHistory, list }),
     onSuccess: () => {
+      console.log('on add to history success');
       updateShoppingList({
-        userId: user.id,
         id: 1,
         oldList: [],
         item: null,
@@ -43,9 +43,9 @@ function useAddListToHistory() {
           is_canceled: false,
         },
       });
-      updateListName({ id: 1, listName: '' });
     },
     onSettled: () => {
+      updateListName({ id: 1, listName: '', reset: true });
       queryClient.invalidateQueries('shopping_list');
     },
     onError: error => {

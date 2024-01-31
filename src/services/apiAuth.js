@@ -11,6 +11,23 @@ async function login({ email, password }) {
   return data;
 }
 
+async function signup({ email, password }) {
+  let { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+  });
+  console.log(email, password);
+  if (error) throw new Error(error.message);
+  console.log(data);
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .insert([{ id: data.user.id }])
+    .select();
+
+  if (profileError) throw new Error(profileError.message);
+  return data;
+}
+
 async function getCurrentUser() {
   const { data: session, error: sessionError } =
     await supabase.auth.getSession();
@@ -24,4 +41,4 @@ async function getCurrentUser() {
   return data?.user;
 }
 
-export { login, getCurrentUser };
+export { login, getCurrentUser, signup };
