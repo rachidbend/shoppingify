@@ -24,13 +24,14 @@ const StyledAppLayout = styled(motion.div)`
   font-family: var(--font-main);
   background-color: var(--color-background);
   position: relative;
+
   @media screen and (max-width: 480px) {
     grid-template-columns: 6.1581rem 1fr;
   }
 `;
 
 const SideContainer = styled.div`
-  width: 100%;
+  width: calc(100% - 6.1581rem);
   position: ${props => (props.ismobile === 'true' ? 'absolute' : 'static')};
 
   /* left: 6.1581rem; */

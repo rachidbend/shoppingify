@@ -38,13 +38,17 @@ const StyledShoppingList = styled(motion.div)`
 `;
 // animated all children in the page
 const ChildrenContainer = styled(motion.div)`
-  padding-bottom: 13rem;
+  /* padding-bottom: 13rem; */
   padding: 4.37rem 3.19rem 0 4.84rem;
   height: 100vh;
   overflow: hidden;
 
   display: grid;
   grid-template-rows: auto auto 1fr auto;
+
+  @media screen and (max-width: 480px) {
+    padding: 2.5rem 1.43rem 0 1.63rem;
+  }
 `;
 
 const AddItemContainer = styled.div`
@@ -53,6 +57,9 @@ const AddItemContainer = styled.div`
   background-color: var(--color-shopping-add-item-background);
   /* display: flex; */
   position: relative;
+  @media screen and (max-width: 480px) {
+    padding: 1.63rem 2.53rem 1.69rem 1rem;
+  }
 `;
 
 const AddItemParagraph = styled.p`
@@ -62,6 +69,10 @@ const AddItemParagraph = styled.p`
   margin-bottom: 1.36rem;
   font-weight: 700;
   margin-left: 10.95rem; /* 12.21rem - 1.26rem */
+
+  @media screen and (max-width: 480px) {
+    margin-left: 10.19rem; /* 11.19rem - 1rem */
+  }
 `;
 const AddItemButton = styled.button`
   background-color: var(--color-white);
@@ -83,6 +94,10 @@ const AddItemButton = styled.button`
     color: var(--color-white);
     background-color: transparent;
   }
+
+  @media screen and (max-width: 480px) {
+    margin-left: 10.19rem; /* 11.19rem - 1rem */
+  }
 `;
 
 const AddItemIllustration = styled.img`
@@ -101,6 +116,12 @@ const NameInputContainer = styled.div`
   width: 38.9rem;
 
   margin: 0 -3.19rem 0 -4.84rem;
+
+  @media screen and (max-width: 480px) {
+    padding: 1.83rem 1.43rem 1.44rem 2.2rem;
+    margin: 0 -1.43rem 0 -1.6rem;
+    width: calc(100% - 6.1581rem);
+  }
 `;
 
 const NameInput = styled.input`
@@ -151,11 +172,23 @@ const NoItems = styled.p`
 
   font-weight: 700;
   margin-bottom: auto;
+
+  @media screen and (max-width: 480px) {
+    margin-top: 12.19rem;
+  }
 `;
 
 const NoItemsIllustration = styled.img`
   position: absolute;
   top: -19.1rem;
+
+  @media screen and (max-width: 480px) {
+    width: 20rem;
+    top: -15.6rem;
+    left: 50%;
+
+    transform: translateX(-50%);
+  }
 `;
 
 // Shopping list items
@@ -221,6 +254,11 @@ const ShoppingListTitleContianer = styled.div`
   margin-top: 4.4rem;
   margin-bottom: 3.93rem;
   align-items: flex-end;
+
+  @media screen and (max-width: 480px) {
+    margin-top: 3.23rem;
+    margin-bottom: 3.93rem;
+  }
 `;
 
 const ButtonsContainer = styled.div`
