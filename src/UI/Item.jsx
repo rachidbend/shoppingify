@@ -25,6 +25,10 @@ const StyledItem = styled.div`
     transform: scale(103%);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   }
+
+  @media screen and (max-width: 480px) {
+    width: 14rem;
+  }
 `;
 const Name = styled.p`
   color: var(--color-black);

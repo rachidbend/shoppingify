@@ -23,6 +23,11 @@ const StyledNavSideBar = styled.div`
 
   padding-top: 5.25rem;
   padding-bottom: 3.49rem;
+
+  @media screen and (max-width: 480px) {
+    padding-top: 3.22rem;
+    padding-bottom: 3.38rem;
+  }
 `;
 
 const NavContianer = styled.div`

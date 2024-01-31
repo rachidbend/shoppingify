@@ -22,6 +22,10 @@ const StyledItems = styled(motion.div)`
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  @media screen and (max-width: 480px) {
+    padding: 0 1.24rem;
+  }
 `;
 // animated all children in the page
 const ChildrenContainer = styled(motion.div)``;
@@ -31,17 +35,24 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
+  @media screen and (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
 
 // Title text
 const Title = styled.h1`
   color: var(--color-title);
-
   font-size: 2.6rem;
-
   font-weight: 500;
   margin-bottom: 5.71rem;
   margin-top: 3.75rem;
+
+  @media screen and (max-width: 480px) {
+    margin-bottom: 1.8rem;
+    font-size: 2rem;
+  }
 `;
 
 const TitleAccent = styled.span`
@@ -54,6 +65,10 @@ const SearchInputContainer = styled.div`
   position: relative;
   height: auto;
   margin-top: 2.77rem;
+  @media screen and (max-width: 480px) {
+    margin-top: 0rem;
+    margin-bottom: 3.6rem;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -102,12 +117,14 @@ const CategoryTitle = styled.h2`
   color: var(--color-black);
   margin-bottom: 1.8rem;
   font-size: 1.8rem;
-
   font-weight: 500;
 `;
 
 const CategoryContainer = styled.div`
   margin-bottom: 4.6rem;
+  @media screen and (max-width: 480px) {
+    margin-bottom: 2.71rem;
+  }
 `;
 const CategoryItemsContianer = styled.div`
   display: flex;
@@ -117,6 +134,10 @@ const CategoryItemsContianer = styled.div`
   gap: 1.96rem;
   flex-grow: 0;
   flex-shrink: 0;
+  @media screen and (max-width: 480px) {
+    gap: 0.86rem;
+    row-gap: 2.4rem;
+  }
 `;
 
 function Items() {

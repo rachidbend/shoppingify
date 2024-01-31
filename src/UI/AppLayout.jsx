@@ -52,7 +52,7 @@ function AppLayout() {
 
       {/* <AnimatePresence> */}
       <SideContainer
-        isopen={isOpen ? 'true' : 'false'}
+        isopen={isOpen ? 'true' : isMobile ? 'false' : 'true'}
         ismobile={isMobile ? 'true' : 'false'}
       >
         {page === 'shopping-list' && !itemId && (
