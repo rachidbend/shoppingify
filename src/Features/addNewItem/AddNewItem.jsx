@@ -13,6 +13,7 @@ const StyledAddNewItem = styled(motion.div)`
   padding: 0 4.01rem;
   /* padding-top: 3.45rem; */
   position: relative;
+  background-color: var(--color-background);
   height: 100vh;
 `;
 
