@@ -14,6 +14,8 @@ import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';
 import { useAddListToHistory } from '../../Hooks/useAddListToHistory';
 import Modal from '../../UI/Model';
+import { useUser } from '../../Hooks/useUser';
+import { useGetHistory } from '../../Hooks/useGetHistory';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
@@ -262,10 +264,11 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   const [listName, setListName] = useState('');
   const [isEditMode, setIsEditMode] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, isAuthenticated, fetchStatus } = useUser();
 
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
-
+  const { history } = useGetHistory();
   const {
     updateShoppingList,
     isLoading: isUpdatingListItem,
@@ -290,12 +293,14 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   function updateListItemQuantity(itemId, incease) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
-      id: shoppingList[0].id,
-      oldList: shoppingList[0].items,
+      userId: user.id,
+      id: shoppingList.id,
+      oldList: shoppingList.items,
       updateQuantity: {
         itemId,
         update: incease ? 'increase' : 'decrease',
       },
+      shoppingList: shoppingList,
     });
     // id, item, oldList, updateQuantity
   }
@@ -303,17 +308,19 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   function onRemoveItem(deleteId) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
-      id: shoppingList[0].id,
-      oldList: shoppingList[0].items,
+      userId: user.id,
+      id: shoppingList.id,
+      oldList: shoppingList.items,
       deleteItemId: deleteId,
+      shoppingList: shoppingList,
     });
   }
 
   function itemPurchaseStatehandler(id, value) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
-      id: shoppingList[0].id,
-      oldList: shoppingList[0].items,
+      id: shoppingList.id,
+      oldList: shoppingList.items,
       itemIsPurchased: {
         id,
         value,
@@ -325,7 +332,7 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   function listNameSaveHandler() {
     // to make sure we have the id
     if (isLoadingShoppingList) return;
-    updateListName({ id: shoppingList[0].id, listName: listName });
+    updateListName({ id: shoppingList.id, listName: listName });
   }
 
   function handeListState() {
@@ -336,13 +343,15 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
     if (isLoadingShoppingList) return;
 
     const list = {
-      name: shoppingList.at(0).name,
-      shopping_list: shoppingList.at(0).items,
+      id: new Date(),
+      created_at: new Date(),
+      name: shoppingList.name,
+      shopping_list: [...shoppingList.items],
       is_completed: isCompleted ? true : false,
       is_canceled: isCompleted ? false : true,
       completed_at: new Date(),
     };
-    uploadList(list);
+    uploadList({ userId: user.id, shoppingHistory: history, list });
   }
 
   function onCloseModal() {
@@ -357,16 +366,18 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
   if (shoppingListError) return <p>{shoppingListError.message}</p>;
 
   const emtyList =
-    shoppingList[0].items === null ||
-    shoppingList[0].length === 0 ||
-    shoppingList[0].items === undefined ||
-    shoppingList[0].items.length === 0;
+    !shoppingList ||
+    shoppingList?.items === null ||
+    shoppingList?.length === 0 ||
+    shoppingList?.items === undefined ||
+    shoppingList?.items.length === 0;
 
   //  chat gpt's help //////
   // get all the available item categories without duplicates
+
   const availableCategories = emtyList
     ? []
-    : shoppingList[0]?.items.reduce((accumulator, currentObject) => {
+    : shoppingList?.items.reduce((accumulator, currentObject) => {
         const { category } = currentObject;
 
         // Check if the category is already a key in the accumulator
@@ -437,12 +448,10 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
         )}
         <NameInputContainer>
           {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
-          {shoppingList[0]?.name?.length === 0 && (
+          {shoppingList?.name?.length === 0 && (
             <Container>
               <NameInput
-                disabled={
-                  emtyList || isUpdatingListName || shoppingList[0].name
-                }
+                disabled={emtyList || isUpdatingListName || shoppingList?.name}
                 type="text"
                 placeholder="Enter a name"
                 value={listName}
@@ -450,16 +459,14 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
               />
               <SaveButton
                 onClick={listNameSaveHandler}
-                disabled={
-                  emtyList || isUpdatingListName || shoppingList[0].name
-                }
+                disabled={emtyList || isUpdatingListName || shoppingList?.name}
               >
                 save
               </SaveButton>
             </Container>
           )}
 
-          {shoppingList[0].name.length > 0 && (
+          {shoppingList?.name?.length > 0 && (
             <ButtonsContainer>
               <CancelButton onClick={() => setIsModalOpen(true)}>
                 cancel

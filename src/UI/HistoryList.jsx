@@ -86,7 +86,7 @@ function HistoryList() {
 
   if (isLoading) return <Spinner />;
   if (error) return <p>{error.message} </p>;
-
+  console.log(list);
   const availableCategories = list
     .at(0)
     .shopping_list.reduce((accumulator, currentObject) => {

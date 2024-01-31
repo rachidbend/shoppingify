@@ -6,9 +6,11 @@ import {
 import { addListToHistory } from '../services/apiItems';
 import { useUpdateShoppingListName } from './useUpdateShoppingListName';
 import { useUpdateShoppingList } from './useUpdateShoppingList';
+import { useUser } from './useUser';
 
 function useAddListToHistory() {
   const queryClient = useQueryClient();
+  const { user } = useUser();
   const {
     updateListName,
     isLoading: isUpdatingName,
@@ -25,17 +27,29 @@ function useAddListToHistory() {
     isLoading,
     error,
   } = useMutation({
-    mutationFn: list => addListToHistory(list),
+    mutationFn: ({ userId, shoppingHistory, list }) =>
+      addListToHistory({ userId, shoppingHistory, list }),
     onSuccess: () => {
-      if (isUpdatingName) return;
-      updateListName({ id: 1, listName: '' });
+      console.log('on add to history success');
       updateShoppingList({
         id: 1,
         oldList: [],
         item: null,
+        shoppingList: {
+          id: 1,
+          name: '',
+          items: [],
+          is_completed: false,
+          is_canceled: false,
+        },
       });
-
+    },
+    onSettled: () => {
+      updateListName({ id: 1, listName: '', reset: true });
       queryClient.invalidateQueries('shopping_list');
+    },
+    onError: error => {
+      throw new Error(error.message);
     },
   });
 

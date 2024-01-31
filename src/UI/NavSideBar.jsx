@@ -8,6 +8,7 @@ import {
 import logo from './../assets/logo.svg';
 
 import styled from 'styled-components';
+import { useGetShoppingList } from '../Hooks/useGetShoppingList';
 
 const StyledNavSideBar = styled.div`
   background-color: var(--color-nav-background);
@@ -162,6 +163,8 @@ const Logo = styled.img`
 `;
 
 function NavSideBar() {
+  const { shoppingList, isLoading } = useGetShoppingList();
+
   return (
     <StyledNavSideBar>
       <Logo src={logo} alt="Shoppingify logo" />
@@ -179,7 +182,13 @@ function NavSideBar() {
       </NavContianer>
       <ShoppingCartContainer>
         <ShoppingCart />
-        <ShoppingCount>3</ShoppingCount>
+        <ShoppingCount>
+          {isLoading
+            ? 0
+            : shoppingList?.items?.length === 0
+            ? 0
+            : shoppingList?.items?.length}
+        </ShoppingCount>
       </ShoppingCartContainer>
     </StyledNavSideBar>
   );

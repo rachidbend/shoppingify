@@ -13,6 +13,9 @@ import { AnimatePresence } from 'framer-motion';
 import ItemDetails from './Features/itemDetails/ItemDetails';
 import EmptyContainer from './UI/EmptyContainer';
 import HistoryList from './UI/HistoryList';
+import Login from './Features/authentication/Login';
+import Signup from './Features/authentication/Signup';
+import ProtectedRoute from './UI/ProtectedRoute';
 
 /*
 const router = createBrowserRouter([
@@ -84,11 +87,17 @@ function App() {
       <BrowserRouter>
         <GlobalStyle />
 
-        <AppProvider>
-          <SidePageProvider>
+        <SidePageProvider>
+          <AppProvider>
             <AnimatePresence>
               <Routes location={location} key={location.key}>
-                <Route element={<AppLayout />}>
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout />
+                    </ProtectedRoute>
+                  }
+                >
                   <Route index path="/" element={<Navigate to={'/items'} />} />
                   <Route path="/items" element={<Items />}>
                     <Route path="/items/:itemId" element={<EmptyContainer />} />
@@ -99,10 +108,12 @@ function App() {
 
                   <Route path="*" element={<PageNotFound />} />
                 </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
               </Routes>
             </AnimatePresence>
-          </SidePageProvider>
-        </AppProvider>
+          </AppProvider>
+        </SidePageProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

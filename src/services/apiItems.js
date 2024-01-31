@@ -1,38 +1,40 @@
 import { supabase } from './supabase';
 
+// updated for profiles ****
 async function getAllItems() {
-  let { data: items, error } = await supabase.from('items').select('*');
-
+  let { data: items, error } = await supabase.from('profiles').select('items');
   if (error) throw new Error('There was an error fetching the items');
-
-  return items;
+  return items.at(0).items;
 }
 
+// updated for profiles ****
 async function getShoppingList() {
   let { data: shoppingList, error } = await supabase
-    .from('shopping_list')
-    .select('*');
+    .from('profiles')
+    .select('shopping_list');
   if (error) throw new Error('There was an error fetching the items');
 
-  return shoppingList;
+  return shoppingList.at(0).shopping_list;
 }
 
 // three thing will need to be updatable
 // 1. when an item is added
 // 2. when an item is removed
 // 3. when the quantity of an item is changed
+// updated for profiles ****
 async function updateShoppingListItems({
+  userId,
   id,
   item,
   oldList,
   updateQuantity,
   deleteItemId,
   itemIsPurchased,
+  shoppingList,
 }) {
   // i get a json object
   // when an item is added, add the new item to the current list of items
   let duplicate, newList;
-
   // ADD ITEM TO LIST
   // check if there is a duplicate
   if (item) {
@@ -98,46 +100,72 @@ async function updateShoppingListItems({
 
       return item;
     });
-
+  console.log(oldList);
+  console.log(shoppingList);
+  console.log(item);
+  console.log(newList);
+  console.log(updatedList);
   const { data, error } = await supabase
-    .from('shopping_list')
-    .update({ items: updatedList ? updatedList : newList })
-    .eq('id', id)
+    .from('profiles')
+    .update({
+      shopping_list: {
+        ...shoppingList,
+        items: updatedList ? updatedList : newList,
+      },
+    })
+    .eq('id', userId)
     .select();
-
   if (error) throw new Error('There was an error updating your shopping list.');
-
+  console.log('on add to history success');
   return data;
 }
 
-async function updateShopplingListName({ id, listName }) {
+// updated for profiles ****
+async function updateShopplingListName({
+  userId,
+  shoppingList,
+  id,
+  listName,
+  reset = false,
+}) {
+  const shopping = reset ? [] : shoppingList;
   const { data, error } = await supabase
-    .from('shopping_list')
-    .update({ name: listName })
-    .eq('id', id)
+    .from('profiles')
+    .update({
+      shopping_list: {
+        ...shopping,
+        name: listName,
+      },
+    })
+    .eq('id', userId)
     .select();
 
   if (error)
     throw new Error(
       'There was an error updating the name of your shopping list.'
     );
-
+  console.log('on add to history success');
   return data;
 }
 
-async function addNewItem(item) {
-  // const { name, image, note, category } = item;
-
+// updated for profiles ****
+async function addNewItem({ userId, allItems, item }) {
   const { data, error } = await supabase
-    .from('items')
-    .insert([
-      {
-        name: item.name,
-        image: item.image,
-        note: item.note,
-        category: item.category,
-      },
-    ])
+    .from('profiles')
+    .update({
+      items: [
+        {
+          id: `${new Date()}-item`,
+          created_at: new Date(),
+          name: item.name,
+          image: item.image,
+          note: item.note,
+          category: item.category,
+        },
+        ...allItems,
+      ],
+    })
+    .eq('id', userId)
     .select();
 
   if (error) throw new Error('There was an error adding the new item.');
@@ -145,80 +173,74 @@ async function addNewItem(item) {
   return data;
 }
 
+// updated for profiles ****
 async function getAllCategories() {
   let { data: categories, error } = await supabase
-    .from('categories')
-    .select('*');
+    .from('profiles')
+    .select('categories');
   if (error) throw new Error('There was an error getting the categories.');
 
-  return categories;
+  return categories.at(0).categories;
 }
 
+// updated for profiles ****
 async function getItemDetails(id) {
-  let { data: itemDetails, error } = await supabase
-    .from('items')
-    .select('*')
-    .eq('id', id);
-
+  let { data, error } = await supabase.from('profiles').select('items');
+  const itemDetails = await data
+    .at(0)
+    .items.filter(item => String(item.id) === String(id));
   if (error) throw new Error('There was an error getting the item details.');
-
   return itemDetails;
 }
 
-async function deleteItem(itemId) {
-  const { error } = await supabase.from('items').delete().eq('id', itemId);
+// updated for profiles ****
+async function deleteItem({ userId, allItems, itemId }) {
+  const newList = allItems.filter(item => String(item.id) !== String(itemId));
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      items: [...newList],
+    })
+    .eq('id', userId)
+    .select();
 
   if (error) throw new Error('There was an error deleting the item.');
+
+  return data;
 }
 
+// updated for profiles ****
 async function getHistory() {
   let { data: shopping_history, error } = await supabase
-    .from('shopping_history')
-    .select('*');
-
+    .from('profiles')
+    .select('shopping_history');
   if (error) throw new Error('There was an error getting the shopping history');
-
-  return shopping_history;
+  return shopping_history.at(0).shopping_history;
 }
 
+// updated for profiles ****
 async function getHistoryList(id) {
-  let { data: list, error } = await supabase
-    .from('shopping_history')
-    .select('*')
-    .eq('id', id);
-
+  let { data, error } = await supabase
+    .from('profiles')
+    .select('shopping_history');
+  const list = await data
+    .at(0)
+    .shopping_history.filter(list => String(list.id) === String(id));
   if (error)
     throw new Error(
       'There was an error getting the shopping list you requested.'
     );
-
   return list;
 }
 
-async function addListToHistory(list) {
-  /*
-id, 
-created_at,
-name, 
-shopping_list,
-is_completed,
-is_canceled, 
-completed_at
-*/
-
-  console.log(list);
-
+// updated for profiles ****
+async function addListToHistory({ userId, shoppingHistory, list }) {
   const { data, error } = await supabase
-    .from('shopping_history')
-    .insert([
-      {
-        name: list.name,
-        shopping_list: list.shopping_list,
-        is_completed: list.is_completed,
-        is_canceled: list.is_canceled,
-        completed_at: list.completed_at,
-      },
-    ])
+    .from('profiles')
+    .update({
+      shopping_history: [list, ...shoppingHistory],
+    })
+    .eq('id', userId)
     .select();
 
   if (error)
@@ -228,11 +250,21 @@ completed_at
 
   return data;
 }
-
-async function addCategory(category) {
+// updated for profiles ****
+async function addCategory({ userId, allCategories, category }) {
   const { data, error } = await supabase
-    .from('categories')
-    .insert([{ name: category }])
+    .from('profiles')
+    .update({
+      categories: [
+        {
+          id: `${new Date()}-category`,
+          created_at: new Date(),
+          name: category,
+        },
+        ...allCategories,
+      ],
+    })
+    .eq('id', userId)
     .select();
   if (error) throw new Error('There was an error adding the category.');
 
@@ -253,32 +285,3 @@ export {
   addListToHistory,
   addCategory,
 };
-
-/*
-{
-  [
-    {
-      id,
-      name,
-      note, 
-      image,
-      category,
-
-      quantity,
-      (need to add: purchased)
-
-    },
-    {
-      id,
-      name,
-      note, 
-      image,
-      category,
-
-      quantity,
-       (need to add: purchased)
-
-    }
-  ]
-}
-*/
