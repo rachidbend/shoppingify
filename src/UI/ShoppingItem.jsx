@@ -26,6 +26,10 @@ const Name = styled(motion.p)`
 
   text-decoration: ${props =>
     props.ischecked === 'true' ? 'line-through' : 'none'};
+
+  @media screen and (max-width: 480px) {
+    font-size: 1.4rem;
+  }
 `;
 // item qantity
 const Quantity = styled(motion.button)`
