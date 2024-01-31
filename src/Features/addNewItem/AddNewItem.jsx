@@ -11,10 +11,27 @@ import { useAddCategory } from '../../Hooks/useAddCategory';
 
 const StyledAddNewItem = styled(motion.div)`
   padding: 0 4.01rem;
+
   /* padding-top: 3.45rem; */
   position: relative;
   background-color: var(--color-background);
   height: 100vh;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  overflow-x: hidden;
+
+  @media screen and (max-width: 480px) {
+    padding-bottom: 2rem;
+  }
 `;
 
 const Title = styled.h2`
