@@ -54,7 +54,22 @@ function AppLayout() {
 
   return (
     <StyledAppLayout>
-      <Toaster position="top-center" />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 3000,
+            style: {
+              fontSize: '1.2rem',
+              fontFamily: 'var(--font-main)',
+              fontWeight: 500,
+            },
+          },
+          error: {
+            duration: 5000,
+          },
+        }}
+      />
       <NavSideBar />
       <Outlet />
 

@@ -100,11 +100,6 @@ async function updateShoppingListItems({
 
       return item;
     });
-  console.log(oldList);
-  console.log(shoppingList);
-  console.log(item);
-  console.log(newList);
-  console.log(updatedList);
   const { data, error } = await supabase
     .from('profiles')
     .update({
@@ -116,7 +111,6 @@ async function updateShoppingListItems({
     .eq('id', userId)
     .select();
   if (error) throw new Error('There was an error updating your shopping list.');
-  console.log('on add to history success');
   return data;
 }
 
@@ -144,7 +138,6 @@ async function updateShopplingListName({
     throw new Error(
       'There was an error updating the name of your shopping list.'
     );
-  console.log('on add to history success');
   return data;
 }
 

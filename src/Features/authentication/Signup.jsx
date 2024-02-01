@@ -151,7 +151,6 @@ function Signup() {
   const { signup, isLoading, error } = useSignup();
 
   function onSubmit(data) {
-    console.log(data);
     if (data.password === data.confirm)
       signup({ email: data.email, password: data.password });
   }

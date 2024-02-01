@@ -41,7 +41,6 @@ const QuantityText = styled.span`
 
 function ListItem({ itemDetails }) {
   const { id, created_at, name, note, image, category, quantity } = itemDetails;
-  console.log(itemDetails);
   return (
     <StyledItem>
       <StyledLink to={`/items/${id}`}>
