@@ -58,4 +58,33 @@ async function getUserProfile({ userId }) {
   return profiles;
 }
 
-export { login, getCurrentUser, signup, logout, getUserProfile };
+async function updateUser({ email, password }) {
+  let change;
+
+  // change password only
+  if (!email && password) {
+    change = {
+      password: password,
+    };
+  }
+  // change email only
+  if (email && !password) {
+    change = {
+      email: email,
+    };
+  }
+
+  // change both email and password
+  if (email && password) {
+    change = {
+      email: email,
+      password: password,
+    };
+  }
+
+  const { data, error } = await supabase.auth.updateUser(change);
+
+  return data;
+}
+
+export { login, getCurrentUser, signup, logout, getUserProfile, updateUser };
