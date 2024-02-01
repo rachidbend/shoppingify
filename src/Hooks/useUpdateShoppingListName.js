@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateShopplingListName } from '../services/apiItems';
 import { useUser } from './useUser';
 import { useGetShoppingList } from './useGetShoppingList';
+import toast from 'react-hot-toast';
 
 function useUpdateShoppingListName() {
   const queryClient = useQueryClient();
@@ -20,11 +21,14 @@ function useUpdateShoppingListName() {
       reset,
     }) =>
       updateShopplingListName({ userId, shoppingList, id, listName, reset }),
-    onSuccess: () => {},
+    onSuccess: () => {
+      toast.success('Shopping list name updated successfully!');
+    },
     onSettled: () => {
       queryClient.invalidateQueries('shopping_list');
     },
     onError: error => {
+      toast.error(error.message);
       throw new Error(error.message);
     },
   });

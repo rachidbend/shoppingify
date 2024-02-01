@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addCategory as addCategoryAPI } from '../services/apiItems';
 import { useUser } from './useUser';
 import { useGetCategories } from './useGetCategories';
+import toast from 'react-hot-toast';
 
 function useAddCategory() {
   const queryClient = useQueryClient();
@@ -16,6 +17,10 @@ function useAddCategory() {
       addCategoryAPI({ userId: user.id, allCategories: categories, category }),
     onSuccess: () => {
       queryClient.invalidateQueries('categories');
+      toast.success('Category added successfully!');
+    },
+    onError: error => {
+      toast.error(error.message);
     },
   });
 

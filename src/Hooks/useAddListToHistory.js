@@ -7,6 +7,7 @@ import { addListToHistory } from '../services/apiItems';
 import { useUpdateShoppingListName } from './useUpdateShoppingListName';
 import { useUpdateShoppingList } from './useUpdateShoppingList';
 import { useUser } from './useUser';
+import toast from 'react-hot-toast';
 
 function useAddListToHistory() {
   const queryClient = useQueryClient();
@@ -31,6 +32,7 @@ function useAddListToHistory() {
       addListToHistory({ userId, shoppingHistory, list }),
     onSuccess: () => {
       console.log('on add to history success');
+      toast.success('Shopping list added to history successfully');
       updateShoppingList({
         id: 1,
         oldList: [],
@@ -49,6 +51,7 @@ function useAddListToHistory() {
       queryClient.invalidateQueries('shopping_list');
     },
     onError: error => {
+      toast.error(error.message);
       throw new Error(error.message);
     },
   });
