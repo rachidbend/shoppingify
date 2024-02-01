@@ -163,7 +163,7 @@ function Account() {
   } = useGetUserProfile({ userId: user.id });
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
-  const [username, setUsername] = useState(profile?.at(0).user_name);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   function onHandleUsername(e) {
@@ -188,7 +188,7 @@ function Account() {
     updateUser({ password: password });
   }
 
-  if (isLoadingUser && isLoadingProfile) return <Spinner />;
+  if (isLoadingUser || isLoadingProfile) return <Spinner />;
 
   if (useError) return <p>{useError.message}</p>;
   if (profileError) return <p>{profileError.message}</p>;
@@ -201,8 +201,8 @@ function Account() {
 
       <Avatar
         src={
-          profile?.at(0).avatar
-            ? profile?.at(0).avatar
+          profile?.at(0)?.avatar
+            ? profile?.at(0)?.avatar
             : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
         }
       />
@@ -211,8 +211,8 @@ function Account() {
         <UsernameIcon />
         {!isOpenUsername && (
           <Text>
-            {profile?.at(0).user_name
-              ? profile?.at(0).user_name
+            {profile?.at(0)?.user_name
+              ? profile?.at(0)?.user_name
               : 'add a username'}
           </Text>
         )}
