@@ -41,4 +41,21 @@ async function getCurrentUser() {
   return data?.user;
 }
 
-export { login, getCurrentUser, signup };
+async function logout() {
+  let { error } = await supabase.auth.signOut();
+
+  if (error) throw new Error(error.message);
+}
+
+async function getUserProfile({ userId }) {
+  let { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('user_name, avatar')
+    .eq('id', userId);
+
+  if (error) throw new Error(error.message);
+
+  return profiles;
+}
+
+export { login, getCurrentUser, signup, logout, getUserProfile };
