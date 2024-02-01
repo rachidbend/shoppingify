@@ -173,7 +173,9 @@ function NavSideBar() {
   const { onOpenMobileSide } = useMobileSide();
   return (
     <StyledNavSideBar>
-      <Logo src={logo} alt="Shoppingify logo" />
+      <StyledNavLink to="/account">
+        <Logo src={logo} alt="Shoppingify logo" />
+      </StyledNavLink>
 
       <NavContianer>
         <StyledNavLink to="/items">

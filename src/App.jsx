@@ -17,6 +17,7 @@ import Login from './Features/authentication/Login';
 import Signup from './Features/authentication/Signup';
 import ProtectedRoute from './UI/ProtectedRoute';
 import MobileSideProvider from './Context/MobileSideContext';
+import Account from './pages/Account';
 
 /*
 const router = createBrowserRouter([
@@ -114,6 +115,7 @@ function App() {
                     <Route path="/history" element={<History />} />
                     <Route path="/statistics" element={<Statistics />} />
                     <Route path="/history/:listId" element={<HistoryList />} />
+                    <Route path="/account" element={<Account />} />
 
                     <Route path="*" element={<PageNotFound />} />
                   </Route>
