@@ -16,9 +16,9 @@ async function signup({ email, password }) {
     email: email,
     password: password,
   });
-  console.log(email, password);
+
   if (error) throw new Error(error.message);
-  console.log(data);
+
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .insert([{ id: data.user.id }])
@@ -81,7 +81,7 @@ async function updateUser({ email, password }) {
       password: password,
     };
   }
-  console.log(change);
+
   const { data, error } = await supabase.auth.updateUser(change);
   if (error) throw new Error(error.message);
   return data;

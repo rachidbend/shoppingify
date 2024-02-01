@@ -326,7 +326,6 @@ function AddNewItem({ onchangePage }) {
   const { addCategory } = useAddCategory();
 
   const onSubmit = data => {
-    console.log({ ...data, category: selectedCategory });
     if (data.name.length === 0 && selectedCategory.length === 0) return;
     addItem({ ...data, category: selectedCategory });
     reset();

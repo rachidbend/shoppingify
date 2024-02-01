@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
@@ -51,7 +52,6 @@ const PercentageSlider = styled(motion.span)`
 `;
 
 function TopItemsOrCategories({ name, itemNumber, totalNumber, color }) {
-  // console.log(name, itemNumber, totalNumber, color);
   return (
     <StyledTopItemsOrCategories>
       <TextContainer>

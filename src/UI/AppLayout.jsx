@@ -9,6 +9,7 @@ import AddNewItem from '../Features/addNewItem/AddNewItem';
 import { AnimatePresence, motion } from 'framer-motion';
 import ItemDetails from '../Features/itemDetails/ItemDetails';
 import { useMobileSide } from '../Context/MobileSideContext';
+import { Toaster } from 'react-hot-toast';
 // import { createContext, useContext } from 'react';
 // import { useGetAllItems } from '../Hooks/useGetAllItems';
 // import { useGetShoppingList } from '../Hooks/useGetShoppingList';
@@ -53,6 +54,22 @@ function AppLayout() {
 
   return (
     <StyledAppLayout>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 3000,
+            style: {
+              fontSize: '1.2rem',
+              fontFamily: 'var(--font-main)',
+              fontWeight: 500,
+            },
+          },
+          error: {
+            duration: 5000,
+          },
+        }}
+      />
       <NavSideBar />
       <Outlet />
 
