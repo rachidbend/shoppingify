@@ -11,6 +11,7 @@ function useLogin() {
     onSuccess: user => {
       queryClient.setQueryData(['user'], user);
       navigate('/items');
+      queryClient.invalidateQueries(['items']);
     },
     onError: error => {
       console.log('error', error.message);
