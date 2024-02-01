@@ -25,6 +25,24 @@ import {
 const StyledStatistics = styled(motion.div)`
   /* background-color: green; */
   padding: 0rem 7.77rem 0rem 11.13rem;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  overflow-y: scroll;
+
+  @media screen and (max-width: 480px) {
+    padding: 0 1.24rem;
+    padding-right: 2.3rem;
+    padding-bottom: 2.4rem;
+  }
 `;
 const ChildrenContainer = styled(motion.div)``;
 
@@ -33,6 +51,11 @@ const Title = styled.h2`
   font-size: 2.4rem;
   font-weight: 500;
   margin-bottom: 3.84rem;
+
+  @media screen and (max-width: 480px) {
+    font-size: 2rem;
+    margin-bottom: 2.23rem;
+  }
 `;
 
 const TopContainer = styled.div`
@@ -41,11 +64,21 @@ const TopContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 6.51rem;
   margin-bottom: 6.5rem;
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    margin-top: 2.84rem;
+    margin-bottom: 3.31rem;
+    gap: 3.31rem;
+  }
 `;
 const TopItemsContainer = styled.div``;
 const TopCategoriesContainer = styled.div``;
 
-const ChartContianer = styled.div``;
+const ChartContianer = styled.div`
+  margin-bottom: 4rem;
+`;
 
 function Statistics() {
   const { history, isLoading, error } = useGetHistory();
@@ -169,6 +202,10 @@ function Statistics() {
                 color="var(--color-gray-500)"
                 fontSize="1.4rem"
                 dataKey="name"
+                angle={90}
+                tickMargin={40}
+                padding="gap"
+                height={90}
                 strokeDasharray="3 3"
               />
               <YAxis

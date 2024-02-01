@@ -7,6 +7,10 @@ const StyledTopItemsOrCategories = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media screen and (max-width: 480px) {
+    margin-bottom: 1.8rem;
+  }
 `;
 
 const TextContainer = styled.div`

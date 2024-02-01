@@ -32,6 +32,7 @@ const StyledAppLayout = styled(motion.div)`
 
 const SideContainer = styled.div`
   width: 100%;
+  height: 100vh;
   position: ${props => (props.ismobile === 'true' ? 'absolute' : 'static')};
 
   /* left: 6.1581rem; */
