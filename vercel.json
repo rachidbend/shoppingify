@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/items", "destination": "/" },
     { "source": "/history", "destination": "/" },
-    { "source": "/statistics", "destination": "/" }
+    { "source": "/statistics", "destination": "/" },
+    { "source": "/account", "destination": "/" }
   ]
 }
