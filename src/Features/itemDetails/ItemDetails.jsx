@@ -13,7 +13,22 @@ const StyledItemDetails = styled.div`
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr auto;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
   overflow: hidden;
+
+  @media screen and (max-width: 480px) {
+    height: 100%;
+  }
 `;
 
 const Image = styled.img`
@@ -88,7 +103,7 @@ const DetailsContaner = styled.div`
   }
 `;
 
-const ButtonsContianer = styled.div`
+const ButtonsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,10 +188,10 @@ function ItemDetails() {
         <NameTag>note</NameTag>
         <Note>{note ? note : 'You left no note, consider adding one!'} </Note>
       </DetailsContaner>
-      <ButtonsContianer>
+      <ButtonsContainer>
         <Delete onClick={onDelete}>delete</Delete>
         <Add onClick={onAddToList}>Add to list</Add>
-      </ButtonsContianer>
+      </ButtonsContainer>
     </StyledItemDetails>
   );
 }

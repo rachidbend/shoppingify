@@ -37,7 +37,7 @@ const HeaderContainer = styled.header`
   align-items: flex-start;
 
   @media screen and (max-width: 480px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 `;
 
@@ -50,8 +50,12 @@ const Title = styled.h1`
   margin-top: 3.75rem;
 
   @media screen and (max-width: 480px) {
-    margin-bottom: 1.8rem;
+    /* margin-bottom: 1.8rem; */
     font-size: 2rem;
+
+    margin-bottom: 5.71rem;
+    margin-top: 0rem;
+    display: none;
   }
 `;
 
@@ -66,7 +70,8 @@ const SearchInputContainer = styled.div`
   height: auto;
   margin-top: 2.77rem;
   @media screen and (max-width: 480px) {
-    margin-top: 0rem;
+    /* margin-top: 0rem; */
+    margin-top: 3.77rem;
     margin-bottom: 3.6rem;
   }
 `;
@@ -95,6 +100,11 @@ const SearchInput = styled.input`
   }
   &:focus {
     outline: 1px solid var(--color-accent);
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 22rem;
+    padding-left: 5rem;
   }
 `;
 

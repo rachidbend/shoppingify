@@ -18,6 +18,10 @@ const StyledHistoryList = styled.div`
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  @media screen and (max-width: 480px) {
+    padding: 0 1.24rem;
+  }
 `;
 
 const Name = styled.h2`
