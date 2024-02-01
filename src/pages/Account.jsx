@@ -29,12 +29,12 @@ function Account() {
     <StyledAccount>
       <Username>
         username :{' '}
-        {profile.at(0).user_name
-          ? profile.at(0).user_name
+        {profile?.at(0).user_name
+          ? profile?.at(0).user_name
           : 'you have not added a username'}
       </Username>
-      {!profile.at(0).avatar && <p>there is no avatar image</p>}
-      {profile.at(0).avatar && <Avatar src={profile.at(0).avatar} />}
+      {!profile?.at(0).avatar && <p>there is no avatar image</p>}
+      {profile?.at(0).avatar && <Avatar src={profile.at(0).avatar} />}
 
       <p>email : {user.email} </p>
 
