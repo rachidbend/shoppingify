@@ -81,10 +81,28 @@ async function updateUser({ email, password }) {
       password: password,
     };
   }
-
+  console.log(change);
   const { data, error } = await supabase.auth.updateUser(change);
-
+  if (error) throw new Error(error.message);
   return data;
 }
 
-export { login, getCurrentUser, signup, logout, getUserProfile, updateUser };
+async function updateUsername({ userId, username }) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ user_name: username })
+    .eq('id', userId)
+    .select();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export {
+  login,
+  getCurrentUser,
+  signup,
+  logout,
+  getUserProfile,
+  updateUser,
+  updateUsername,
+};
