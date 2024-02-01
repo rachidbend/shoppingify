@@ -225,7 +225,14 @@ function Account() {
               placeholder="username"
               type="text"
             />
-            <SaveButton onClick={onSaveUsername}>Save</SaveButton>
+            <SaveButton
+              onClick={() => {
+                onSaveUsername();
+                setIsOpenUsername(false);
+              }}
+            >
+              Save
+            </SaveButton>
           </InputContainer>
         )}
         <IconContainer onClick={() => setIsOpenUsername(!isOpenUsername)}>
@@ -244,7 +251,14 @@ function Account() {
               type="email"
               placeholder="new email"
             />
-            <SaveButton onClick={onSaveEmail}>Save</SaveButton>
+            <SaveButton
+              onClick={() => {
+                onSaveEmail();
+                isOpenEmail(false);
+              }}
+            >
+              Save
+            </SaveButton>
           </InputContainer>
         )}
 
@@ -265,7 +279,14 @@ function Account() {
               type="password"
               placeholder="new password"
             />
-            <SaveButton onClick={onSavePassword}>Save</SaveButton>
+            <SaveButton
+              onClick={() => {
+                onSavePassword();
+                isOpenPassword(false);
+              }}
+            >
+              Save
+            </SaveButton>
           </InputContainer>
         )}
 
