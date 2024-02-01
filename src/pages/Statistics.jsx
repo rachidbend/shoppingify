@@ -82,6 +82,7 @@ const ChartContianer = styled.div`
 
 function Statistics() {
   const { history, isLoading, error } = useGetHistory();
+  const isMobile = window.innerWidth <= 480;
 
   if (isLoading) return <Spinner />;
   if (error) return <p>{error.message}</p>;
@@ -202,10 +203,10 @@ function Statistics() {
                 color="var(--color-gray-500)"
                 fontSize="1.4rem"
                 dataKey="name"
-                angle={90}
-                tickMargin={40}
+                angle={isMobile ? 90 : 0}
+                tickMargin={isMobile ? 40 : 0}
                 padding="gap"
-                height={90}
+                height={isMobile ? 90 : 30}
                 strokeDasharray="3 3"
               />
               <YAxis

@@ -6,14 +6,15 @@ import { useLogin } from '../../Hooks/useLogin';
 const StyledLogin = styled.div`
   height: 100vh;
   width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-color: var(--color-background);
-
   font-family: var(--font-main);
+
+  @media screen and (max-width: 480px) {
+    padding: 2.4rem;
+  }
 `;
 
 const Container = styled.div`
