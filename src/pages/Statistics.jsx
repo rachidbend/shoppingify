@@ -32,6 +32,10 @@ const StyledStatistics = styled(motion.div)`
   }
   overflow-y: scroll;
 
+  @media screen and (max-width: 1024px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 780px) {
     padding: 0 2.4rem;
   }
@@ -50,8 +54,14 @@ const Title = styled.h2`
   font-weight: 500;
   margin-bottom: 3.84rem;
 
+  @media screen and (max-width: 1024px) {
+    font-size: 2.2rem;
+    margin-bottom: 3rem;
+  }
+
   @media screen and (max-width: 780px) {
     font-size: 2rem;
+    margin-bottom: 3rem;
   }
 
   @media screen and (max-width: 480px) {
@@ -66,6 +76,10 @@ const TopContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 6.51rem;
   margin-bottom: 6.5rem;
+
+  @media screen and (max-width: 1024px) {
+    gap: 3.4rem;
+  }
 
   @media screen and (max-width: 780px) {
     gap: 4rem;

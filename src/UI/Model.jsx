@@ -11,6 +11,19 @@ const StyledModel = styled.div`
   background-color: var(--color-white);
   border-radius: 2.4rem;
   padding: 1.56rem 3.01rem 2.93rem 3.85rem;
+
+  @media screen and (max-width: 1024px) {
+    padding: 1.56rem 3.01rem 2.93rem 3.85rem;
+  }
+
+  @media screen and (max-width: 780px) {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 1rem 2.01rem 2rem 2.85rem;
+    width: 80%;
+  }
 `;
 
 const OverLay = styled.div`
@@ -39,12 +52,35 @@ const Text = styled.p`
   font-size: 2.4rem;
   font-weight: 500;
   margin-top: 1.76rem;
+
+  @media screen and (max-width: 1024px) {
+  }
+
+  @media screen and (max-width: 780px) {
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 1.8rem;
+  }
 `;
 const Container = styled.div`
   margin-bottom: 3.56rem;
   display: flex;
   align-items: start;
+  justify-content: space-between;
   gap: 7rem;
+
+  @media screen and (max-width: 1024px) {
+    gap: 4rem;
+  }
+
+  @media screen and (max-width: 780px) {
+    gap: 2.4rem;
+  }
+
+  @media screen and (max-width: 480px) {
+    gap: 1.2rem;
+  }
 `;
 const ButtonContainer = styled.div`
   text-align: right;
@@ -82,13 +118,19 @@ const Cancel = styled.button`
   }
 `;
 
+const Break = styled.br`
+  @media screen and (max-width: 780px) {
+    display: none;
+  }
+`;
+
 function Modal({ onClose, onConfirm }) {
   return createPortal(
     <OverLay>
       <StyledModel>
         <Container>
           <Text>
-            Are you sure that you want to <br /> cancel this list?
+            Are you sure that you want to <Break /> cancel this list?
           </Text>
           <CloseButton onClick={onClose}>
             <CloseIcon />

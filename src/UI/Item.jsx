@@ -26,6 +26,10 @@ const StyledItem = styled.div`
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   }
 
+  @media screen and (max-width: 1024px) {
+    width: 16rem;
+  }
+
   @media screen and (max-width: 780px) {
     width: 16rem;
   }
