@@ -14,9 +14,13 @@ import { useUpdateUsername } from '../Hooks/useUpdateUsername';
 const StyledAccount = styled.div`
   background-color: var(--color-background);
   height: 100%;
-
+  padding: 0 8rem;
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 1024px) {
+    padding: 0 4.8rem;
+  }
 
   @media screen and (max-width: 780px) {
     padding: 0 2.4rem;
@@ -31,6 +35,14 @@ const Title = styled.h2`
   color: var(--color-title);
   font-size: 1.8rem;
   font-weight: 500;
+
+  margin-top: 6.8rem;
+  margin-bottom: 4.8rem;
+
+  @media screen and (max-width: 1024px) {
+    margin-top: 3.85rem;
+    margin-bottom: 2rem;
+  }
 
   @media screen and (max-width: 780px) {
     margin-top: 3.85rem;

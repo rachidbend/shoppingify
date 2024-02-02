@@ -26,6 +26,10 @@ const StyledAppLayout = styled(motion.div)`
   background-color: var(--color-background);
   position: relative;
 
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 6.1581rem 1fr 32rem;
+  }
+
   @media screen and (max-width: 780px) {
     grid-template-columns: 6.1581rem 1fr;
   }
@@ -44,13 +48,19 @@ const SideContainer = styled(motion.div)`
   top: 0;
   right: 0;
 
-  transition: left 260ms cubic-bezier(0.075, 0.82, 0.165, 1),
-    right 260ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: left 360ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    right 360ms cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    position: static;
+  }
 
   @media screen and (max-width: 780px) {
     width: 38rem;
     left: auto;
     right: ${props => (props.isopen === 'true' ? '0' : '-100%')};
+    position: ${props => (props.ismobile === 'true' ? 'absolute' : 'static')};
   }
 
   @media screen and (max-width: 480px) {

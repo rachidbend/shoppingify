@@ -26,6 +26,10 @@ const StyledItemDetails = styled.div`
   }
   overflow: hidden;
 
+  @media screen and (max-width: 1024px) {
+    height: 100%;
+  }
+
   @media screen and (max-width: 480px) {
     height: 100%;
   }

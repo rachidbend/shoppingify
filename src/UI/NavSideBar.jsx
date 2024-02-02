@@ -84,6 +84,7 @@ const StyledNavLink = styled(NavLink)`
     opacity: 0;
     border-radius: 0.4rem;
     transition: all 400ms ease-in-out;
+    z-index: 9999;
   }
   &:nth-child(1)::before {
     content: 'items';

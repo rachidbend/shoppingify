@@ -46,6 +46,10 @@ const ChildrenContainer = styled(motion.div)`
   display: grid;
   grid-template-rows: auto auto 1fr auto;
 
+  @media screen and (min-width: 780px) and (max-width: 1024px) {
+    padding: 2.5rem 1.6rem 0 1.8rem;
+  }
+
   @media screen and (max-width: 480px) {
     padding: 2.5rem 1.43rem 0 1.63rem;
   }
@@ -116,6 +120,12 @@ const NameInputContainer = styled.div`
   width: 38.9rem;
 
   margin: 0 -3.19rem 0 -4.84rem;
+
+  @media screen and (min-width: 780px) and (max-width: 1024px) {
+    margin: 0 -1.43rem 0 -1.6rem;
+    padding: 2.8rem 3rem;
+    width: 32rem;
+  }
 
   @media screen and (max-width: 480px) {
     padding: 1.83rem 1.43rem 1.44rem 2.2rem;

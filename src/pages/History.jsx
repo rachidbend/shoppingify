@@ -21,6 +21,10 @@ const StyledHistory = styled(motion.div)`
     scrollbar-width: none; /* Firefox */
   }
 
+  @media screen and (max-width: 1024px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 780px) {
     padding: 0 2.4rem;
   }
@@ -74,6 +78,24 @@ const List = styled(Link)`
   align-items: center;
   text-decoration: none;
 
+  @media screen and (max-width: 1024px) {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr auto auto;
+
+    padding: 1.6rem 1rem 1.6rem 1.4rem;
+  }
+
+  @media screen and (max-width: 780px) {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+  }
+
   @media screen and (max-width: 480px) {
     display: grid;
     grid-template-rows: auto auto;
@@ -86,6 +108,17 @@ const ListName = styled.p`
   font-size: 1.6rem;
   color: var(--color-black);
   font-weight: 500;
+
+  @media screen and (max-width: 1024px) {
+    text-align: left;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    margin-bottom: 0.6rem;
+    font-size: 1.4rem;
+  }
+
+  @media screen and (max-width: 780px) {
+  }
 
   @media screen and (max-width: 480px) {
     text-align: left;
@@ -124,6 +157,15 @@ const ArrowIcon = styled(MdArrowForwardIos)`
   width: auto;
   color: var(--color-accent);
 
+  @media screen and (max-width: 1024px) {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+    margin-left: 1rem;
+  }
+
+  @media screen and (max-width: 780px) {
+  }
+
   @media screen and (max-width: 480px) {
     /* margin-left: auto; */
     grid-column: 3 / 4;
@@ -140,6 +182,23 @@ const Container = styled.div`
   align-items: center;
   margin-left: auto;
   width: 14.13rem;
+
+  @media screen and (max-width: 1024px) {
+    margin-left: 0;
+    width: auto;
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  @media screen and (max-width: 780px) {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-items: center;
+    margin-left: auto;
+    width: 14.13rem;
+  }
 
   @media screen and (max-width: 480px) {
     margin-left: 0;
@@ -158,6 +217,16 @@ const TagContainer = styled.div`
   margin-left: 2.63rem;
   margin-right: 3.27rem;
   width: 7.5992rem;
+
+  @media screen and (max-width: 1024px) {
+    width: 7.5992rem;
+    margin: 0;
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+  }
+
+  @media screen and (max-width: 780px) {
+  }
 
   @media screen and (max-width: 480px) {
     width: 7.5992rem;
