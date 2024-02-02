@@ -18,6 +18,10 @@ const StyledAccount = styled.div`
   display: flex;
   flex-direction: column;
 
+  @media screen and (max-width: 780px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 480px) {
     padding: 0 1.25rem;
   }
@@ -27,6 +31,11 @@ const Title = styled.h2`
   color: var(--color-title);
   font-size: 1.8rem;
   font-weight: 500;
+
+  @media screen and (max-width: 780px) {
+    margin-top: 3.85rem;
+    margin-bottom: 2rem;
+  }
 
   @media screen and (max-width: 480px) {
     margin-top: 3.85rem;
@@ -103,6 +112,14 @@ const Container = styled.div`
   align-items: center;
   padding-bottom: 1.2rem;
   border-bottom: 0.1rem solid var(--color-gray-200);
+
+  @media screen and (max-width: 780px) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 const Text = styled.p`
   font-size: 1.6rem;
@@ -113,6 +130,14 @@ const Text = styled.p`
 const ButtonContainer = styled.div`
   margin-top: auto;
   margin-bottom: 2.8rem;
+
+  @media screen and (max-width: 780px) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const InputContainer = styled.div`
