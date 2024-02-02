@@ -21,6 +21,10 @@ const StyledHistory = styled(motion.div)`
     scrollbar-width: none; /* Firefox */
   }
 
+  @media screen and (max-width: 780px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 480px) {
     padding: 0 1.24rem;
   }
