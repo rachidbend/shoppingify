@@ -18,6 +18,8 @@ import Signup from './Features/authentication/Signup';
 import ProtectedRoute from './UI/ProtectedRoute';
 import MobileSideProvider from './Context/MobileSideContext';
 import Account from './pages/Account';
+import ResetPassword from './pages/ResetPassword';
+import GetEmail from './pages/GetEmail';
 
 /*
 const router = createBrowserRouter([
@@ -121,6 +123,8 @@ function App() {
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/reset" element={<ResetPassword />} />
+                  <Route path="/get-email" element={<GetEmail />} />
                 </Routes>
               </AnimatePresence>
             </MobileSideProvider>

@@ -97,6 +97,14 @@ async function updateUsername({ userId, username }) {
   return data;
 }
 
+async function forgotPassword(email) {
+  let { data, error } = await supabase.auth.resetPasswordForEmail(email);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export {
   login,
   getCurrentUser,
@@ -105,4 +113,5 @@ export {
   getUserProfile,
   updateUser,
   updateUsername,
+  forgotPassword,
 };
