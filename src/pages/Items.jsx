@@ -23,6 +23,10 @@ const StyledItems = styled(motion.div)`
     scrollbar-width: none; /* Firefox */
   }
 
+  @media screen and (max-width: 780px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 480px) {
     padding: 0 1.24rem;
   }
@@ -36,6 +40,10 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: flex-start;
 
+  @media screen and (max-width: 780px) {
+    flex-direction: column;
+  }
+
   @media screen and (max-width: 480px) {
     flex-direction: column-reverse;
   }
@@ -48,6 +56,13 @@ const Title = styled.h1`
   font-weight: 500;
   margin-bottom: 5.71rem;
   margin-top: 3.75rem;
+
+  @media screen and (max-width: 780px) {
+    font-size: 2.2rem;
+    padding-right: 8rem;
+    margin-bottom: 2.8rem;
+    margin-top: 3.7rem;
+  }
 
   @media screen and (max-width: 480px) {
     /* margin-bottom: 1.8rem; */
@@ -69,6 +84,12 @@ const SearchInputContainer = styled.div`
   position: relative;
   height: auto;
   margin-top: 2.77rem;
+
+  @media screen and (max-width: 780px) {
+    margin-top: 0;
+    margin-bottom: 3.6rem;
+  }
+
   @media screen and (max-width: 480px) {
     /* margin-top: 0rem; */
     margin-top: 3.77rem;

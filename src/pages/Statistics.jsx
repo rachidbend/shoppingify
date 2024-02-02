@@ -4,13 +4,7 @@ import { childrenVariants, routeVariants } from '../Variables/variables';
 import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
 import TopItemsOrCategories from '../UI/TopItemsOrCategories';
-import {
-  addMonths,
-  eachMonthOfInterval,
-  format,
-  isSameMonth,
-  subMonths,
-} from 'date-fns';
+import { eachMonthOfInterval, format, isSameMonth, subMonths } from 'date-fns';
 import {
   CartesianGrid,
   Legend,
@@ -38,6 +32,10 @@ const StyledStatistics = styled(motion.div)`
   }
   overflow-y: scroll;
 
+  @media screen and (max-width: 780px) {
+    padding: 0 2.4rem;
+  }
+
   @media screen and (max-width: 480px) {
     padding: 0 1.24rem;
     padding-right: 2.3rem;
@@ -52,6 +50,10 @@ const Title = styled.h2`
   font-weight: 500;
   margin-bottom: 3.84rem;
 
+  @media screen and (max-width: 780px) {
+    font-size: 2rem;
+  }
+
   @media screen and (max-width: 480px) {
     font-size: 2rem;
     margin-bottom: 2.23rem;
@@ -64,6 +66,10 @@ const TopContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 6.51rem;
   margin-bottom: 6.5rem;
+
+  @media screen and (max-width: 780px) {
+    gap: 4rem;
+  }
 
   @media screen and (max-width: 480px) {
     grid-template-columns: 1fr;

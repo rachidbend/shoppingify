@@ -9,6 +9,10 @@ const StyledTopItemsOrCategories = styled.div`
     margin-bottom: 0;
   }
 
+  @media screen and (max-width: 780px) {
+    margin-bottom: 2rem;
+  }
+
   @media screen and (max-width: 480px) {
     margin-bottom: 1.8rem;
   }
