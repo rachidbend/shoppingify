@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useSignup } from '../../Hooks/useSignup';
+import { Toaster } from 'react-hot-toast';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -157,6 +158,22 @@ function Signup() {
 
   return (
     <StyledLogin>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 3000,
+            style: {
+              fontSize: '1.2rem',
+              fontFamily: 'var(--font-main)',
+              fontWeight: 500,
+            },
+          },
+          error: {
+            duration: 5000,
+          },
+        }}
+      />
       <Container>
         <Title>Signup</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
