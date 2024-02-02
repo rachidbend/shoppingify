@@ -22,7 +22,7 @@ function useUpdateShoppingListName() {
     }) =>
       updateShopplingListName({ userId, shoppingList, id, listName, reset }),
     onSuccess: () => {
-      toast.success('Shopping list name updated successfully!');
+      toast.success('Shopping list name updated successfuly!');
     },
     onSettled: () => {
       queryClient.invalidateQueries('shopping_list');

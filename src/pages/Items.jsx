@@ -23,6 +23,10 @@ const StyledItems = styled(motion.div)`
     scrollbar-width: none; /* Firefox */
   }
 
+  @media screen and (min-width: 1600px) {
+    padding: 0 14rem;
+  }
+
   @media screen and (max-width: 1024px) {
     padding: 0 2.4rem;
   }
@@ -44,7 +48,7 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: flex-start;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1200px) {
     flex-direction: column;
   }
 
@@ -65,7 +69,7 @@ const Title = styled.h1`
   margin-bottom: 5.71rem;
   margin-top: 3.75rem;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1200px) {
     padding-right: 8rem;
     margin-bottom: 2.8rem;
     margin-top: 3.7rem;
@@ -96,7 +100,7 @@ const SearchInputContainer = styled.div`
   height: auto;
   margin-top: 2.77rem;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1200px) {
     margin-top: 0;
     margin-bottom: 3.6rem;
   }

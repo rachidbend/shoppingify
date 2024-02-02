@@ -28,10 +28,9 @@ function useAddListToHistory() {
     isLoading,
     error,
   } = useMutation({
-    mutationFn: ({ userId, shoppingHistory, list }) =>
+    mutationFn: ({ userId = user.id, shoppingHistory, list }) =>
       addListToHistory({ userId, shoppingHistory, list }),
     onSuccess: () => {
-      console.log('on add to history success');
       toast.success('Shopping list added to history successfully');
       updateShoppingList({
         id: 1,
@@ -45,6 +44,7 @@ function useAddListToHistory() {
           is_canceled: false,
         },
       });
+      queryClient.invalidateQueries('shopping_list');
     },
     onSettled: () => {
       updateListName({ id: 1, listName: '', reset: true });

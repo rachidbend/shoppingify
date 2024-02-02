@@ -32,6 +32,10 @@ const StyledStatistics = styled(motion.div)`
   }
   overflow-y: scroll;
 
+  @media screen and (min-width: 1600px) {
+    padding: 0 14rem;
+  }
+
   @media screen and (max-width: 1024px) {
     padding: 0 2.4rem;
   }
