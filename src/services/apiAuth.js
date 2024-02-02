@@ -98,12 +98,22 @@ async function updateUsername({ userId, username }) {
 }
 
 async function forgotPassword(email) {
-  let { data, error } = await supabase.auth.resetPasswordForEmail(email);
+  let { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://shoppingify-bay.vercel.app/reset',
+  });
 
   if (error) throw new Error(error.message);
 
   return data;
 }
+
+// async function forgotPasswordEmail ({email}) {
+// let {data, error} =  await supabase.auth.resetPasswordForEmail('hello@example.com', {
+//     redirectTo: 'http://example.com/account/update-password',
+//   })
+
+//   if (error) throw new Error(error.message);
+// }
 
 export {
   login,
