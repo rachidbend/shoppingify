@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { MdRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router';
+import { useUser } from '../Hooks/useUser';
+import Spinner from '../UI/Spinner';
+import { useUpdateUser } from '../Hooks/useUpdateUser';
+import { useForm } from 'react-hook-form';
 
 const StyledResetPassword = styled.div`
   height: 100vh;
@@ -119,17 +123,31 @@ function ResetPassword() {
   const [isShow, setIsShow] = useState(false);
   const [isShowSecond, setIsShowSecond] = useState(false);
 
+  const { user, isLoading } = useUser();
+  const { updateUser } = useUpdateUser();
   const navigate = useNavigate();
+
+  const { register, handleSubmit, reset } = useForm();
+
+  function onSbmit(data) {
+    if (!data) return;
+
+    if (data.password === data.confirm) updateUser({ password: data.password });
+  }
+
+  if (isLoading) return <Spinner />;
+  console.log(user);
 
   return (
     <StyledResetPassword>
       <Container>
         <Title>Reset your password</Title>
-        <form action="">
+        <form onSubmit={handleSubmit(onSbmit)}>
           <InputContainer>
             <Input
               placeholder="New password"
               type={isShow ? 'text' : 'password'}
+              {...register('password', { required: true, minLength: 6 })}
             />
 
             <IconContainer
@@ -144,6 +162,7 @@ function ResetPassword() {
             <Input
               placeholder="Confirm password"
               type={isShowSecond ? 'text' : 'password'}
+              {...register('confirm', { required: true, minLength: 6 })}
             />
 
             <IconContainer
