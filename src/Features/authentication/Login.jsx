@@ -225,7 +225,9 @@ function Login() {
           <LoginButton disabled={isLoggingIn} type="submit" value="LOGIN" />
         </Form>
         <ForgotPasswordContainer>
-          <ForgotPassword>Forgot password?</ForgotPassword>
+          <ForgotPassword onClick={() => navigate('/get-email')}>
+            Forgot password?
+          </ForgotPassword>
         </ForgotPasswordContainer>
 
         <OrContainer>
