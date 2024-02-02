@@ -7,6 +7,7 @@ import { useUser } from '../Hooks/useUser';
 import Spinner from '../UI/Spinner';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useForm } from 'react-hook-form';
+import { supabase } from '../services/supabase';
 
 const StyledResetPassword = styled.div`
   height: 100vh;
@@ -123,7 +124,6 @@ function ResetPassword() {
   const [isShow, setIsShow] = useState(false);
   const [isShowSecond, setIsShowSecond] = useState(false);
 
-  const { user, isLoading } = useUser();
   const { updateUser } = useUpdateUser();
   const navigate = useNavigate();
 
@@ -136,7 +136,6 @@ function ResetPassword() {
   }
 
   if (isLoading) return <Spinner />;
-  console.log(user);
 
   return (
     <StyledResetPassword>
@@ -177,7 +176,7 @@ function ResetPassword() {
             <LoginButton onClick={() => navigate('/login', { replace: true })}>
               Log In
             </LoginButton>
-            <Save type="submit" value={'Save'} />
+            <Save type="submit" value={'Send'} />
           </ButtonContainer>
         </form>
       </Container>
