@@ -3,8 +3,8 @@
     { "source": "/items", "destination": "/" },
     { "source": "/history", "destination": "/" },
     { "source": "/statistics", "destination": "/" },
-    { "source": "/account", "destination": "/" }
-    { "source": "/reset", "destination": "/" }
+    { "source": "/account", "destination": "/" },
+    { "source": "/reset", "destination": "/" },
     { "source": "/get-email", "destination": "/" }
   ]
 }
