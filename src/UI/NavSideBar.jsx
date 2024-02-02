@@ -98,6 +98,12 @@ const StyledNavLink = styled(NavLink)`
   &:hover::before {
     opacity: 1;
   }
+
+  @media screen and (max-width: 780px) {
+    &::before {
+      display: none;
+    }
+  }
 `;
 
 const StyledItemsIcon = styled(MdFormatListBulleted)`
