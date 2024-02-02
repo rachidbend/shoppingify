@@ -18,6 +18,10 @@ const StyledAccount = styled.div`
   display: flex;
   flex-direction: column;
 
+  @media screen and (min-width: 1600px) {
+    padding: 0 14rem;
+  }
+
   @media screen and (max-width: 1024px) {
     padding: 0 4.8rem;
   }
@@ -65,6 +69,7 @@ const Logout = styled.button`
   padding: 1.4rem 1.8rem;
   margin-left: auto;
   display: block;
+  cursor: pointer;
 
   transition: color 260ms ease-in-out, background-color 260ms ease-in-out;
   &:hover {
@@ -114,6 +119,8 @@ const EditIcon = styled(MdEditSquare)`
   width: auto;
   color: var(--color-gray-100);
   transform: translateY(-0.8rem);
+
+  cursor: pointer;
 `;
 const IconContainer = styled.div``;
 
@@ -141,14 +148,20 @@ const Text = styled.p`
 
 const ButtonContainer = styled.div`
   margin-top: auto;
-  margin-bottom: 2.8rem;
+  margin-bottom: 8rem;
+
+  @media screen and (min-width: 1600px) {
+    margin-bottom: 8rem;
+  }
 
   @media screen and (max-width: 780px) {
     width: 80%;
+    margin-bottom: 4.8rem;
   }
 
   @media screen and (max-width: 480px) {
     width: 100%;
+    margin-bottom: 2.8rem;
   }
 `;
 

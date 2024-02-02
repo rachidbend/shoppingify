@@ -13,7 +13,7 @@ const StyledItemDetails = styled.div`
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr auto;
-
+  height: 100%;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
@@ -25,14 +25,6 @@ const StyledItemDetails = styled.div`
     scrollbar-width: none; /* Firefox */
   }
   overflow: hidden;
-
-  @media screen and (max-width: 1024px) {
-    height: 100%;
-  }
-
-  @media screen and (max-width: 480px) {
-    height: 100%;
-  }
 `;
 
 const Image = styled.img`
