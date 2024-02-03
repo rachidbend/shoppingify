@@ -8,5 +8,6 @@
     { "source": "/get-email", "destination": "/" },
     { "source": "/login", "destination": "/" },
     { "source": "/signup", "destination": "/" }
+    { "source": "/confirm", "destination": "/" }
   ]
 }
