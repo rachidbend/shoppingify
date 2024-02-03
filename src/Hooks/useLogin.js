@@ -14,6 +14,11 @@ function useLogin() {
       navigate('/items');
       queryClient.invalidateQueries();
       toast.success('Login successfull!');
+
+      // check if there is a profile with the same id as the user id
+
+      // if there is one, then do nothing
+      // if there is none, then create one
     },
     onError: error => {
       toast.error(error.message);

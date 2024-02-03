@@ -25,8 +25,32 @@ async function signup({ email, password }) {
     .select();
 
   if (profileError) throw new Error(profileError.message);
+
   return data;
 }
+
+// async function createProfile(userId) {
+//   const { data, error } = await supabase
+//     .from('profiles')
+//     .insert([{ id: userId }])
+//     .select();
+
+//   if (error) throw new Error(error.message);
+
+//   return data;
+// }
+
+// async function getProfiles(userId) {
+//   if (userId === undefined) return;
+//   let { data: profiles, error } = await supabase
+//     .from('profiles')
+//     .select('id')
+//     .eq('id', userId);
+
+//   if (error) throw new Error(error.message);
+
+//   return profiles;
+// }
 
 async function getCurrentUser() {
   const { data: session, error: sessionError } =

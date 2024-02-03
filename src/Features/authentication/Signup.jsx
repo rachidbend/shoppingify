@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useSignup } from '../../Hooks/useSignup';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -153,7 +153,17 @@ function Signup() {
 
   function onSubmit(data) {
     if (data.password === data.confirm)
-      signup({ email: data.email, password: data.password });
+      signup(
+        { email: data.email, password: data.password },
+        {
+          onSuccess: () => {
+            navigate('/confirm');
+          },
+          onError: error => {
+            toast.error(error.message);
+          },
+        }
+      );
   }
 
   return (

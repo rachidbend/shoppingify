@@ -8,8 +8,12 @@ function useLogout() {
   const { mutate: logout, error } = useMutation({
     mutationFn: logoutAPI,
     onSuccess: () => {
-      queryClient.invalidateQueries();
       toast.success('Logout successfull!');
+      queryClient.setQueryData(['user'], null);
+      queryClient.setQueryData(['items'], []);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries();
     },
     onError: error => {
       toast.error(error.message);

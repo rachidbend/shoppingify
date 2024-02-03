@@ -21,6 +21,7 @@ import Account from './pages/Account';
 import ResetPassword from './pages/ResetPassword';
 import GetEmail from './pages/GetEmail';
 import { supabase } from './services/supabase';
+import EmailConfirmation from './UI/EmailConfirmation';
 
 /*
 const router = createBrowserRouter([
@@ -126,6 +127,7 @@ function App() {
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/reset" element={<ResetPassword />} />
                   <Route path="/get-email" element={<GetEmail />} />
+                  <Route path="/confirm" element={<EmailConfirmation />} />
                 </Routes>
               </AnimatePresence>
             </MobileSideProvider>

@@ -6,6 +6,7 @@ import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';
 import { useGetAppData } from '../Context/AppContext';
 import Spinner from '../UI/Spinner';
+import { useUser } from '../Hooks/useUser';
 
 // page container
 const StyledItems = styled(motion.div)`
@@ -208,6 +209,7 @@ function Items() {
 
   if (isLoadingAllItems) return <Spinner />;
   if (allItemsError) return <p>{allItemsError.message}</p>;
+
   // filtering for the query
   // if there is no search query, return all the items
   // if there is a search query, return the items that have the query in their name

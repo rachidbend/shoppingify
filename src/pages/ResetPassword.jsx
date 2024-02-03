@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { MdRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router';
-import { useUser } from '../Hooks/useUser';
 import Spinner from '../UI/Spinner';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useForm } from 'react-hook-form';
-import { supabase } from '../services/supabase';
 
 const StyledResetPassword = styled.div`
   height: 100vh;
