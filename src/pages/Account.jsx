@@ -11,6 +11,7 @@ import { MdEditSquare } from 'react-icons/md';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useUpdateUsername } from '../Hooks/useUpdateUsername';
 import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
+import { useGetAllAvatars } from '../Hooks/useGetAllAvatars';
 
 const StyledAccount = styled.div`
   background-color: var(--color-background);
@@ -207,6 +208,11 @@ const Input = styled.input`
   }
 `;
 
+const AvatarChooseImage = styled.img`
+  height: 2.4rem;
+  width: 2.4rem;
+`;
+
 const UsernameInput = styled(Input)``;
 const EmailInput = styled(Input)``;
 const PasswordInput = styled(Input)``;
@@ -216,6 +222,7 @@ function Account() {
   const [isOpenPassword, setIsOpenPassword] = useState(false);
   const [isOpenUsername, setIsOpenUsername] = useState(false);
   const [isOpenAvatar, setIsOpenAvatar] = useState(false);
+  const [isOpenAvatarChoose, setIsOpenAvatarChoose] = useState(false);
 
   const { logout, error: logoutError } = useLogout();
   const { user, error: useError, isLoading: isLoadingUser } = useUser();
@@ -226,6 +233,11 @@ function Account() {
     error: profileError,
   } = useGetUserProfile({ userId: user.id });
   const { updateAvatar, error: avatarError } = useUpdateAvatar();
+  const {
+    avatars,
+    isLoading: isLoadingAvatars,
+    error: getAvatarError,
+  } = useGetAllAvatars();
 
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
@@ -245,6 +257,10 @@ function Account() {
   function handleAvatarUrl(e) {
     setAvatarUrl(e.target.value);
   }
+  function handleChooseAvatar(url) {
+    updateAvatar({ url: url });
+    setIsOpenAvatar(false);
+  }
 
   function onSaveUsername() {
     updateUsername({ username: username });
@@ -262,12 +278,13 @@ function Account() {
     setIsOpenAvatar(false);
   }
 
-  if (isLoadingUser || isLoadingProfile) return <Spinner />;
+  if (isLoadingUser || isLoadingProfile || isLoadingAvatars) return <Spinner />;
 
   if (useError) return <p>{useError.message}</p>;
   if (profileError) return <p>{profileError.message}</p>;
   if (logoutError) return <p>{logoutError.message}</p>;
   if (updateUserError) return <p>{updateUserError.message}</p>;
+  if (getAvatarError) return <p>{getAvatarError.message}</p>;
 
   return (
     <StyledAccount>
@@ -281,21 +298,33 @@ function Account() {
           }
         />
         {isOpenAvatar && (
-          <InputContainer>
-            <Input
-              placeholder="Image URL"
-              type="text"
-              value={avatarUrl}
-              onChange={handleAvatarUrl}
-            />
-            <SaveButton
-              onClick={() => {
-                onSaveAvatarUrl();
-              }}
-            >
-              Save
-            </SaveButton>
-          </InputContainer>
+          <>
+            <InputContainer>
+              <Input
+                placeholder="Image URL"
+                type="text"
+                value={avatarUrl}
+                onChange={handleAvatarUrl}
+              />
+              <SaveButton
+                onClick={() => {
+                  onSaveAvatarUrl();
+                }}
+              >
+                Save
+              </SaveButton>
+            </InputContainer>
+            <p>Choose an avatart</p>
+            <div>
+              {avatars.map(avatar => (
+                <AvatarChooseImage
+                  onClick={() => handleChooseAvatar(avatar.url)}
+                  key={`avatar-${avatar.id}`}
+                  src={avatar.url}
+                />
+              ))}
+            </div>
+          </>
         )}
         <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
           <EditIcon />

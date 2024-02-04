@@ -275,6 +275,14 @@ async function updateAvatar({ userId, url }) {
   return data;
 }
 
+async function getAllAvatars() {
+  let { data: avatars, error } = await supabase.from('Avatars').select('*');
+
+  if (error) throw new Error('Could not get the Avatars');
+
+  return avatars;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -289,4 +297,5 @@ export {
   addListToHistory,
   addCategory,
   updateAvatar,
+  getAllAvatars,
 };
