@@ -24,7 +24,6 @@ async function getShoppingList() {
 // updated for profiles ****
 async function updateShoppingListItems({
   userId,
-  id,
   item,
   oldList,
   updateQuantity,
@@ -118,7 +117,7 @@ async function updateShoppingListItems({
 async function updateShopplingListName({
   userId,
   shoppingList,
-  id,
+
   listName,
   reset = false,
 }) {

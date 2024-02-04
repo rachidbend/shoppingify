@@ -10,6 +10,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ItemDetails from '../Features/itemDetails/ItemDetails';
 import { useMobileSide } from '../Context/MobileSideContext';
 import { Toaster } from 'react-hot-toast';
+import Spinner from './Spinner';
+import { useUser } from '../Hooks/useUser';
 
 // import { createContext, useContext } from 'react';
 // import { useGetAllItems } from '../Hooks/useGetAllItems';
@@ -74,19 +76,6 @@ function AppLayout() {
   const { itemId } = useParams();
   const { isOpen } = useMobileSide();
   const isMobile = window.innerWidth <= 780;
-
-  // const { user, isLoading: isLoadingUser } = useUser();
-
-  // if (isLoading || isLoadingUser) return <Spinner />;
-  // if (error) toast.error(error.message);
-
-  // console.log('data', data);
-  // console.log('user', user);
-  // if this is the first time the user logs in after email confirmation
-  // then create the profile for them
-  // but if they already have a profile, there not the first time they login, then do nothing
-  // if (data.length === 0) createProfile(user?.id);
-  // if (isPending) return <Spinner />;
 
   return (
     <StyledAppLayout>

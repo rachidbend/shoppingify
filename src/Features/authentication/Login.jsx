@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useLogin } from '../../Hooks/useLogin';
 import { Toaster } from 'react-hot-toast';
+import { FcGoogle } from 'react-icons/fc';
+// import { ImFacebook2 } from 'react-icons/im';
+// import { FaXTwitter } from 'react-icons/fa6';
+import { useSigninWithGoogle } from '../../Hooks/useSigninWithGoogle';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -168,10 +172,55 @@ const SignupText = styled.p`
   justify-content: center;
 `;
 
+const OtherLoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 2.4rem;
+`;
+
+const OtherLogin = styled.div`
+  padding: 1.1rem 2.95rem;
+  border: 1px solid var(--color-gray-200);
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  width: 20rem;
+  border-radius: 1.2rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--color-black);
+`;
+
+const GoogleIcon = styled(FcGoogle)`
+  height: 2.4rem;
+  width: 2.4rem;
+`;
+// const FacebookIcon = styled(ImFacebook2)`
+//   height: 2.4rem;
+//   width: 2.4rem;
+//   color: #316ff6;
+// `;
+
+// const TwitterIcon = styled(FaXTwitter)`
+//   height: 2.4rem;
+//   width: 2.4rem;
+// `;
+
 function Login() {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
   const { login, isLoading: isLoggingIn } = useLogin();
+  const { signInWithGoogle, error } = useSigninWithGoogle();
 
   function onSubmit(data) {
     login(data, {
@@ -233,6 +282,13 @@ function Login() {
         <OrContainer>
           <OrText>OR</OrText>
         </OrContainer>
+
+        <OtherLoginContainer>
+          <OtherLogin onClick={signInWithGoogle}>
+            <GoogleIcon />
+            Google
+          </OtherLogin>
+        </OtherLoginContainer>
         <SignupText>
           need an account?
           <SignupButton onClick={() => navigate('/signup')}>
@@ -245,3 +301,24 @@ function Login() {
 }
 
 export default Login;
+
+/* 
+
+create function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id)
+  values (new.id, new.created_at, new.user_name, new.avatar, new.shopping_history, new.shopping_history, new.items, new.categories);
+  return new;
+end;
+$$;
+
+-- trigger the function every time a user is created
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+  
+*/

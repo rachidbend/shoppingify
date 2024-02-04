@@ -19,38 +19,8 @@ async function signup({ email, password }) {
 
   if (error) throw new Error(error.message);
 
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .insert([{ id: data.user.id }])
-    .select();
-
-  if (profileError) throw new Error(profileError.message);
-
   return data;
 }
-
-// async function createProfile(userId) {
-//   const { data, error } = await supabase
-//     .from('profiles')
-//     .insert([{ id: userId }])
-//     .select();
-
-//   if (error) throw new Error(error.message);
-
-//   return data;
-// }
-
-// async function getProfiles(userId) {
-//   if (userId === undefined) return;
-//   let { data: profiles, error } = await supabase
-//     .from('profiles')
-//     .select('id')
-//     .eq('id', userId);
-
-//   if (error) throw new Error(error.message);
-
-//   return profiles;
-// }
 
 async function getCurrentUser() {
   const { data: session, error: sessionError } =
@@ -129,13 +99,18 @@ async function forgotPassword(email) {
   return data;
 }
 
-// async function forgotPasswordEmail ({email}) {
-// let {data, error} =  await supabase.auth.resetPasswordForEmail('hello@example.com', {
-//     redirectTo: 'http://example.com/account/update-password',
-//   })
+async function signInGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'https://shoppingify-bay.vercel.app',
+    },
+  });
 
-//   if (error) throw new Error(error.message);
-// }
+  if (error) throw new Error(error.message);
+
+  return data;
+}
 
 export {
   login,
@@ -146,4 +121,5 @@ export {
   updateUser,
   updateUsername,
   forgotPassword,
+  signInGoogle,
 };
