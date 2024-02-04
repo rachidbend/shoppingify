@@ -10,6 +10,9 @@ import { MdLock } from 'react-icons/md';
 import { MdEditSquare } from 'react-icons/md';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useUpdateUsername } from '../Hooks/useUpdateUsername';
+import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
+import { useGetAllAvatars } from '../Hooks/useGetAllAvatars';
+import { useUploadUserAvatar } from '../Hooks/useUploadUserAvatar';
 
 const StyledAccount = styled.div`
   background-color: var(--color-background);
@@ -85,13 +88,16 @@ const Username = styled.span`
 `;
 
 const Avatar = styled.img`
-  width: 4.8rem;
-  height: 4.8rem;
+  width: 6.8rem;
+  height: 6.8rem;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   background-color: var(--color-white);
-  border-radius: 50%;
+  border-radius: 15rem;
   margin-bottom: 4.8rem;
-  border: 0.2rem solid var(--color-accent);
+  object-fit: cover;
+
+  /* border: 0.2rem solid var(--color-accent); */
 `;
 const NoAvatar = styled.p`
   color: var(--color-gray-200);
@@ -119,10 +125,17 @@ const EditIcon = styled(MdEditSquare)`
   width: auto;
   color: var(--color-gray-100);
   transform: translateY(-0.8rem);
-
   cursor: pointer;
+
+  position: absolute;
+  top: 1rem;
+  left: 0;
 `;
-const IconContainer = styled.div``;
+const IconContainer = styled.div`
+  position: relative;
+  width: auto;
+  height: 100%;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -131,7 +144,7 @@ const Container = styled.div`
   align-items: center;
   padding-bottom: 1.2rem;
   border-bottom: 0.1rem solid var(--color-gray-200);
-
+  position: relative;
   @media screen and (max-width: 780px) {
     width: 80%;
   }
@@ -192,6 +205,48 @@ const Input = styled.input`
   border: 0.1rem solid var(--color-gray-200);
   border-radius: 0.8rem;
   background: transparent;
+  outline: none;
+
+  &:focus {
+    border: 0.1rem solid var(--color-accent);
+  }
+`;
+
+const AvatarChooseImage = styled.img`
+  height: 4em;
+  width: auto;
+`;
+
+const AvatarChooseContainer = styled.div`
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+`;
+const AvatarChangeContainer = styled.div`
+  position: absolute;
+  top: 6rem;
+  width: 36rem;
+  padding: 2.4rem;
+  background-color: var(--color-white);
+  z-index: 9999;
+  border-radius: 2.4rem;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+
+  input {
+    width: 100%;
+  }
+`;
+
+const TextChoose = styled.p`
+  color: var(--color-title);
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  margin-top: 1.2rem;
+  font-weight: 500;
+
+  &::first-child {
+    margin-top: 0;
+  }
 `;
 
 const UsernameInput = styled(Input)``;
@@ -202,6 +257,8 @@ function Account() {
   const [isOpenEmail, setIsOpenEmail] = useState(false);
   const [isOpenPassword, setIsOpenPassword] = useState(false);
   const [isOpenUsername, setIsOpenUsername] = useState(false);
+  const [isOpenAvatar, setIsOpenAvatar] = useState(false);
+  const [isOpenAvatarChoose, setIsOpenAvatarChoose] = useState(false);
 
   const { logout, error: logoutError } = useLogout();
   const { user, error: useError, isLoading: isLoadingUser } = useUser();
@@ -211,10 +268,19 @@ function Account() {
     isLoading: isLoadingProfile,
     error: profileError,
   } = useGetUserProfile({ userId: user.id });
+  const { updateAvatar, error: avatarError } = useUpdateAvatar();
+  const {
+    avatars,
+    isLoading: isLoadingAvatars,
+    error: getAvatarError,
+  } = useGetAllAvatars();
+  const { uploadAvatar } = useUploadUserAvatar();
+
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   function onHandleUsername(e) {
     setUsername(e.target.value);
@@ -224,6 +290,13 @@ function Account() {
   }
   function onHandlePassword(e) {
     setPassword(e.target.value);
+  }
+  function handleAvatarUrl(e) {
+    setAvatarUrl(e.target.value);
+  }
+  function handleChooseAvatar(url) {
+    updateAvatar({ url: url });
+    setIsOpenAvatar(false);
   }
 
   function onSaveUsername() {
@@ -237,25 +310,76 @@ function Account() {
     if (!password) return;
     updateUser({ password: password });
   }
+  function onSaveAvatarUrl() {
+    updateAvatar({ url: avatarUrl });
+    setIsOpenAvatar(false);
+  }
 
-  if (isLoadingUser || isLoadingProfile) return <Spinner />;
+  function onAvatarUploadChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    uploadAvatar(file);
+  }
+
+  if (isLoadingUser || isLoadingProfile || isLoadingAvatars) return <Spinner />;
 
   if (useError) return <p>{useError.message}</p>;
   if (profileError) return <p>{profileError.message}</p>;
   if (logoutError) return <p>{logoutError.message}</p>;
   if (updateUserError) return <p>{updateUserError.message}</p>;
+  if (getAvatarError) return <p>{getAvatarError.message}</p>;
 
   return (
     <StyledAccount>
       <Title>Account details</Title>
-
-      <Avatar
-        src={
-          profile?.at(0)?.avatar
-            ? profile?.at(0)?.avatar
-            : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
-        }
-      />
+      <Container>
+        <Avatar
+          src={
+            profile?.at(0)?.avatar
+              ? profile?.at(0)?.avatar
+              : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
+          }
+        />
+        {isOpenAvatar && (
+          <AvatarChangeContainer>
+            <TextChoose>Put in a URL</TextChoose>
+            <InputContainer>
+              <Input
+                placeholder="Image URL"
+                type="text"
+                value={avatarUrl}
+                onChange={handleAvatarUrl}
+              />
+              <SaveButton
+                onClick={() => {
+                  onSaveAvatarUrl();
+                }}
+              >
+                Save
+              </SaveButton>
+            </InputContainer>
+            <TextChoose>or upload an image</TextChoose>
+            <input
+              onChange={onAvatarUploadChange}
+              type="file"
+              name="avatar_image"
+            />
+            <TextChoose>or choose an avatart</TextChoose>
+            <AvatarChooseContainer>
+              {avatars.map(avatar => (
+                <AvatarChooseImage
+                  onClick={() => handleChooseAvatar(avatar.url)}
+                  key={`avatar-${avatar.id}`}
+                  src={avatar.url}
+                />
+              ))}
+            </AvatarChooseContainer>
+          </AvatarChangeContainer>
+        )}
+        <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
+          <EditIcon />
+        </IconContainer>
+      </Container>
 
       <Container>
         <UsernameIcon />

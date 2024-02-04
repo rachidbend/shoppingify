@@ -263,6 +263,37 @@ async function addCategory({ userId, allCategories, category }) {
   return data;
 }
 
+async function updateAvatar({ userId, url }) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ avatar: url })
+    .eq('id', userId)
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
+async function getAllAvatars() {
+  let { data: avatars, error } = await supabase.from('Avatars').select('*');
+
+  if (error) throw new Error('Could not get the Avatars');
+
+  return avatars;
+}
+
+async function uploadUserAvatar(file) {
+  console.log(file);
+  const { data, error } = await supabase.storage
+    .from('user_avatar')
+    .upload(`avatar-${Date.now()}.png`, file);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -276,4 +307,7 @@ export {
   getHistoryList,
   addListToHistory,
   addCategory,
+  updateAvatar,
+  getAllAvatars,
+  uploadUserAvatar,
 };
