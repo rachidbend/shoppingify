@@ -412,7 +412,7 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
 
   if (isLoadingShoppingList) return <Spinner />;
   if (shoppingListError) return <p>{shoppingListError.message}</p>;
-
+  // console.log(shoppingList);
   const emtyList =
     !shoppingList ||
     shoppingList?.items === null ||
