@@ -12,6 +12,7 @@ import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useUpdateUsername } from '../Hooks/useUpdateUsername';
 import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
 import { useGetAllAvatars } from '../Hooks/useGetAllAvatars';
+import { useUploadUserAvatar } from '../Hooks/useUploadUserAvatar';
 
 const StyledAccount = styled.div`
   background-color: var(--color-background);
@@ -87,13 +88,13 @@ const Username = styled.span`
 `;
 
 const Avatar = styled.img`
-  width: 4.8rem;
-  height: 4.8rem;
+  width: auto;
+  height: 6.8rem;
   overflow: hidden;
   background-color: var(--color-white);
   border-radius: 50%;
   margin-bottom: 4.8rem;
-  border: 0.2rem solid var(--color-accent);
+  /* border: 0.2rem solid var(--color-accent); */
 `;
 const NoAvatar = styled.p`
   color: var(--color-gray-200);
@@ -140,7 +141,7 @@ const Container = styled.div`
   align-items: center;
   padding-bottom: 1.2rem;
   border-bottom: 0.1rem solid var(--color-gray-200);
-
+  position: relative;
   @media screen and (max-width: 780px) {
     width: 80%;
   }
@@ -209,8 +210,40 @@ const Input = styled.input`
 `;
 
 const AvatarChooseImage = styled.img`
-  height: 2.4rem;
-  width: 2.4rem;
+  height: 4em;
+  width: auto;
+`;
+
+const AvatarChooseContainer = styled.div`
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+`;
+const AvatarChangeContainer = styled.div`
+  position: absolute;
+  top: 6rem;
+  width: 36rem;
+  padding: 2.4rem;
+  background-color: var(--color-white);
+  z-index: 9999;
+  border-radius: 2.4rem;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+
+  input {
+    width: 100%;
+  }
+`;
+
+const TextChoose = styled.p`
+  color: var(--color-title);
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  margin-top: 1.2rem;
+  font-weight: 500;
+
+  &::first-child {
+    margin-top: 0;
+  }
 `;
 
 const UsernameInput = styled(Input)``;
@@ -238,6 +271,7 @@ function Account() {
     isLoading: isLoadingAvatars,
     error: getAvatarError,
   } = useGetAllAvatars();
+  const { uploadAvatar } = useUploadUserAvatar();
 
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
@@ -278,6 +312,12 @@ function Account() {
     setIsOpenAvatar(false);
   }
 
+  function onAvatarUploadChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    uploadAvatar(file);
+  }
+
   if (isLoadingUser || isLoadingProfile || isLoadingAvatars) return <Spinner />;
 
   if (useError) return <p>{useError.message}</p>;
@@ -298,7 +338,8 @@ function Account() {
           }
         />
         {isOpenAvatar && (
-          <>
+          <AvatarChangeContainer>
+            <TextChoose>Put in a URL</TextChoose>
             <InputContainer>
               <Input
                 placeholder="Image URL"
@@ -314,8 +355,14 @@ function Account() {
                 Save
               </SaveButton>
             </InputContainer>
-            <p>Choose an avatart</p>
-            <div>
+            <TextChoose>or upload an image</TextChoose>
+            <input
+              onChange={onAvatarUploadChange}
+              type="file"
+              name="avatar_image"
+            />
+            <TextChoose>or choose an avatart</TextChoose>
+            <AvatarChooseContainer>
               {avatars.map(avatar => (
                 <AvatarChooseImage
                   onClick={() => handleChooseAvatar(avatar.url)}
@@ -323,8 +370,8 @@ function Account() {
                   src={avatar.url}
                 />
               ))}
-            </div>
-          </>
+            </AvatarChooseContainer>
+          </AvatarChangeContainer>
         )}
         <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
           <EditIcon />

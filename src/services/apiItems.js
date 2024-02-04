@@ -283,6 +283,17 @@ async function getAllAvatars() {
   return avatars;
 }
 
+async function uploadUserAvatar(file) {
+  console.log(file);
+  const { data, error } = await supabase.storage
+    .from('user_avatar')
+    .upload(`avatar-${Date.now()}.png`, file);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -298,4 +309,5 @@ export {
   addCategory,
   updateAvatar,
   getAllAvatars,
+  uploadUserAvatar,
 };
