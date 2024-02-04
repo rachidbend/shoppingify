@@ -88,12 +88,15 @@ const Username = styled.span`
 `;
 
 const Avatar = styled.img`
-  width: auto;
+  width: 6.8rem;
   height: 6.8rem;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   background-color: var(--color-white);
-  border-radius: 50%;
+  border-radius: 15rem;
   margin-bottom: 4.8rem;
+  object-fit: cover;
+
   /* border: 0.2rem solid var(--color-accent); */
 `;
 const NoAvatar = styled.p`
