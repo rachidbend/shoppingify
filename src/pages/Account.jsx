@@ -10,6 +10,7 @@ import { MdLock } from 'react-icons/md';
 import { MdEditSquare } from 'react-icons/md';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useUpdateUsername } from '../Hooks/useUpdateUsername';
+import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
 
 const StyledAccount = styled.div`
   background-color: var(--color-background);
@@ -119,10 +120,17 @@ const EditIcon = styled(MdEditSquare)`
   width: auto;
   color: var(--color-gray-100);
   transform: translateY(-0.8rem);
-
   cursor: pointer;
+
+  position: absolute;
+  top: 1rem;
+  left: 0;
 `;
-const IconContainer = styled.div``;
+const IconContainer = styled.div`
+  position: relative;
+  width: auto;
+  height: 100%;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -192,6 +200,11 @@ const Input = styled.input`
   border: 0.1rem solid var(--color-gray-200);
   border-radius: 0.8rem;
   background: transparent;
+  outline: none;
+
+  &:focus {
+    border: 0.1rem solid var(--color-accent);
+  }
 `;
 
 const UsernameInput = styled(Input)``;
@@ -202,6 +215,7 @@ function Account() {
   const [isOpenEmail, setIsOpenEmail] = useState(false);
   const [isOpenPassword, setIsOpenPassword] = useState(false);
   const [isOpenUsername, setIsOpenUsername] = useState(false);
+  const [isOpenAvatar, setIsOpenAvatar] = useState(false);
 
   const { logout, error: logoutError } = useLogout();
   const { user, error: useError, isLoading: isLoadingUser } = useUser();
@@ -211,10 +225,13 @@ function Account() {
     isLoading: isLoadingProfile,
     error: profileError,
   } = useGetUserProfile({ userId: user.id });
+  const { updateAvatar, error: avatarError } = useUpdateAvatar();
+
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   function onHandleUsername(e) {
     setUsername(e.target.value);
@@ -224,6 +241,9 @@ function Account() {
   }
   function onHandlePassword(e) {
     setPassword(e.target.value);
+  }
+  function handleAvatarUrl(e) {
+    setAvatarUrl(e.target.value);
   }
 
   function onSaveUsername() {
@@ -237,6 +257,10 @@ function Account() {
     if (!password) return;
     updateUser({ password: password });
   }
+  function onSaveAvatarUrl() {
+    updateAvatar({ url: avatarUrl });
+    setIsOpenAvatar(false);
+  }
 
   if (isLoadingUser || isLoadingProfile) return <Spinner />;
 
@@ -248,14 +272,35 @@ function Account() {
   return (
     <StyledAccount>
       <Title>Account details</Title>
-
-      <Avatar
-        src={
-          profile?.at(0)?.avatar
-            ? profile?.at(0)?.avatar
-            : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
-        }
-      />
+      <Container>
+        <Avatar
+          src={
+            profile?.at(0)?.avatar
+              ? profile?.at(0)?.avatar
+              : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
+          }
+        />
+        {isOpenAvatar && (
+          <InputContainer>
+            <Input
+              placeholder="Image URL"
+              type="text"
+              value={avatarUrl}
+              onChange={handleAvatarUrl}
+            />
+            <SaveButton
+              onClick={() => {
+                onSaveAvatarUrl();
+              }}
+            >
+              Save
+            </SaveButton>
+          </InputContainer>
+        )}
+        <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
+          <EditIcon />
+        </IconContainer>
+      </Container>
 
       <Container>
         <UsernameIcon />

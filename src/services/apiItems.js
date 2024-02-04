@@ -263,6 +263,18 @@ async function addCategory({ userId, allCategories, category }) {
   return data;
 }
 
+async function updateAvatar({ userId, url }) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ avatar: url })
+    .eq('id', userId)
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -276,4 +288,5 @@ export {
   getHistoryList,
   addListToHistory,
   addCategory,
+  updateAvatar,
 };
