@@ -20,31 +20,7 @@ import MobileSideProvider from './Context/MobileSideContext';
 import Account from './pages/Account';
 import ResetPassword from './pages/ResetPassword';
 import GetEmail from './pages/GetEmail';
-import { supabase } from './services/supabase';
 import EmailConfirmation from './UI/EmailConfirmation';
-
-/*
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <AppLayout />,
-    children: [
-      {
-        path: '/items',
-        element: <Items />,
-      },
-      {
-        path: '/history',
-        element: <History />,
-      },
-      {
-        path: '/statistics',
-        element: <Statistics />,
-      },
-    ],
-  },
-]); 
-*/
 
 const styled = { createGlobalStyle };
 
@@ -58,31 +34,46 @@ export const GlobalStyle = styled.createGlobalStyle`
     font-size: 62.5%;
   }
   :root {
+    /* main font familiy */
     --font-main: 'Quicksand', sans-serif;
 
+    /* background colors */
     --color-background: #fafafe;
     --color-nav-background: #fff;
     --color-shopping-list-background: #fff0de;
-
-    --color-white: #fff;
-    --color-black: #000;
-
-    --color-gray-100: #454545;
-    --color-gray-200: #bdbdbd;
-    --color-gray-300: #c1c1c4;
-    --color-gray-400: #828282;
-    --color-gray-500: #c1c1c3;
-    --color-gray-600: #e0e0e0;
-
-    --color-accent: #f9a109;
-
-    --color-red: #eb5757;
-    --color-blue: #56ccf2;
     --color-shopping-add-item-background: #80485b;
 
+    /* main colors */
+    --color-white: #fff;
+    --color-black: #000;
+    --color-accent: #f9a109;
+
+    /* grey cloros */
     --color-title: #34333a;
+    --color-grey-100: #454545;
+    --color-grey-200: #bdbdbd;
+    --color-grey-300: #c1c1c4;
+    --color-grey-400: #828282;
+    --color-grey-500: #c1c1c3;
+    --color-grey-600: #e0e0e0;
+
+    /* secondary colors */
+    --color-red: #eb5757;
+    --color-blue: #56ccf2;
+
+    /* box shadows */
+    --shadow-100: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+    --shadow-item: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
+
+    /* transitions */
   }
 `;
+
+/* The AppLayout is protected by the ProtectedRoute to prevent un autherized app use. 
+  In turn the History, Items, Statistics, and Account pages are protected by the ProtectedRoute because they reside inside of AppLayout. 
+  The sub-pages, which are item-details, shopping-list, history-list,and add-new-item, are protected aswell.
+  The pages that are not protected, meaning any one can access them are, Login, Signup,ResetPassword, GetEmail, and EmailConfirmation.
+*/
 
 const queryClient = new QueryClient();
 
@@ -91,45 +82,42 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
       <BrowserRouter>
+        {/* global styles for the app */}
         <GlobalStyle />
 
+        {/* the side page provider allows for navigation between the shopping list and item details */}
         <SidePageProvider>
           <AppProvider>
+            {/* the Mobile provider allows for the app to find out if it is being displayed in a mobile device, so that the app can addapt how it shows the main and side pages like the shopping list.  */}
             <MobileSideProvider>
-              <AnimatePresence>
-                <Routes location={location} key={location.key}>
-                  <Route
-                    element={
-                      <ProtectedRoute>
-                        <AppLayout />
-                      </ProtectedRoute>
-                    }
-                  >
-                    <Route
-                      index
-                      path="/"
-                      element={<Navigate to={'/items'} />}
-                    />
-                    <Route path="/items" element={<Items />}>
-                      <Route
-                        path="/items/:itemId"
-                        element={<EmptyContainer />}
-                      />
-                    </Route>
-                    <Route path="/history" element={<History />} />
-                    <Route path="/statistics" element={<Statistics />} />
-                    <Route path="/history/:listId" element={<HistoryList />} />
-                    <Route path="/account" element={<Account />} />
-
-                    <Route path="*" element={<PageNotFound />} />
+              <Routes location={location} key={location.key}>
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  {/* these are the main routes */}
+                  <Route index path="/" element={<Navigate to={'/items'} />} />
+                  <Route path="/items" element={<Items />}>
+                    <Route path="/items/:itemId" element={<EmptyContainer />} />
                   </Route>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/reset" element={<ResetPassword />} />
-                  <Route path="/get-email" element={<GetEmail />} />
-                  <Route path="/confirm" element={<EmailConfirmation />} />
-                </Routes>
-              </AnimatePresence>
+                  <Route path="/history" element={<History />} />
+                  <Route path="/statistics" element={<Statistics />} />
+                  <Route path="/account" element={<Account />} />
+                  {/* this shows the history list when a specific list is requested */}
+                  <Route path="/history/:listId" element={<HistoryList />} />
+
+                  <Route path="*" element={<PageNotFound />} />
+                </Route>
+                {/* these are the pages for logging in, signing up, reseting password, and confirming email on signup. */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/reset" element={<ResetPassword />} />
+                <Route path="/get-email" element={<GetEmail />} />
+                <Route path="/confirm" element={<EmailConfirmation />} />
+              </Routes>
             </MobileSideProvider>
           </AppProvider>
         </SidePageProvider>
@@ -139,25 +127,3 @@ function App() {
 }
 
 export default App;
-
-// const queryClient = new QueryClient();
-
-// function App() {
-//   return (
-//     <QueryClientProvider client={queryClient}>
-//       <ReactQueryDevtools />
-//       <BrowserRouter>
-//         <GlobalStyle />
-//         <AnimatePresence>
-//           <AppProvider>
-//             <SidePageProvider>
-//               <RoutesWithAnimation />
-//             </SidePageProvider>
-//           </AppProvider>
-//         </AnimatePresence>
-//       </BrowserRouter>
-//     </QueryClientProvider>
-//   );
-// }
-
-// export default App;
