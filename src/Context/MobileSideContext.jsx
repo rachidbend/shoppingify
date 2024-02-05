@@ -7,13 +7,15 @@ export default function MobileSideProvider({ children }) {
   // stores the state of when the sidepage should be displayed ro not (for use in mobile view)
   const [isOpen, setIsOpen] = useState(false);
 
+  // this checks if the device used is a mobile device (phone or tablet)
+  const isMobile = window.innerWidth <= 780;
   // this function allows a component to change the state
   function onOpenMobileSide() {
-    setIsOpen(isOpen => !isOpen);
+    isMobile ? setIsOpen(isOpen => !isOpen) : setIsOpen(true);
   }
 
   return (
-    <MobileContext.Provider value={{ isOpen, onOpenMobileSide }}>
+    <MobileContext.Provider value={{ isOpen, onOpenMobileSide, isMobile }}>
       {children}
     </MobileContext.Provider>
   );

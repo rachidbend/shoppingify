@@ -5,7 +5,7 @@ import { useUpdateShoppingList } from '../Hooks/useUpdateShoppingList';
 import { useUser } from '../Hooks/useUser';
 
 /* 
-the reason i created this context is to be able to get the item data and the list data to be able to add an item into the shopping list
+The reason I created this context is to be able to get the item data and the list data to be able to add an item into the shopping list
 */
 const AppContext = createContext();
 
@@ -30,12 +30,12 @@ export default function AppProvider({ children }) {
 
   const { user } = useUser();
 
+  // This function gets an item and adds that items to the shopping list,
+  // so whe nthe user clicks the plus icon to add an item, this function is called and it adds that item to the shopping list.
   function addItemToList(item) {
-    // id, newitem, oldList
-
-    // this is what adds the item to the shopping list
-    if (isLoadingShoppingList) return;
-    if (isLoadingAllItems) return;
+    // make sure the shopping list and all the items exist first
+    if (isLoadingShoppingList || isLoadingAllItems) return;
+    // then we can update without any missing data
     updateShoppingList({
       userId: user.id,
       id: shoppingList.id,
@@ -62,6 +62,7 @@ export default function AppProvider({ children }) {
   );
 }
 
+// This custom hook gives easy access to the provided values
 export function useGetAppData() {
   const value = useContext(AppContext);
   if (value === undefined)
