@@ -64,6 +64,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     /* box shadows */
     --shadow-100: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
     --shadow-item: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
+    --shadow-item-hover: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
 
     /* transitions */
   }

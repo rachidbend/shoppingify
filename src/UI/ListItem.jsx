@@ -6,7 +6,7 @@ const StyledItem = styled.div`
   width: 18.2rem;
   border-radius: 1.2rem;
   background-color: var(--color-white);
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-item);
   padding: 1.3rem 1.2rem;
   padding-right: 1.8rem;
 
@@ -40,14 +40,15 @@ const QuantityText = styled.span`
 `;
 
 function ListItem({ itemDetails }) {
-  const { id, created_at, name, note, image, category, quantity } = itemDetails;
+  // available variables { id, created_at, name, note, image, category, quantity }
+  const { id, name, quantity } = itemDetails;
   return (
     <StyledItem>
       <StyledLink to={`/items/${id}`}>
         <Name>{name}</Name>
       </StyledLink>
       <Quantity>
-        {quantity} <QuantityText>pcs</QuantityText>{' '}
+        {quantity} <QuantityText>pcs</QuantityText>
       </Quantity>
     </StyledItem>
   );

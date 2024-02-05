@@ -4,33 +4,26 @@ import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 const StyledItem = styled.div`
-  width: 18.2rem;
-  border-radius: 1.2rem;
-  background-color: var(--color-white);
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
-  padding: 1.3rem 1.2rem;
-
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
   align-items: flex-start;
-  flex-grow: 0;
-  flex-shrink: 0;
+  gap: 1.2rem;
+
+  width: 18.2rem;
+  border-radius: 1.2rem;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-item);
+  padding: 1.3rem 1.2rem;
 
   transform: scale(100%);
 
-  transition: 260ms ease-in-out;
-
   &:hover {
-    transform: scale(103%);
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+    transform: scale(102%);
+    box-shadow: var(--shadow-item-hover);
   }
 
   @media screen and (max-width: 1024px) {
-    width: 16rem;
-  }
-
-  @media screen and (max-width: 780px) {
     width: 16rem;
   }
 
@@ -46,8 +39,12 @@ const Name = styled.p`
 const Icon = styled(MdAdd)`
   width: 2.4rem;
   height: 2.4rem;
-  color: var(--color-gray-100);
+  color: var(--color-grey-100);
   cursor: pointer;
+
+  &:hover {
+    color: var(--color-accent);
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -56,7 +53,8 @@ const StyledLink = styled(Link)`
 `;
 
 function Item({ itemDetails, onAddItem }) {
-  const { id, created_at, name, note, image, category } = itemDetails;
+  // available variables { id, created_at, name, note, image, category }
+  const { id, name } = itemDetails;
 
   return (
     <StyledItem>
