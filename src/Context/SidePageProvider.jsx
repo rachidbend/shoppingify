@@ -1,15 +1,15 @@
 import { createContext, useContext, useState } from 'react';
-
+// side page context
 const SidePageContext = createContext();
 
 function SidePageProvider({ children }) {
+  // storing the state of the page that will be displayed, and it starts as the shopping list by default
   const [page, setPage] = useState('shopping-list');
-  // available pages: shopping-list, add-new-item, item-details
 
+  // this changes the state to be the page that shoold be displayed
   function handleChangePage(goTo) {
     if (goTo === 'shopping-list') setPage('shopping-list');
     if (goTo === 'add-new-item') setPage('add-new-item');
-    if (goTo === 'item-details') setPage('item-details');
   }
 
   return (
@@ -24,6 +24,7 @@ function SidePageProvider({ children }) {
   );
 }
 
+// custom hook to easily get the values of the context without needing to export the context itself
 function useSidePage() {
   const value = useContext(SidePageContext);
   if (value === undefined)

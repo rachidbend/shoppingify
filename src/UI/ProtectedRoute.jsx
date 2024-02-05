@@ -3,7 +3,9 @@ import { useUser } from '../Hooks/useUser';
 import Spinner from './Spinner';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
+// full page background for the spinner
 const FullPage = styled.div`
   height: 100vh;
   width: 100%;
@@ -38,6 +40,6 @@ export default function ProtectedRoute({ children }) {
     );
 
   // 4. if there is an authenticated user, render the app
-  if (!isAuthenticated) return <p>you must be authenticated first</p>;
+  if (!isAuthenticated) toast.error('You must be authenticated first!');
   if (isAuthenticated) return children;
 }
