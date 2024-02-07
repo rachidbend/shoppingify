@@ -1,30 +1,40 @@
 import { createContext, useContext, useState } from 'react';
 
-// mobile context
+// Context for managing mobile side panel state
 const MobileContext = createContext();
 
+// Provider component for managing the state of the mobile side panel
 export default function MobileSideProvider({ children }) {
-  // stores the state of when the sidepage should be displayed ro not (for use in mobile view)
+  // State to manage whether the mobile side panel is open or closed
   const [isOpen, setIsOpen] = useState(false);
 
-  // this checks if the device used is a mobile device (phone or tablet)
+  // Determine if the device is mobile (phone or tablet)
   const isMobile = window.innerWidth <= 780;
-  // this function allows a component to change the state
+
+  // Function to toggle the state of the mobile side panel
   function onOpenMobileSide() {
+    // If the device is mobile, toggle the state; otherwise, set the state to open
     isMobile ? setIsOpen(isOpen => !isOpen) : setIsOpen(true);
   }
 
+  // Value provided by the context
+  const contexValue = {
+    isOpen,
+    onOpenMobileSide,
+    isMobile,
+  };
+
   return (
-    <MobileContext.Provider value={{ isOpen, onOpenMobileSide, isMobile }}>
+    <MobileContext.Provider value={contexValue}>
       {children}
     </MobileContext.Provider>
   );
 }
 
-// custom hook to easily get the values needed
+// Custom hook to easily access the mobile side panel context.
 export function useMobileSide() {
   const value = useContext(MobileContext);
-
+  // Throw an error if the hook is used outside of the MobileSideProvider
   if (value === undefined)
     throw new Error(
       'Mobile side context is used outside of the MobileSideProvider!'

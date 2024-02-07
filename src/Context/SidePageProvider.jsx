@@ -1,12 +1,14 @@
 import { createContext, useContext, useState } from 'react';
-// side page context
+
+// Context for managing side page state
 const SidePageContext = createContext();
 
-function SidePageProvider({ children }) {
-  // storing the state of the page that will be displayed, and it starts as the shopping list by default
+// Provider component for managing side page state.
+export default function SidePageProvider({ children }) {
+  // State to store the currently displayed page, defaults to 'shopping-list'
   const [page, setPage] = useState('shopping-list');
 
-  // this changes the state to be the page that shoold be displayed
+  // Function to change the currently displayed page.
   function handleChangePage(goTo) {
     if (goTo === 'shopping-list') setPage('shopping-list');
     if (goTo === 'add-new-item') setPage('add-new-item');
@@ -24,9 +26,11 @@ function SidePageProvider({ children }) {
   );
 }
 
-// custom hook to easily get the values of the context without needing to export the context itself
-function useSidePage() {
+// Custom hook to easily access the side page state provided by SidePageProvider.
+export function useSidePage() {
   const value = useContext(SidePageContext);
+
+  // Throw an error if the hook is used outside of the SidePageProvider
   if (value === undefined)
     throw new Error(
       'The SidePageContext was used outside the SidePageProvider  '
@@ -34,5 +38,3 @@ function useSidePage() {
 
   return value;
 }
-
-export { SidePageProvider, useSidePage };
