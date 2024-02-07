@@ -55,16 +55,23 @@ const PercentageSlider = styled(motion.span)`
     props.backgroundcolor ? props.backgroundcolor : 'var(-color-black)'};
 `;
 
+// TopItemsOrCategories component renders an item or category with its percentage and a corresponding slider.
 function TopItemsOrCategories({ name, itemNumber, totalNumber, color }) {
   return (
+    // Container for the top item or category
     <StyledTopItemsOrCategories>
+      {/* Container for text */}
       <TextContainer>
+        {/* Name of the item or category */}
         <Name>{name}</Name>
+        {/* Percentage of the item or category */}
         <Percentage>
           {((itemNumber / totalNumber) * 100).toFixed(0)}%
         </Percentage>
       </TextContainer>
+      {/* Container for the percentage slider */}
       <TotalSlider>
+        {/* Percentage slider */}
         <PercentageSlider
           initial={{
             width: 0,

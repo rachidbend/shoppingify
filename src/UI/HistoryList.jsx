@@ -8,6 +8,7 @@ import ListItem from './ListItem';
 import { daysOfTheWeek } from '../helpers/helperVariables';
 import { groupByProperty } from '../helpers/helperFunctions';
 import ItemsCategory from './ItemsCategory';
+import toast from 'react-hot-toast';
 
 const StyledHistoryList = styled.div`
   padding: 0 8rem;
@@ -53,48 +54,35 @@ const Container = styled.div`
   margin-top: 5rem;
 `;
 
-const CategoryContainer = styled.div`
-  margin-bottom: 6.47rem;
-`;
-
-const CategoryTitle = styled.h2`
-  color: var(--color-black);
-  margin-bottom: 1.8rem;
-  font-size: 1.8rem;
-  font-weight: 500;
-`;
-const CategoryItemsContianer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1.96rem;
-  flex-grow: 0;
-  flex-shrink: 0;
-`;
-
 const ListDate = styled.span`
   color: var(--color-grey-300);
   font-size: 1.2rem;
   font-weight: 500;
 `;
 
+// HistoryList component displays the details of a specific history list.
+// It retrieves the list details based on the listId parameter from the URL,
+// groups the items based on category, and displays them.
 function HistoryList() {
-  // gets the id of the history list that it should display
+  // Get the id of the history list from the URL params
   const { listId } = useParams();
-  // then geys the details of that list
+
+  // Fetch the details of the specified list
   const { list, isLoading, error } = useGetHistoryList(listId);
 
+  // Display loading spinner while fetching data
   if (isLoading) return <Spinner />;
-  if (error) return <p>{error.message} </p>;
 
-  // then groupes the items based on the category
+  // Display error toast if data fetching fails
+  if (error) return toast.error(error.message);
+
+  // Group the items based on their category
   const availableCategories = groupByProperty(
     list.at(0).shopping_list,
     'category'
   );
 
-  // get the date where it was created and format it correclty
+  // Format the completion date of the list
   const listDate = new Date(list.at(0).completed_at);
   const listFullDate = `${
     daysOfTheWeek[listDate.getDay()]
@@ -104,16 +92,28 @@ function HistoryList() {
 
   return (
     <StyledHistoryList>
+      {/* Render a back button with custom margins */}
       <BackButton marginTop="3.71rem" marginBottom="3.2rem" />
+
+      {/* Display the name of the list */}
       <Name>{list.at(0).name}</Name>
+
+      {/* Display the date of completion */}
       <DateOfCompletion>
         <CalendarIcon />
         <ListDate>{listFullDate}</ListDate>
       </DateOfCompletion>
+
+      {/* Container to display items grouped by category */}
       <Container>
+        {/* Iterate over available categories and render items for each */}
         {Object.keys(availableCategories)?.map(key => (
           <ItemsCategory marginbottom="6.47rem" key={key}>
+            {/* Render category title */}
+
             <ItemsCategory.Title>{key}</ItemsCategory.Title>
+
+            {/* Render items for the current category */}
             <ItemsCategory.Container>
               {availableCategories[key].map(item => {
                 return <ListItem itemDetails={item} key={item.id} />;

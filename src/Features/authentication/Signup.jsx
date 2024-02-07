@@ -208,6 +208,7 @@ function Signup() {
           onError: error => {
             // Display error toast if signup fails
             toast.error(error.message);
+            throw new Error(error.message);
           },
         }
       );

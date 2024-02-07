@@ -59,8 +59,15 @@ const Paragraph = styled.div`
   margin-bottom: 4.8rem;
 `;
 
+// EmailConfirmation component renders a message to inform the user to check their inbox for a confirmation email.
+// It also provides a button to navigate to the login page.
 function EmailConfirmation() {
   const navigate = useNavigate();
+
+  // Handle click event to navigate to the login page
+  const handleLoginClick = () => {
+    navigate('/login', { replace: true });
+  };
 
   return (
     <StyledEmailConfirmation>
@@ -68,9 +75,7 @@ function EmailConfirmation() {
         <Title>Confirm email</Title>
         <Paragraph>Check your inbox for a confirmation email! </Paragraph>
         <ButtonContainer>
-          <Save onClick={() => navigate('/login', { replace: true })}>
-            Log In
-          </Save>
+          <Save onClick={handleLoginClick}>Log In</Save>
         </ButtonContainer>
       </Container>
     </StyledEmailConfirmation>

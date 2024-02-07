@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import noItemsIllustration from '../../assets/undraw_shopping.svg';
-import Modal from '../../UI/Model';
+import Modal from '../../UI/Modal';
 import { useState } from 'react';
 import { updateShopplingListName } from '../../services/apiItems';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';

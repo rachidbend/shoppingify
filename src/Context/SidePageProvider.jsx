@@ -6,7 +6,7 @@ const SidePageContext = createContext();
 // Provider component for managing side page state.
 export default function SidePageProvider({ children }) {
   // State to store the currently displayed page, defaults to 'shopping-list'
-  const [page, setPage] = useState('shopping-list');
+  const [currentPage, setPage] = useState('shopping-list');
 
   // Function to change the currently displayed page.
   function handleChangePage(goTo) {
@@ -17,7 +17,7 @@ export default function SidePageProvider({ children }) {
   return (
     <SidePageContext.Provider
       value={{
-        page,
+        currentPage,
         handleChangePage,
       }}
     >

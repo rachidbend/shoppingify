@@ -151,6 +151,12 @@ const LinkHoverSpan = styled(TbTriangleFilled)`
   left: 0;
 `;
 
+// Function to get the position of an element
+const getElementPosition = ref => {
+  // Get the bounding client rect of the element
+  return ref?.current?.getBoundingClientRect();
+};
+
 const adjustSpanPosition = (sideSpanRef, spanPosition, ref, position) => {
   // checks which route is active
   // then changes the position of the sideSpan based on it, and puts it in the middle
@@ -161,6 +167,7 @@ const adjustSpanPosition = (sideSpanRef, spanPosition, ref, position) => {
   }
 };
 
+// Main NavSideBar component
 function NavSideBar() {
   // to make sure that when a link is hovered, we show the appropriate element
   const [linkHovered, setLinkHovered] = useState('');
@@ -176,11 +183,6 @@ function NavSideBar() {
   const historyRef = useRef();
   const statisticsRef = useRef();
   // initiating the position of each element
-  let spanPosition;
-  let accountPosition;
-  let itemsPosition;
-  let historytPosition;
-  let statisticsPosition;
 
   // this effect runs on every re-render to make sure the position of the span is always correct
   useEffect(function () {
@@ -193,23 +195,34 @@ function NavSideBar() {
       statisticsRef?.current === undefined
     )
       return;
-    // getting the position of each element
-    spanPosition = sideSpanRef?.current.getBoundingClientRect();
-    accountPosition = accountRef?.current.getBoundingClientRect();
-    itemsPosition = itemsRef?.current.getBoundingClientRect();
-    historytPosition = historyRef?.current.getBoundingClientRect();
-    statisticsPosition = statisticsRef?.current.getBoundingClientRect();
+    // Get the position of the side span
+    const sideSpanPosition = getElementPosition(sideSpanRef);
+    // Get the position of each navigation item
+    const accountPosition = getElementPosition(accountRef);
+    const itemsPosition = getElementPosition(itemsRef);
+    const historyPosition = getElementPosition(historyRef);
+    const statisticsPosition = getElementPosition(statisticsRef);
 
     // console.log(itemsRef.current.classList.contains('active'));
     // changing the position of the side span depending on which page is active
     // and putting it in the middle of the element, to look like they are aligned in the middle
 
-    adjustSpanPosition(sideSpanRef, spanPosition, accountRef, accountPosition);
-    adjustSpanPosition(sideSpanRef, spanPosition, itemsRef, itemsPosition);
-    adjustSpanPosition(sideSpanRef, spanPosition, historyRef, historytPosition);
     adjustSpanPosition(
       sideSpanRef,
-      spanPosition,
+      sideSpanPosition,
+      accountRef,
+      accountPosition
+    );
+    adjustSpanPosition(sideSpanRef, sideSpanPosition, itemsRef, itemsPosition);
+    adjustSpanPosition(
+      sideSpanRef,
+      sideSpanPosition,
+      historyRef,
+      historyPosition
+    );
+    adjustSpanPosition(
+      sideSpanRef,
+      sideSpanPosition,
       statisticsRef,
       statisticsPosition
     );

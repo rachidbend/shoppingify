@@ -83,25 +83,34 @@ const InputContainer = styled.div`
 `;
 
 function GetEmail() {
+  // Initialize react-hook-form
   const { register, handleSubmit, reset } = useForm();
 
-  const { forgotPassword, error, data: forgotData } = useForgotPassword();
+  // Use the useForgotPassword hook to handle forgot password functionality
+  const { forgotPassword, error } = useForgotPassword();
 
+  // Function to handle form submission
   function onSubmit(data) {
-    console.log(data);
+    // Return if data is empty
     if (!data) return;
+    // Call forgotPassword function with email and callback options
     forgotPassword(data.email, {
       onSuccess: () => {
+        // Reset form on success
         reset();
       },
       onError: error => toast.error(error.message),
     });
   }
 
+  // Show error toast if there's an error
+  if (error) toast.error(error.message);
+
   return (
     <StyledGetEmail>
       <Container>
         <Title>Enter your email</Title>
+        {/* Form for entering email */}
         <form action="" onSubmit={handleSubmit(onSubmit)}>
           <InputContainer>
             <Input
@@ -114,6 +123,7 @@ function GetEmail() {
             />
           </InputContainer>
 
+          {/* Button to submit form */}
           <ButtonContainer>
             <Save type="submit" value={'Save'} />
           </ButtonContainer>

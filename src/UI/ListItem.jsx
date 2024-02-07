@@ -39,14 +39,20 @@ const QuantityText = styled.span`
   font-weight: 500;
 `;
 
+// ListItem component renders details of an individual item within a list.
+// It displays the item name and quantity.
 function ListItem({ itemDetails }) {
   // available variables { id, created_at, name, note, image, category, quantity }
+  // Destructure itemDetails object to extract relevant properties
   const { id, name, quantity } = itemDetails;
   return (
     <StyledItem>
+      {/* Link to navigate to the item details page */}
       <StyledLink to={`/items/${id}`}>
+        {/* Display the name of the item */}
         <Name>{name}</Name>
       </StyledLink>
+      {/* Display the quantity of the item */}
       <Quantity>
         {quantity} <QuantityText>pcs</QuantityText>
       </Quantity>

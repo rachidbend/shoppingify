@@ -60,12 +60,16 @@ const SideContainer = styled(motion.div)`
   }
 `;
 
+// AppLayout component manages the overall layout of the application.
+// It includes navigation, main content, side pages, and toast notifications.
 function AppLayout() {
-  // side page that should be displayed, and it's handler
-  const { page, handleChangePage } = useSidePage();
-  // if the user requests details of an item, an item id will be the the params
+  // Get the current side page and its handler
+  const { currentPage, handleChangePage } = useSidePage();
+  // Get the item ID from URL parameters
+  // If the user requests details of an item, an item id will be the the params
   const { itemId } = useParams();
-  // the side page should be open or closed based on if a mobile device is used and user input
+  // Determine if the side menu is open and if the user is on a mobile device
+  // The side page should be open or closed based on if a mobile device is used as well as user input
   const { isOpen, isMobile } = useMobileSide();
 
   return (
@@ -87,20 +91,20 @@ function AppLayout() {
           },
         }}
       />
-      {/* side navigation */}
+      {/* Side navigation */}
       <NavSideBar />
       <Outlet />
 
-      {/* contianer for the side pages to be more consistent */}
+      {/* Container for side pages */}
       <SideContainer
         isopen={isOpen ? 'true' : isMobile ? 'false' : 'true'}
         ismobile={isMobile ? 'true' : 'false'}
       >
-        {/* show the appropriate component depending on the side page requested by the user */}
-        {page === 'shopping-list' && !itemId && (
+        {/* Render appropriate side page based on the current page and item ID */}
+        {currentPage === 'shopping-list' && !itemId && (
           <ShoppingList key={'component-shopping-list'} />
         )}
-        {page === 'add-new-item' && !itemId && (
+        {currentPage === 'add-new-item' && !itemId && (
           <AddNewItem
             key={'component-add-new-item'}
             onchangePage={goTo => handleChangePage(goTo)}

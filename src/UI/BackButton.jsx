@@ -25,14 +25,20 @@ const ArrowIcon = styled(MdArrowRightAlt)`
   transform: rotate(180deg);
 `;
 
+// BackButton component renders a button that allows the user to navigate back to the previous page.
 function BackButton({ marginTop = '2.48rem', marginBottom = '3.11rem' }) {
   const navigate = useNavigate();
+
+  // Handle click event to navigate back to the previous page
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   return (
     <StyledBackButton
       margintop={marginTop}
       marginbottom={marginBottom}
-      onClick={() => navigate(-1)}
+      onClick={handleBackClick}
     >
       <ArrowIcon /> back
     </StyledBackButton>
