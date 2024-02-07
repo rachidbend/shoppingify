@@ -2,18 +2,18 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useLogin } from '../../Hooks/useLogin';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { FcGoogle } from 'react-icons/fc';
 // import { ImFacebook2 } from 'react-icons/im';
 // import { FaXTwitter } from 'react-icons/fa6';
 import { useSigninWithGoogle } from '../../Hooks/useSigninWithGoogle';
 
 const StyledLogin = styled.div`
-  height: 100vh;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  width: 100%;
   background-color: var(--color-background);
   font-family: var(--font-main);
 
@@ -23,69 +23,65 @@ const StyledLogin = styled.div`
 `;
 
 const Container = styled.div`
+  width: 38.9rem;
   background-color: var(--color-white);
   border-radius: 2.4rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
   padding: 4rem;
-  width: 38.9rem;
+  box-shadow: var(--shadow-100);
 `;
 
 const Label = styled.label`
-  color: var(--color-title);
-
-  font-size: 1.4rem;
   display: inline-block;
+  font-size: 1.4rem;
   font-weight: 500;
+  color: var(--color-title);
   margin-bottom: 0.8rem;
 `;
 
 const Input = styled.input`
-  color: var(--color-title);
   font-size: 1.4rem;
   font-weight: 500;
+  color: var(--color-title);
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
+  out;
   outline: none;
   margin-bottom: 1.8rem;
   &::placeholder {
-    color: var(--color-gray-200);
     font-family: var(--font-main);
+    color: var(--color-grey-200);
   }
-
   &:focus {
     border: 0.2rem solid var(--color-accent);
   }
-
   &:last-child {
     margin-bottom: 0;
   }
 `;
 
 const Title = styled.h2`
-  color: var(--color-black);
-
   font-size: 2.4rem;
   margin-bottom: 3.38rem;
   font-weight: 500;
+  color: var(--color-black);
   text-align: center;
 `;
 
 const LoginButton = styled.input`
-  padding: 1.4rem 2.32rem 1.4rem 2.42rem;
-  margin-top: 1.6rem;
-  color: var(--color-white);
+  display: inline-block;
   font-size: 1.6rem;
   font-weight: 700;
+  text-transform: capitalize;
+  color: var(--color-white);
+  padding: 1.4rem 2.32rem 1.4rem 2.42rem;
+  margin-top: 1.6rem;
   border-radius: 1.2rem;
   background-color: var(--color-accent);
-  text-transform: capitalize;
-  display: inline-block;
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+  out, background 260ms ease-in-out;
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
@@ -105,56 +101,52 @@ const ForgotPassword = styled.button`
   font-size: 1.2rem;
   font-weight: 500;
   background: none;
+  color: var(--color-grey-400);
   border: none;
   outline: none;
-  color: var(--color-gray-400);
   align-self: flex-end;
   margin-top: 0.6rem;
   margin-left: auto;
   padding: 0.4rem 0 0.4rem 0.4rem;
   cursor: pointer;
-
-  transition: color 200ms ease-out;
   &:hover {
     color: var(--color-accent);
   }
 `;
 
 const OrContainer = styled.div`
-  border-bottom: 1px solid var(--color-gray-200);
   position: relative;
+  border-bottom: 1px solid var(--color-grey-200);
   margin-top: 3.6rem;
   margin-bottom: 4.8rem;
 `;
 const OrText = styled.p`
-  color: var(--color-gray-400);
   font-size: 1.2rem;
   font-weight: 500;
+  color: var(--color-grey-400);
   text-align: center;
   background-color: var(--color-white);
+  padding: 0.4rem;
+  border: 1px solid var(--color-grey-200);
+  border-radius: 0.6rem;
   position: absolute;
   bottom: 0;
-  padding: 0.4rem;
-  border: 1px solid var(--color-gray-200);
-  border-radius: 0.6rem;
   left: 50%;
   transform: translate(-50%, 50%);
 `;
 
 const SignupButton = styled.button`
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--color-grey-100);
   background: none;
   border: none;
   outline: none;
   cursor: pointer;
-
-  font-size: 1.4rem;
-  color: var(--color-gray-100);
-  font-weight: 500;
-  text-align: center;
   padding: 0.2rem 0;
   margin-left: 0.4rem;
-  border-bottom: 1px solid var(--color-gray-100);
-  transition: color 200ms ease-out, border 200ms ease-out;
+  border-bottom: 1px solid var(--color-grey-100);
   &:hover {
     color: var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
@@ -162,14 +154,13 @@ const SignupButton = styled.button`
 `;
 
 const SignupText = styled.p`
-  font-size: 1.4rem;
-  color: var(--color-gray-400);
-  font-weight: 500;
-  text-align: center;
-
   display: flex;
   align-items: baseline;
   justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--color-grey-400);
 `;
 
 const OtherLoginContainer = styled.div`
@@ -177,61 +168,59 @@ const OtherLoginContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   margin-bottom: 2.4rem;
 `;
 
 const OtherLogin = styled.div`
-  padding: 1.1rem 2.95rem;
-  border: 1px solid var(--color-gray-200);
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
-  text-align: center;
   width: 20rem;
-  border-radius: 1.2rem;
-
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
-  cursor: pointer;
-  margin-bottom: 1.2rem;
-
   font-size: 1.4rem;
   font-weight: 500;
   color: var(--color-black);
+  padding: 1.1rem 2.95rem;
+  border: 1px solid var(--color-grey-200);
+  box-shadow: var(--shadow-100);
+  text-align: center;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
 `;
 
 const GoogleIcon = styled(FcGoogle)`
   height: 2.4rem;
   width: 2.4rem;
 `;
-// const FacebookIcon = styled(ImFacebook2)`
-//   height: 2.4rem;
-//   width: 2.4rem;
-//   color: #316ff6;
-// `;
 
-// const TwitterIcon = styled(FaXTwitter)`
-//   height: 2.4rem;
-//   width: 2.4rem;
-// `;
-
+// Component for user login with email and password, or through Google authentication.
 function Login() {
+  // Form validation using react-hook-form
   const { register, handleSubmit, reset } = useForm();
+  // Navigation hook for redirection
   const navigate = useNavigate();
+  // Custom hook for email and password login
   const { login, isLoading: isLoggingIn } = useLogin();
+  // Custom hook for Google authentication
   const { signInWithGoogle, error } = useSigninWithGoogle();
 
+  // Form submission handler
   function onSubmit(data) {
     login(data, {
       onSettled: () => {
+        // Reset form after submission
         reset();
       },
     });
   }
 
+  // Display error toast if authentication fails
+  if (error) toast.error(error.message);
+
   return (
     <StyledLogin>
+      {/* Global toast notifications */}
       <Toaster
         position="top-center"
         toastOptions={{
@@ -244,13 +233,16 @@ function Login() {
             },
           },
           error: {
-            duration: 5000,
+            duration: 10000,
           },
         }}
       />
       <Container>
+        {/* Login title */}
         <Title>Login</Title>
+        {/* Login form */}
         <Form onSubmit={handleSubmit(onSubmit)}>
+          {/* Email input */}
           <Label>Email</Label>
           <Input
             type="email"
@@ -260,6 +252,8 @@ function Login() {
               pattern: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
             })}
           />
+
+          {/* Password input */}
           <Label>Password</Label>
           <Input
             type="password"
@@ -271,24 +265,29 @@ function Login() {
             })}
           />
 
+          {/* Login button */}
           <LoginButton disabled={isLoggingIn} type="submit" value="LOGIN" />
         </Form>
+        {/* Forgot password link */}
         <ForgotPasswordContainer>
           <ForgotPassword onClick={() => navigate('/get-email')}>
             Forgot password?
           </ForgotPassword>
         </ForgotPasswordContainer>
 
+        {/* Or sepirator */}
         <OrContainer>
           <OrText>OR</OrText>
         </OrContainer>
 
+        {/* Google login button */}
         <OtherLoginContainer>
           <OtherLogin onClick={signInWithGoogle}>
             <GoogleIcon />
             Google
           </OtherLogin>
         </OtherLoginContainer>
+        {/* Signup link */}
         <SignupText>
           need an account?
           <SignupButton onClick={() => navigate('/signup')}>
@@ -302,6 +301,7 @@ function Login() {
 
 export default Login;
 
+// this was used to add a trigger to add a profile whenever a new user was creaded, and that new profile will be linked with the user by the id of the user
 /* 
 
 create function public.handle_new_user()

@@ -294,6 +294,23 @@ async function uploadUserAvatar(file) {
   return data;
 }
 
+async function resetShoppingList({ userId }) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      shopping_list: {
+        name: '',
+        items: [],
+      },
+    })
+    .eq('id', userId)
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export {
   getAllItems,
   getShoppingList,
@@ -310,4 +327,5 @@ export {
   updateAvatar,
   getAllAvatars,
   uploadUserAvatar,
+  resetShoppingList,
 };

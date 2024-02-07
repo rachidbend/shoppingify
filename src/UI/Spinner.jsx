@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const StyledSpinner = styled.span`
   box-sizing: border-box;
   position: relative;
@@ -14,7 +22,7 @@ const StyledSpinner = styled.span`
     height: 24px;
     position: absolute;
     border-radius: 50%;
-    background: #ff3d00;
+    background: var(--color-red);
     animation: spin 1s linear infinite;
     transform-origin: 0px 100%;
   }
@@ -29,6 +37,7 @@ const StyledSpinner = styled.span`
   }
 `;
 
+// Spinner component renders a loading spinner.
 const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -37,9 +46,12 @@ const SpinnerContainer = styled.div`
 
 function Spinner() {
   return (
-    <SpinnerContainer>
-      <StyledSpinner></StyledSpinner>
-    </SpinnerContainer>
+    // Container to center the spinner
+    <Container>
+      <SpinnerContainer>
+        <StyledSpinner></StyledSpinner>
+      </SpinnerContainer>
+    </Container>
   );
 }
 

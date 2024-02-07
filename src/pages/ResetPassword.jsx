@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { MdRemoveRedEye } from 'react-icons/md';
 import { useNavigate } from 'react-router';
-import Spinner from '../UI/Spinner';
+
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useForm } from 'react-hook-form';
 
@@ -78,7 +78,7 @@ const ButtonContainer = styled.div`
   align-items: baseline;
 `;
 
-const Save = styled.input`
+const Send = styled.input`
   padding: 1.96rem 2.32rem 1.96rem 2.42rem;
   color: var(--color-white);
   font-size: 1.6rem;
@@ -118,27 +118,33 @@ const InputContainer = styled.div`
 `;
 
 function ResetPassword() {
+  // State variables to manage password visibility
   const [isShow, setIsShow] = useState(false);
   const [isShowSecond, setIsShowSecond] = useState(false);
 
-  const { updateUser } = useUpdateUser();
+  // Hooks for form handling and navigation
+  const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, reset } = useForm();
+  const { updateUser } = useUpdateUser();
 
+  // Function to handle form submission
   function onSbmit(data) {
+    // Return if data is empty
     if (!data) return;
-
+    // Check if password matches confirm password
+    // If passwords match, update user with new password
     if (data.password === data.confirm) updateUser({ password: data.password });
+    reset();
   }
-
-  if (isLoading) return <Spinner />;
 
   return (
     <StyledResetPassword>
       <Container>
         <Title>Reset your password</Title>
+        {/* Form for resetting password */}
         <form onSubmit={handleSubmit(onSbmit)}>
+          {/* Input field for new password */}
           <InputContainer>
             <Input
               placeholder="New password"
@@ -146,6 +152,7 @@ function ResetPassword() {
               {...register('password', { required: true, minLength: 6 })}
             />
 
+            {/* Button to toggle password visibility */}
             <IconContainer
               onClick={() => {
                 setIsShow(!isShow);
@@ -154,6 +161,8 @@ function ResetPassword() {
               <EyeIcon />
             </IconContainer>
           </InputContainer>
+
+          {/* Input field for confirming new password */}
           <InputContainer>
             <Input
               placeholder="Confirm password"
@@ -161,6 +170,7 @@ function ResetPassword() {
               {...register('confirm', { required: true, minLength: 6 })}
             />
 
+            {/* Button to toggle password visibility */}
             <IconContainer
               onClick={() => {
                 setIsShowSecond(!isShowSecond);
@@ -169,11 +179,15 @@ function ResetPassword() {
               <EyeIcon />
             </IconContainer>
           </InputContainer>
+
+          {/* Button container with Log In and Send buttons */}
           <ButtonContainer>
+            {/* Log In button to navigate to login page */}
             <LoginButton onClick={() => navigate('/login', { replace: true })}>
               Log In
             </LoginButton>
-            <Save type="submit" value={'Send'} />
+            {/* Submit button to reset password */}
+            <Send type="submit" value={'Send'} />
           </ButtonContainer>
         </form>
       </Container>

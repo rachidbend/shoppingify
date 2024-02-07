@@ -86,7 +86,7 @@ const ButtonContainer = styled.div`
   text-align: right;
 `;
 
-const Yes = styled.button`
+const Confirm = styled.button`
   padding: 2.06rem 3.07rem;
   color: var(--color-white);
   font-size: 1.6rem;
@@ -124,24 +124,37 @@ const Break = styled.br`
   }
 `;
 
+// Modal component displays a dialog box to prompt the user for confirmation.
+// "onClose" Function to handle modal close action.
+// "onConfirm" Function to handle modal confirm action.
 function Modal({ onClose, onConfirm }) {
+  // Render the modal using createPortal to ensure it's outside the main DOM hierarchy
   return createPortal(
+    // Modal overlay to cover the entire viewport
     <OverLay>
+      {/* Modal content */}
       <StyledModel>
+        {/* Container for modal content */}
         <Container>
+          {/* Text prompting the user */}
           <Text>
             Are you sure that you want to <Break /> cancel this list?
           </Text>
+          {/* Close button to close the modal */}
           <CloseButton onClick={onClose}>
             <CloseIcon />
           </CloseButton>
         </Container>
+        {/* Button container for confirmation options */}
         <ButtonContainer>
+          {/* Cancel button */}
           <Cancel onClick={onClose}>cancel</Cancel>
-          <Yes onClick={onConfirm}>Yes</Yes>
+          {/* Confirmation button */}
+          <Confirm onClick={onConfirm}>Yes</Confirm>
         </ButtonContainer>
       </StyledModel>
     </OverLay>,
+    // Render the modal as a direct child of the document body
     document.body
   );
 }

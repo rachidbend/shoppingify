@@ -5,15 +5,16 @@ import Spinner from '../../UI/Spinner';
 import { useDeleteItem } from '../../Hooks/useDeleteItem';
 import { useGetAppData } from '../../Context/AppContext';
 import BackButton from '../../UI/BackButton';
+import toast from 'react-hot-toast';
 
 const StyledItemDetails = styled.div`
-  background-color: var(--color-white);
-  padding: 0 4.45rem 0 4.41rem;
-
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr auto;
   height: 100%;
+  background-color: var(--color-white);
+  padding: 0 4.45rem 0 4.41rem;
+  overflow: hidden;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
@@ -24,70 +25,64 @@ const StyledItemDetails = styled.div`
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  overflow: hidden;
 `;
 
 const Image = styled.img`
   width: 100%;
   height: auto;
   border-radius: 2.5rem;
-  overflow: hidden;
   margin-bottom: 5.37rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-100);
+  overflow: hidden;
 `;
 
-const EmptyImage = styled.div`
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16/9;
-  background-color: var(--color-gray-300);
-  border-radius: 2.5rem;
-  margin-bottom: 5.37rem;
-
+const ImagePlaceholder = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
   font-size: 1.8rem;
   color: var(--color-white);
   font-weight: 700;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  background-color: var(--color-grey-300);
+  border-radius: 2.5rem;
+  margin-bottom: 5.37rem;
+  box-shadow: var(--shadow-100);
 `;
 
-const NameTag = styled.p`
-  color: var(--color-gray-300);
-
+const DetailLabel = styled.p`
   font-size: 1.2rem;
-
   font-weight: 500;
-
+  color: var(--color-grey-300);
   margin-bottom: 1.15rem;
 `;
 
-const Name = styled.p`
-  color: var(--color-black);
+const ItemName = styled.p`
   font-size: 2.4rem;
   font-weight: 500;
+  color: var(--color-black);
   margin-bottom: 3.33rem;
   text-transform: capitalize;
 `;
 const Category = styled.p`
-  color: var(--color-black);
   font-size: 1.8rem;
   font-weight: 500;
+  color: var(--color-black);
   margin-bottom: 3.61rem;
 `;
 const Note = styled.p`
-  color: var(--color-black);
   font-size: 1.8rem;
   font-weight: 500;
+  color: var(--color-black);
   line-height: normal;
 `;
 
 const DetailsContaner = styled.div`
-  overflow-y: scroll;
   height: 100%;
-
+  overflow-y: scroll;
+  /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -109,21 +104,19 @@ const ButtonsContainer = styled.div`
   margin-top: 3.49rem;
 `;
 
-const Delete = styled.button`
-  color: var(--color-title);
-
+const DeleteButton = styled.button`
   font-size: 1.6rem;
-  padding: 2.06rem 2.42rem 2.06rem 2.52rem;
+  color: var(--color-title);
   font-weight: 700;
-  transition: color 260ms ease-in-out;
+  padding: 2.06rem 2.42rem 2.06rem 2.52rem;
   background: none;
   border: none;
   cursor: pointer;
   &:hover {
-    color: var(--color-gray-300);
+    color: var(--color-grey-300);
   }
 `;
-const Add = styled.button`
+const AddToListButton = styled.button`
   padding: 1.96rem 2.32rem 1.96rem 2.42rem;
   color: var(--color-white);
   font-size: 1.6rem;
@@ -134,7 +127,7 @@ const Add = styled.button`
 
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+  /* transition: color 260ms ease-in-out, background 260ms ease-in-out; */
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
@@ -142,51 +135,94 @@ const Add = styled.button`
 `;
 
 function ItemDetails() {
+  // Extract itemId from URL parameters
+  // if an itemId exists, then this component will be rendered, if not, it will not be displayed.
   const { itemId } = useParams();
-  const { itemDetails, isLoading, error } = useGetItemDetails(itemId);
+
+  // Fetch item details using custom hook
+  const {
+    itemDetails,
+    isLoading,
+    error: itemDetailsError,
+  } = useGetItemDetails(itemId);
+
+  // Access navigation functionality from React Router
   const navigate = useNavigate();
+
+  // Custom hook for deleting an item from the database
   const {
     deleteItem,
     isLoading: isDeleting,
     error: deleteError,
   } = useDeleteItem();
 
-  const { items, isLoadingAllItems, allItemsError, addItemToList } =
-    useGetAppData();
+  // Custom hook to get the function to add the item to the shopping list
+  const { isLoadingAllItems, allItemsError, addItemToList } = useGetAppData();
 
+  // Function to handle item deletion
   function onDelete() {
+    // Return if data is still loading or deletion is in progress
     if (isLoading) return;
+    // Call deleteItem function with itemId
     deleteItem(id);
+    // Navigate back to items page after deletion
     navigate('/items');
   }
 
+  // Function to handle adding item to list
   function onAddToList() {
+    // Return if data is still loading or adding to list is in progress
     if (isLoadingAllItems || isLoading) return;
+    // Add item to list using addItemToList function
     // takes in only the item to add to the list
-    addItemToList(itemDetails.at(0));
+    addItemToList(itemDetails[0]);
+    // Navigate back to items page after adding to list
     navigate('/items');
   }
 
+  // Render spinner while data is loading
   if (isLoading) return <Spinner />;
-  if (error) return <p>{error.message}</p>;
-  const { id, name, image, note, category } = itemDetails.at(0);
+  // Render error message if there's an error fetching data
+  if (itemDetailsError) toast.error(itemDetailsError.message);
+  if (deleteError) toast.error(deleteError.message);
+  if (allItemsError) toast.error(allItemsError.message);
+
+  // Destructure itemDetails to access item properties
+  const { id, name, image, note, category } = itemDetails[0];
 
   return (
     <StyledItemDetails>
+      {/* Back button component */}
       <BackButton />
+      {/* Render item image if available, otherwise show placeholder */}
       <DetailsContaner>
-        {image ? <Image src={image} /> : <EmptyImage>No image</EmptyImage>}
+        {image ? (
+          <Image src={image} />
+        ) : (
+          <ImagePlaceholder>No image</ImagePlaceholder>
+        )}
 
-        <NameTag>name</NameTag>
-        <Name>{name} </Name>
-        <NameTag>category</NameTag>
+        {/* Display item details */}
+        <DetailLabel>name</DetailLabel>
+        <ItemName>{name} </ItemName>
+        <DetailLabel>category</DetailLabel>
         <Category>{category} </Category>
-        <NameTag>note</NameTag>
+        <DetailLabel>note</DetailLabel>
+
+        {/* Show note if available, otherwise display default message */}
         <Note>{note ? note : 'You left no note, consider adding one!'} </Note>
       </DetailsContaner>
+
       <ButtonsContainer>
-        <Delete onClick={onDelete}>delete</Delete>
-        <Add onClick={onAddToList}>Add to list</Add>
+        {/* Button to delete item */}
+        <DeleteButton onClick={onDelete} disabled={isDeleting}>
+          delete
+        </DeleteButton>
+
+        {/* Button to add item to list */}
+        <AddToListButton onClick={onAddToList} disabled={isDeleting}>
+          Add to list
+        </AddToListButton>
       </ButtonsContainer>
     </StyledItemDetails>
   );

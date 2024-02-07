@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { childrenVariants, routeVariants } from '../Variables/variables';
 import Item from '../UI/Item';
 import { MdOutlineSearch } from 'react-icons/md';
 import { useState } from 'react';
 import { useGetAppData } from '../Context/AppContext';
 import Spinner from '../UI/Spinner';
-import { useUser } from '../Hooks/useUser';
+import toast from 'react-hot-toast';
+import { groupByProperty } from '../helpers/helperFunctions';
+import ItemsCategory from '../UI/ItemsCategory';
 
-// page container
+// Page Container
 const StyledItems = styled(motion.div)`
   padding: 0 8rem;
   overflow-y: scroll;
@@ -32,28 +33,21 @@ const StyledItems = styled(motion.div)`
     padding: 0 2.4rem;
   }
 
-  @media screen and (max-width: 780px) {
-    padding: 0 2.4rem;
-  }
-
   @media screen and (max-width: 480px) {
     padding: 0 1.24rem;
   }
 `;
-// animated all children in the page
+
+// Animated all children in the page
 const ChildrenContainer = styled(motion.div)``;
 
-// HEADER CONTAINER
+// Header Container
 const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 
   @media screen and (max-width: 1200px) {
-    flex-direction: column;
-  }
-
-  @media screen and (max-width: 780px) {
     flex-direction: column;
   }
 
@@ -81,9 +75,7 @@ const Title = styled.h1`
   }
 
   @media screen and (max-width: 480px) {
-    /* margin-bottom: 1.8rem; */
     font-size: 2rem;
-
     margin-bottom: 5.71rem;
     margin-top: 0rem;
     display: none;
@@ -102,42 +94,33 @@ const SearchInputContainer = styled.div`
   margin-top: 2.77rem;
 
   @media screen and (max-width: 1200px) {
-    margin-top: 0;
-    margin-bottom: 3.6rem;
+    margin: 0 0 3.6rem 0;
   }
 
   @media screen and (max-width: 780px) {
-    margin-top: 0;
-    margin-bottom: 3.6rem;
+    margin: 0 0 3.6rem 0;
   }
 
   @media screen and (max-width: 480px) {
-    /* margin-top: 0rem; */
-    margin-top: 3.77rem;
-    margin-bottom: 3.6rem;
+    margin: 3.77rem 0 3.6rem 0;
   }
 `;
 
 const SearchInput = styled.input`
+  display: inline-block;
   width: 27.5608rem;
   height: 5.0916rem;
-
-  display: inline-block;
-
+  font-size: 1.4rem;
   border: none;
+  font-weight: 500;
   border-radius: 1.2rem;
+  padding-left: 6.17rem;
   background-color: var(--color-white);
   outline: 1px solid transparent;
+  box-shadow: var(--shadow-100);
 
-  font-size: 1.4rem;
-  font-weight: 500;
-
-  padding-left: 6.17rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
-
-  transition: outline 260ms ease-in-out;
   &::placeholder {
-    color: #bdbdbd;
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
   &:focus {
@@ -151,67 +134,39 @@ const SearchInput = styled.input`
 `;
 
 const SearchIcon = styled(MdOutlineSearch)`
-  color: var(--color-gray-100);
-  position: absolute;
   height: 2.6rem;
   width: 2.6rem;
-
+  position: absolute;
   top: 1.33rem;
   left: 1.61rem;
-
+  color: var(--color-grey-100);
   &:focus {
-    border: 1px solid var(--color-accent);
+    border: 0.1rem solid var(--color-accent);
   }
 `;
 
-// Category
-const CategoryTitle = styled.h2`
-  color: var(--color-black);
-  margin-bottom: 1.8rem;
-  font-size: 1.8rem;
-  font-weight: 500;
-`;
-
-const CategoryContainer = styled.div`
-  margin-bottom: 4.6rem;
-  @media screen and (max-width: 480px) {
-    margin-bottom: 2.71rem;
-  }
-`;
-const CategoryItemsContianer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1.96rem;
-  flex-grow: 0;
-  flex-shrink: 0;
-  @media screen and (max-width: 480px) {
-    gap: 0.86rem;
-    row-gap: 2.4rem;
-  }
-`;
-
+// Component responsible for displaying a list of items with search functionality.
 function Items() {
-  // search input state
+  // State for managing search input
   const [search, setSearch] = useState('');
 
-  // handler when the user inputs a search query
+  // Handler for updating search input
   function handleSearch(e) {
     if (!e) return;
     setSearch(e.target.value);
   }
 
-  // all the items data
-  // const { items, isLoading, error } = useGetAllItems();
+  // Fetch all items data
   const { items, isLoadingAllItems, allItemsError, addItemToList } =
     useGetAppData();
 
+  // Show spinner while loading items
   if (isLoadingAllItems) return <Spinner />;
-  if (allItemsError) return <p>{allItemsError.message}</p>;
-  // filtering for the query
-  // if there is no search query, return all the items
-  // if there is a search query, return the items that have the query in their name
+
+  // Show error toast if there's an error fetching items
+  if (allItemsError) toast.error(allItemsError.message);
+
+  // Filter items based on search query
   const filteredItems =
     search === ''
       ? items
@@ -219,39 +174,20 @@ function Items() {
           item.name.toLowerCase().includes(search.toLocaleLowerCase())
         );
 
-  //  chat gpt's help //////
-  // get all the available item categories without duplicates
-  const availableCategories = filteredItems?.reduce(
-    (accumulator, currentObject) => {
-      const { category } = currentObject;
-
-      // Check if the category is already a key in the accumulator
-      if (!accumulator[category]) {
-        accumulator[category] = [];
-      }
-
-      // Push the current object to the array corresponding to the category
-      accumulator[category].push(currentObject);
-
-      return accumulator;
-    },
-    {}
-  );
+  // Group filtered items by category
+  const categorizedItems = groupByProperty(filteredItems, 'category');
 
   return (
-    <StyledItems variants={routeVariants} initial="initial" animate="final">
-      <ChildrenContainer
-        variants={childrenVariants}
-        initial="initial"
-        animate="final"
-        exit={{ opacity: 0, y: '30px' }}
-      >
+    <StyledItems>
+      <ChildrenContainer>
+        {/* Header section */}
         <HeaderContainer>
           <Title>
             <TitleAccent>Shoppingify </TitleAccent>
             allows you take your shopping list wherever you go
           </Title>
           <SearchInputContainer>
+            {/* Search input */}
             <SearchInput
               value={search}
               onChange={handleSearch}
@@ -261,11 +197,14 @@ function Items() {
           </SearchInputContainer>
         </HeaderContainer>
 
-        {Object.keys(availableCategories)?.map(key => (
-          <CategoryContainer key={key}>
-            <CategoryTitle>{key}</CategoryTitle>
-            <CategoryItemsContianer>
-              {availableCategories[key].map(item => {
+        {/* Render items by category */}
+        {Object.entries(categorizedItems)?.map(([category, items]) => (
+          <ItemsCategory key={category}>
+            {/* Category title */}
+            <ItemsCategory.Title>{category}</ItemsCategory.Title>
+            {/* Render items */}
+            <ItemsCategory.Container>
+              {items.map(item => {
                 return (
                   <Item
                     onAddItem={addItemToList}
@@ -274,8 +213,8 @@ function Items() {
                   />
                 );
               })}
-            </CategoryItemsContianer>
-          </CategoryContainer>
+            </ItemsCategory.Container>
+          </ItemsCategory>
         ))}
       </ChildrenContainer>
     </StyledItems>

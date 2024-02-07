@@ -1,28 +1,25 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-
-import illustration from './../../assets/source.svg';
-import noItemsIllustration from '../../assets/undraw_shopping.svg';
 import { MdCreate } from 'react-icons/md';
-import ShoppingItem from '../../UI/ShoppingItem';
-import { listChildrenVariants } from '../../Variables/variables';
+import ShoppingItem from './ShoppingItem';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
 import { useState } from 'react';
-import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';
 import { useAddListToHistory } from '../../Hooks/useAddListToHistory';
-import Modal from '../../UI/Model';
-import { useUser } from '../../Hooks/useUser';
 import { useGetHistory } from '../../Hooks/useGetHistory';
+import toast from 'react-hot-toast';
+import { groupByProperty } from '../../helpers/helperFunctions';
+import ShoppingListInput from './ShoppingListInput';
+import AddItem from './AddItem';
+import ListItemsCategory from './ListItemsCategory';
+import { useResetShoppingList } from '../../Hooks/useResetShoppingList';
 
 const StyledShoppingList = styled(motion.div)`
   background-color: var(--color-shopping-list-background);
-  /* padding: 4.37rem 3.19rem 4.37rem 4.84rem; */
   padding: 0;
   display: flex;
-  /* padding-bottom: 13rem; */
   height: 100vh;
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
@@ -55,132 +52,13 @@ const ChildrenContainer = styled(motion.div)`
   }
 `;
 
-const AddItemContainer = styled.div`
-  border-radius: 2.4rem;
-  padding: 1.78rem 2.76rem 1.85rem 1.26rem;
-  background-color: var(--color-shopping-add-item-background);
-  /* display: flex; */
-  position: relative;
-  @media screen and (max-width: 480px) {
-    padding: 1.63rem 2.53rem 1.69rem 1rem;
-  }
-`;
-
-const AddItemParagraph = styled.p`
-  color: var(--color-white);
-
-  font-size: 1.6rem;
-  margin-bottom: 1.36rem;
-  font-weight: 700;
-  margin-left: 10.95rem; /* 12.21rem - 1.26rem */
-
-  @media screen and (max-width: 480px) {
-    margin-left: 10.19rem; /* 11.19rem - 1rem */
-  }
-`;
-const AddItemButton = styled.button`
-  background-color: var(--color-white);
-  color: var(--color-title);
-  padding: 0.9rem 2.75rem;
-  border: none;
-  font-weight: 700;
-  font-size: 1.4rem;
-  border-radius: 1.2rem;
-  cursor: pointer;
-  margin-left: 10.95rem; /* 12.21rem - 1.26rem */
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
-
-  border: 0.1rem solid var(--color-white);
-
-  transition: 260ms ease-in-out;
-
-  &:hover {
-    color: var(--color-white);
-    background-color: transparent;
-  }
-
-  @media screen and (max-width: 480px) {
-    margin-left: 10.19rem; /* 11.19rem - 1rem */
-  }
-`;
-
-const AddItemIllustration = styled.img`
-  position: absolute;
-  height: 13.6rem;
-  width: auto;
-  top: -1.68rem;
-`;
-
-// Adding a name to the list
-const NameInputContainer = styled.div`
-  background-color: var(--color-white);
-  padding: 3.49rem 3.96rem;
-  position: fixed;
-  bottom: 0;
-  width: 38.9rem;
-
-  margin: 0 -3.19rem 0 -4.84rem;
-
-  @media screen and (min-width: 780px) and (max-width: 1024px) {
-    margin: 0 -1.43rem 0 -1.6rem;
-    padding: 2.8rem 3rem;
-    width: 32rem;
-  }
-
-  @media screen and (max-width: 480px) {
-    padding: 1.83rem 1.43rem 1.44rem 2.2rem;
-    margin: 0 -1.43rem 0 -1.6rem;
-    width: calc(100% - 6.1581rem);
-  }
-`;
-
-const NameInput = styled.input`
-  border-radius: 1.2rem;
-  border: 2px solid
-    ${props =>
-      props.disabled ? 'var(--color-gray-300)' : 'var(--color-accent)'};
-
-  color: var(--color-title);
-  padding: 0 1.76rem;
-  height: 6.125rem;
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: 500;
-  font-family: var(--font-main);
-  outline: none;
-  cursor: ${props => (props.disabled ? 'no-drop' : 'pointer')};
-`;
-const SaveButton = styled.button`
-  position: absolute;
-  right: 0;
-  top: 0;
-
-  background-color: ${props =>
-    props.disabled ? 'var(--color-gray-300)' : 'var(--color-accent)'};
-  border: none;
-  padding: 0 2.42rem 0 2.52rem;
-  height: 100%;
-
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--color-white);
-  border-radius: 1.2rem;
-  cursor: ${props => (props.disabled ? 'no-drop' : 'pointer')};
-  /* pointer no-drop  */
-`;
-const Container = styled.div`
-  position: relative;
-`;
-
 // when there are no items
 const NoItems = styled.p`
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--color-title);
   text-align: center;
   margin-top: 22.19rem;
-
-  font-size: 2rem;
-
-  font-weight: 700;
   margin-bottom: auto;
 
   @media screen and (max-width: 480px) {
@@ -188,45 +66,16 @@ const NoItems = styled.p`
   }
 `;
 
-const NoItemsIllustration = styled.img`
-  position: absolute;
-  top: -19.1rem;
+// Shopping list items //
 
-  @media screen and (max-width: 480px) {
-    width: 20rem;
-    top: -15.6rem;
-    left: 50%;
-
-    transform: translateX(-50%);
-  }
-`;
-
-// Shopping list items
 // title
-const Title = styled.h2`
+const ListTitle = styled.h2`
   color: var(--color-title);
   font-size: 2.4rem;
   font-weight: 700;
 `;
-// category container
-const CategoryContainer = styled(motion.div)`
-  margin-bottom: 5rem;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-// category title
-const CategoryTitle = styled.h3`
-  color: var(--color-gray-400);
-  font-size: 1.4rem;
-  font-weight: 500;
-  margin-bottom: 1.68rem;
-`;
-
-const ShoppingListItemsContainer = styled(motion.div)`
-  /* overflow-y: scroll;
-  height: 60%; */
+const ShoppingListItems = styled(motion.div)`
   height: 100%;
   overflow: scroll;
   padding-bottom: 13rem;
@@ -243,13 +92,7 @@ const ShoppingListItemsContainer = styled(motion.div)`
   }
 `;
 
-const ShoppingListLoader = styled.div`
-  height: 100%;
-  width: 100%;
-  /* background-color: var(--color-white); */
-`;
-
-const CreateIcon = styled(MdCreate)`
+const EditListIcon = styled(MdCreate)`
   color: var(--color-title);
   width: 2.4rem;
   height: 2.4rem;
@@ -257,7 +100,7 @@ const CreateIcon = styled(MdCreate)`
   cursor: pointer;
 `;
 
-const ShoppingListTitleContianer = styled.div`
+const ShoppingListHeader = styled.div`
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -271,77 +114,23 @@ const ShoppingListTitleContianer = styled.div`
   }
 `;
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3.96rem;
-`;
-
-const CancelButton = styled.button`
-  color: var(--color-title);
-  font-size: 1.6rem;
-  font-weight: 700;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 260ms ease-in-out;
-  &:hover {
-    color: var(--color-gray-300);
-  }
-`;
-
-const CompleteButton = styled.button`
-  background-color: var(--color-blue);
-  border-radius: 1.2rem;
-  padding: 1.86rem 1.83rem 1.58rem 2.14rem;
-  color: var(--color-white);
-  font-size: 1.6rem;
-  font-weight: 700;
-  border: 2px solid var(--color-blue);
-  cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
-
-  &:hover {
-    background-color: transparent;
-    color: var(--color-blue);
-  }
-`;
-
-const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
-  const [listName, setListName] = useState('');
+//  Component responsible for rendering and managing the shopping list.
+function ShoppingList() {
+  // State for managing edit mode and modal visibility
   const [isEditMode, setIsEditMode] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, isAuthenticated, fetchStatus } = useUser();
 
+  // Custom hooks for fetching shopping list data and managing updates
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
-  const { history } = useGetHistory();
-  const {
-    updateShoppingList,
-    isLoading: isUpdatingListItem,
-    error: listItemError,
-  } = useUpdateShoppingList();
-
-  const {
-    updateListName,
-    isLoading: isUpdatingListName,
-    error: listNameError,
-  } = useUpdateShoppingListName();
-
+  const { updateShoppingList, error: listItemError } = useUpdateShoppingList();
   const { uploadList } = useAddListToHistory();
+  const { history } = useGetHistory();
+  const { resetList } = useResetShoppingList();
 
-  // when the user changes the list name
-  function listNameChangeHandler(e) {
-    if (!e) return;
-
-    setListName(e.target.value);
-  }
-
+  // Function to update item quantity in the shopping list
   function updateListItemQuantity(itemId, incease) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
-      userId: user.id,
       id: shoppingList.id,
       oldList: shoppingList.items,
       updateQuantity: {
@@ -350,13 +139,12 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
       },
       shoppingList: shoppingList,
     });
-    // id, item, oldList, updateQuantity
   }
 
+  // Function to remove an item from the shopping list
   function onRemoveItem(deleteId) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
-      userId: user.id,
       id: shoppingList.id,
       oldList: shoppingList.items,
       deleteItemId: deleteId,
@@ -364,6 +152,7 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
     });
   }
 
+  // Function to toggle item purchase state
   function itemPurchaseStatehandler(id, value) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
@@ -376,20 +165,17 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
     });
   }
 
-  // when the user saves the list name
-  function listNameSaveHandler() {
-    // to make sure we have the id
-    if (isLoadingShoppingList) return;
-    updateListName({ id: shoppingList.id, listName: listName });
-  }
-
+  // Function to toggle between editings and completing modes
   function handeListState() {
     setIsEditMode(!isEditMode);
   }
 
+  // Function to handle adding the shopping list to history
   function onAddList(isCompleted) {
+    // Ensure data exists
     if (isLoadingShoppingList) return;
 
+    // Create the list
     const list = {
       id: new Date(),
       created_at: new Date(),
@@ -399,139 +185,84 @@ const ShoppingList = function ShoppingListOriginal({ onchangePage }) {
       is_canceled: isCompleted ? false : true,
       completed_at: new Date(),
     };
-    uploadList({ userId: user.id, shoppingHistory: history, list });
+    // Upload list to hitory
+    uploadList(
+      { shoppingHistory: history, list },
+      {
+        onSuccess: () => {
+          // Reset the current shopping list when upload to history was succussful
+          resetList();
+        },
+      }
+    );
   }
 
-  function onCloseModal() {
-    setIsModalOpen(false);
-  }
-  function onConfirmModal() {
-    setIsModalOpen(false);
-    onAddList(false);
-  }
-
+  // Show spinner when loading shopping list data
   if (isLoadingShoppingList) return <Spinner />;
-  if (shoppingListError) return <p>{shoppingListError.message}</p>;
-  // console.log(shoppingList);
-  const emtyList =
-    !shoppingList ||
-    shoppingList?.items === null ||
-    shoppingList?.length === 0 ||
-    shoppingList?.items === undefined ||
-    shoppingList?.items.length === 0;
 
-  //  chat gpt's help //////
-  // get all the available item categories without duplicates
+  // Show error message if there's an error fetching shopping list data or updating items
+  if (shoppingListError) toast.error(shoppingListError.message);
+  if (listItemError) toast.error(listItemError.message);
 
-  const availableCategories = emtyList
-    ? []
-    : shoppingList?.items.reduce((accumulator, currentObject) => {
-        const { category } = currentObject;
+  // Check if the list is empty
+  const isEmptyList =
+    !shoppingList || !shoppingList.items || shoppingList.items.length === 0;
 
-        // Check if the category is already a key in the accumulator
-        if (!accumulator[category]) {
-          accumulator[category] = [];
-        }
-
-        // Push the current object to the array corresponding to the category
-        accumulator[category].push(currentObject);
-
-        return accumulator;
-      }, {});
+  // Group items by category
+  const categorizedItems = groupByProperty(shoppingList?.items, 'category');
 
   return (
     <StyledShoppingList>
-      <ChildrenContainer
-        variants={listChildrenVariants}
-        initial="initial"
-        animate="final"
-      >
-        <AddItemContainer>
-          <AddItemIllustration src={illustration} />
-          <div>
-            <AddItemParagraph>Didn&apos;t find what you need?</AddItemParagraph>
-            <AddItemButton onClick={() => onchangePage('add-new-item')}>
-              Add item
-            </AddItemButton>
-          </div>
-        </AddItemContainer>
+      <ChildrenContainer>
+        {/* Call to action component for adding items */}
+        <AddItem />
 
-        {emtyList && <NoItems>No items</NoItems>}
-        {/* {!emtyList && } */}
+        {/* Show message if the list is empty */}
+        {isEmptyList && <NoItems>No items</NoItems>}
 
-        {!emtyList && (
+        {!isEmptyList && (
           <>
-            <ShoppingListTitleContianer>
-              <Title>Shopping list</Title>
-              <CreateIcon onClick={handeListState} />
-            </ShoppingListTitleContianer>
-            <ShoppingListItemsContainer>
-              {Object.keys(availableCategories).map(key => (
-                <CategoryContainer
-                  layout
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.2,
-                  }}
-                  key={`shopping list ${key}`}
-                >
-                  <CategoryTitle>{key} </CategoryTitle>
-                  {availableCategories[key].map(item => (
-                    <ShoppingItem
-                      onUpdateQuantity={updateListItemQuantity}
-                      onDelete={onRemoveItem}
-                      isEditing={isEditMode}
-                      onPurchase={itemPurchaseStatehandler}
-                      key={item.id}
-                      item={item}
-                    />
-                  ))}
-                </CategoryContainer>
+            {/* Shopping list title and edit mode toggle */}
+            <ShoppingListHeader>
+              <ListTitle>Shopping list</ListTitle>
+              <EditListIcon onClick={handeListState} />
+            </ShoppingListHeader>
+
+            {/* Render categorized items */}
+            <ShoppingListItems>
+              {Object.entries(categorizedItems).map(([category, items]) => (
+                <ListItemsCategory key={`shopping list ${category}`}>
+                  {/* Category title */}
+                  <ListItemsCategory.Title>{category}</ListItemsCategory.Title>
+                  {/* Items within the category */}
+                  <ListItemsCategory.Container>
+                    {items.map(item => (
+                      <ShoppingItem
+                        onUpdateQuantity={updateListItemQuantity}
+                        onDelete={onRemoveItem}
+                        isEditing={isEditMode}
+                        onPurchase={itemPurchaseStatehandler}
+                        key={item.id}
+                        item={item}
+                      />
+                    ))}
+                  </ListItemsCategory.Container>
+                </ListItemsCategory>
               ))}
-            </ShoppingListItemsContainer>
+            </ShoppingListItems>
           </>
         )}
-        <NameInputContainer>
-          {emtyList && <NoItemsIllustration src={noItemsIllustration} />}
-          {shoppingList?.name?.length === 0 && (
-            <Container>
-              <NameInput
-                disabled={emtyList || isUpdatingListName || shoppingList?.name}
-                type="text"
-                placeholder="Enter a name"
-                value={listName}
-                onChange={e => listNameChangeHandler(e)}
-              />
-              <SaveButton
-                onClick={listNameSaveHandler}
-                disabled={emtyList || isUpdatingListName || shoppingList?.name}
-              >
-                save
-              </SaveButton>
-            </Container>
-          )}
 
-          {shoppingList?.name?.length > 0 && (
-            <ButtonsContainer>
-              <CancelButton onClick={() => setIsModalOpen(true)}>
-                cancel
-              </CancelButton>
-              <CompleteButton onClick={() => onAddList(true)}>
-                Complete
-              </CompleteButton>
-            </ButtonsContainer>
-          )}
-        </NameInputContainer>
-
-        {isModalOpen && (
-          <Modal onClose={onCloseModal} onConfirm={onConfirmModal} />
-        )}
+        {/* Input component for managing list and modal */}
+        <ShoppingListInput
+          isEmptyList={isEmptyList}
+          shoppingListName={shoppingList?.name}
+          isLoadingShoppingList={isLoadingShoppingList}
+          onAddList={onAddList}
+        />
       </ChildrenContainer>
     </StyledShoppingList>
   );
-};
+}
 
 export default ShoppingList;

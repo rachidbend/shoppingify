@@ -12,16 +12,6 @@ import toast from 'react-hot-toast';
 function useAddListToHistory() {
   const queryClient = useQueryClient();
   const { user } = useUser();
-  const {
-    updateListName,
-    isLoading: isUpdatingName,
-    error: errorName,
-  } = useUpdateShoppingListName();
-  const {
-    updateShoppingList,
-    isLoading: isUpdatingListItem,
-    error: listItemError,
-  } = useUpdateShoppingList();
 
   const {
     mutate: uploadList,
@@ -32,22 +22,10 @@ function useAddListToHistory() {
       addListToHistory({ userId, shoppingHistory, list }),
     onSuccess: () => {
       toast.success('Shopping list added to history successfully');
-      updateShoppingList({
-        id: 1,
-        oldList: [],
-        item: null,
-        shoppingList: {
-          id: 1,
-          name: '',
-          items: [],
-          is_completed: false,
-          is_canceled: false,
-        },
-      });
+
       queryClient.invalidateQueries('shopping_list');
     },
     onSettled: () => {
-      updateListName({ id: 1, listName: '', reset: true });
       queryClient.invalidateQueries('shopping_list');
     },
     onError: error => {

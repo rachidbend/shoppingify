@@ -122,16 +122,15 @@ function useUpdateShoppingList() {
         ...shoppingList,
         items: updatedList ? updatedList : newList,
       };
-      console.log(previousShoppingList);
       // Optimistically update to the new value
       queryClient.setQueryData(['shopping_list'], newShoppingList);
-      console.log(newShoppingList);
       // Return a context with the previous and new shopping list data
       return { previousShoppingList, newShoppingList };
     },
 
-    onSuccess: () => {
+    onSuccess: list => {
       toast.success('Shopping list updated successfully!');
+      console.log(list);
     },
     onSettled: () => {
       queryClient.invalidateQueries(['shopping_list']);

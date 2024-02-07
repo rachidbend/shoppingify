@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { childrenVariants, routeVariants } from '../Variables/variables';
 import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
 import TopItemsOrCategories from '../UI/TopItemsOrCategories';
@@ -15,9 +14,13 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { useMobileSide } from '../Context/MobileSideContext';
+import {
+  extractNamesAndCategories,
+  generateFilteredLists,
+} from '../helpers/helperFunctions';
 
 const StyledStatistics = styled(motion.div)`
-  /* background-color: green; */
   padding: 0rem 7.77rem 0rem 11.13rem;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -104,90 +107,68 @@ const ChartContianer = styled.div`
   margin-bottom: 4rem;
 `;
 
+// Component for displaying statistics based on the user's shopping history.
 function Statistics() {
+  // Fetch the user's shopping history
   const { history, isLoading, error } = useGetHistory();
-  const isMobile = window.innerWidth <= 480;
+  // Get mobile context for responsiveness
+  const { isMobile } = useMobileSide();
 
+  // Render loading spinner while data is being fetched
   if (isLoading) return <Spinner />;
+  // Render error message if there's an error fetching data
   if (error) return <p>{error.message}</p>;
 
   // getting all the names of the all the items in the history
-  const allItemsNames = history.reduce((acc, list) => {
-    const { shopping_list } = list;
-    let names = shopping_list.map(item => item.name);
-    return [...acc, ...names];
-  }, []);
-  // getting all the names of the all the category in all the items in the history
-  const allCategoryNames = history.reduce((acc, list) => {
-    const { shopping_list } = list;
-    let categories = shopping_list.map(item => item.category);
-    return [...acc, ...categories];
-  }, []);
 
-  const filteredNameLists = allItemsNames.reduce((accumulator, name) => {
-    // Check if the name is already a key in the accumulator
-    if (!accumulator[name]) {
-      accumulator[name] = [];
-    }
-    // Push the current object to the array corresponding to the name
-    accumulator[name].push(name);
-    return accumulator;
-  }, {});
+  // Getting all the names of all the items in the history
+  const allItemsNames = extractNamesAndCategories(history, 'name');
+  const filteredNameLists = generateFilteredLists(allItemsNames);
 
-  const filteredCategories = allCategoryNames.reduce(
-    (accumulator, category) => {
-      // Check if the category is already a key in the accumulator
-      if (!accumulator[category]) {
-        accumulator[category] = [];
-      }
-      // Push the current object to the array corresponding to the category
-      accumulator[category].push(category);
-      return accumulator;
-    },
-    {}
+  // Getting all the names of all the categories in all the items in the history
+  const allCategoryNames = extractNamesAndCategories(history, 'category');
+  const filteredCategories = generateFilteredLists(allCategoryNames);
+
+  // Convert object to array of key-value pairs, then
+  const convertToObjectArray = inputObject => Object.entries(inputObject);
+  // Sort the array based on the length of each value array and take top 3 items
+  const getTopItems = (array, limit) =>
+    array.sort((a, b) => b[1].length - a[1].length).slice(0, limit);
+
+  // Organize the history by month and year
+  const organizeHistoryByMonth = (history, monthsToDisplay) => {
+    const allMonths = eachMonthOfInterval({
+      start: subMonths(new Date(), monthsToDisplay - 1),
+      end: new Date(),
+    });
+
+    // Organize history by month
+    const data = allMonths.map(month => {
+      const monthName = format(month, 'MMMM');
+      const itemsCount = history
+        .filter(list => isSameMonth(month, new Date(list.completed_at)))
+        .reduce((acc, cur) => acc + cur.shopping_list.length, 0);
+
+      return { name: monthName, items: itemsCount };
+    });
+
+    return data;
+  };
+
+  // Get top 3 items based on their length
+  const topItems = getTopItems(convertToObjectArray(filteredNameLists), 3);
+  const topCategories = getTopItems(
+    convertToObjectArray(filteredCategories),
+    3
   );
 
-  // Convert the object into an array of key-value pairs
-  const namesArray = Object.entries(filteredNameLists);
-  const categoriesArray = Object.entries(filteredCategories);
-  // Sort the array based on the length of each value array
-  const topItems = namesArray
-    .sort((a, b) => b[1].length - a[1].length)
-    .slice(0, 3);
-
-  const topCategories = categoriesArray
-    .sort((a, b) => b[1].length - a[1].length)
-    .slice(0, 3);
-
-  // orgensing the history by month and year
-  //  getting the months required, (current month, and past 6 months)
-  const allMonths = eachMonthOfInterval({
-    start: subMonths(new Date(), 6),
-    end: new Date(),
-  });
-  // creating the data based on the months
-  // for the .filter(), we get the lists that have been completed in the available months that we want to display
-  // then we .reduce() to get the number of items in all of the lists that have been completed in a month
-  const data = allMonths.map(month => {
-    return {
-      name: format(month, 'MMMM'),
-      items: history
-        .filter(list => isSameMonth(month, new Date(list.completed_at)))
-        .reduce((acc, cur) => acc + cur.shopping_list.length, 0),
-    };
-  });
+  // Organize the history by month for the last 6 months
+  const data = organizeHistoryByMonth(history, 6);
 
   return (
-    <StyledStatistics
-      variants={routeVariants}
-      initial="initial"
-      animate="final"
-    >
-      <ChildrenContainer
-        variants={childrenVariants}
-        initial="initial"
-        animate="final"
-      >
+    <StyledStatistics>
+      <ChildrenContainer>
+        {/* Display top items */}
         <TopContainer>
           <TopItemsContainer>
             <Title>Top items</Title>
@@ -203,6 +184,7 @@ function Statistics() {
               ))}
             </div>
           </TopItemsContainer>
+          {/* Display top categories */}
           <TopCategoriesContainer>
             <Title>Top categories</Title>
             <div>
@@ -218,6 +200,7 @@ function Statistics() {
             </div>
           </TopCategoriesContainer>
         </TopContainer>
+        {/* Display monthly summary chart */}
         <ChartContianer>
           <Title>Monthly Summary</Title>
           <ResponsiveContainer width={'100%'} height={302}>

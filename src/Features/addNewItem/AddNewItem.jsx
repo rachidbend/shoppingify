@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import { useGetCategories } from '../../Hooks/useGetCategories';
 import { motion } from 'framer-motion';
 import { useAddNewItem } from '../../Hooks/useAddNewItem';
-import { MdClose } from 'react-icons/md';
-import { itemVariantes } from '../../Variables/variables';
-import { useAddCategory } from '../../Hooks/useAddCategory';
+import Spinner from '../../UI/Spinner';
+import toast from 'react-hot-toast';
+import CategoryDropdown from './CategoryDropdown';
+import AddCategory from './AddCategory';
 
 const StyledAddNewItem = styled(motion.div)`
-  padding: 0 4.01rem;
+  padding: 0 4rem;
 
   /* padding-top: 3.45rem; */
   position: relative;
@@ -35,64 +36,63 @@ const StyledAddNewItem = styled(motion.div)`
 `;
 
 const Title = styled.h2`
-  color: var(--color-black);
-  margin-top: 3.45rem;
   font-size: 2.4rem;
   font-weight: 500;
+  color: var(--color-black);
   margin-bottom: 3.38rem;
+  margin-top: 3.45rem;
 `;
 
 const Form = styled(motion.form)`
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
+  height: 100%;
   padding-bottom: 3.49rem;
 `;
-// name
+
 const Label = styled.label`
-  color: var(--color-title);
   font-size: 1.4rem;
   font-weight: 500;
+  color: var(--color-title);
   margin-bottom: 0.61rem;
 `;
+
 const Input = styled.input`
-  color: var(--color-title);
   font-size: 1.4rem;
   font-weight: 500;
+  color: var(--color-title);
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
   outline: none;
+
   &::placeholder {
-    color: var(--color-gray-200);
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
-
   &:focus {
     border: 0.2rem solid var(--color-accent);
   }
 `;
 
 const TextArea = styled.textarea`
-  color: var(--color-title);
+  height: 11.0215rem;
   font-size: 1.4rem;
   font-weight: 500;
+  color: var(--color-title);
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
-  height: 11.0215rem;
   outline: none;
+
   &::placeholder {
-    color: var(--color-gray-200);
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
-
   &:focus {
     border: 0.2rem solid var(--color-accent);
   }
@@ -102,123 +102,37 @@ const InputContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  flex-grow: 0;
-  flex-shrink: 0;
-
   margin-bottom: ${props =>
     props.marginbottom ? props.marginbottom : '1.8rem'};
 `;
 
-// select component
-const StyledSelect = styled.select`
-  color: var(--color-title);
-  font-size: 1.4rem;
-  font-weight: 500;
-  background-color: transparent;
-  border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
-  padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
-  outline: none;
-
-  display: none;
-`;
-
-// custom select
-
-const Select = styled.div`
-  color: var(--color-title);
-  font-size: 1.4rem;
-  font-weight: 500;
-  background-color: transparent;
-  border-radius: 1.2rem;
-  border: 0.2rem solid
-    ${props =>
-      props.isopen === 'true'
-        ? 'var(--color-accent)'
-        : 'var(--color-gray-200)'};
-  padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
-  outline: none;
-
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-
-  &:focus,
-  &:hover,
-  &:active {
-    border: 0.2rem solid var(--color-accent);
-  }
-`;
-
-const OptionsContainer = styled.div`
-  padding: 1.24rem 0.73rem 1.12rem 0.82rem;
-  background-color: var(--color-white);
-
-  border-radius: 1.2rem;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
-
-  position: absolute;
-  top: calc(100% + 1.22rem);
-  left: 0;
-  right: 0;
-`;
-const OptionsList = styled.ul``;
-const OptionsItem = styled.li`
-  color: var(--color-title);
-  font-size: 1.4rem;
-  font-weight: 500;
-  padding: 1.13rem 2.28rem 1.25rem 2.28rem;
-  list-style: none;
-  margin-bottom: 0.22rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  &:hover {
-    border-radius: 1.2rem;
-    background-color: #f2f2f2;
-  }
-`;
-
 const Save = styled.input`
-  padding: 1.96rem 2.32rem 1.96rem 2.42rem;
-  color: var(--color-white);
   font-size: 1.6rem;
   font-weight: 700;
+  color: var(--color-white);
   border-radius: 1.2rem;
   background-color: var(--color-accent);
+  padding: 1.96rem 2.32rem 1.96rem 2.42rem;
   text-transform: capitalize;
-
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
   }
 `;
-const Cancel = styled.input`
-  color: var(--color-title);
 
+const Cancel = styled.input`
   font-size: 1.6rem;
-  padding: 2.06rem 2.42rem 2.06rem 2.52rem;
   font-weight: 700;
-  transition: color 260ms ease-in-out;
+  color: var(--color-title);
   background: none;
+  padding: 2.06rem 2.42rem 2.06rem 2.52rem;
   border: none;
   cursor: pointer;
   &:hover {
-    color: var(--color-gray-300);
+    color: var(--color-grey-300);
   }
-`;
-
-const CustomSelectContainer = styled(motion.div)`
-  position: relative;
 `;
 
 const ButtonsContainer = styled.div`
@@ -227,149 +141,92 @@ const ButtonsContainer = styled.div`
   align-items: center;
   gap: 1.94rem;
   width: 100%;
-
   margin-top: auto;
 `;
 
-const CloseIcon = styled(MdClose)`
-  width: 2.4rem;
-  height: 2.4rem;
-  color: var(--color-gray-400);
-  cursor: pointer;
-`;
-
-const CloseIconContainer = styled.div`
-  width: 2.4rem;
-  height: 2.4rem;
-  display: inline-block;
-  cursor: pointer;
-`;
-
-const CategoryPlaceHolder = styled.p`
-  color: var(--color-gray-200);
-  font-size: 1.4rem;
-  font-weight: 500;
-`;
-
-// add new category
-
 const AddCategoryButton = styled.button`
+  font-size: 1.4rem;
+  color: var(--color-grey-100);
   background: none;
   border: none;
-  font-size: 1.4rem;
-  color: var(--color-gray-100);
   margin-top: 4rem;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-
-  transition: color 260ms ease-in-out;
-
   &:hover {
     color: var(--color-blue);
     text-decoration: underline;
   }
 `;
 
-const AddCategoryContainer = styled.div`
-  position: relative;
-  margin-top: 2.4rem;
-`;
-const AddCategoryInput = styled(Input)`
-  width: 100%;
-  padding-right: 9rem;
-`;
-
-const AddCategoryAdd = styled.button`
-  padding: 2.06rem 2.32rem 2.06rem 2.42rem;
-  color: var(--color-white);
-  font-size: 1.6rem;
-  font-weight: 700;
-  border-radius: 1.2rem;
-  background-color: var(--color-accent);
-  text-transform: capitalize;
-
-  border: 0.2rem solid var(--color-accent);
-  cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
-
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  &:hover {
-    background-color: transparent;
-    color: var(--color-accent);
-  }
-`;
-
+// Component for adding a new item to items list
 function AddNewItem({ onchangePage }) {
+  // State for managing form data and UI state
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
   const [showCategoryInput, setShowCategoryInput] = useState(false);
-  const [addedCategory, setAddedCategory] = useState('');
 
-  const { categories, isLoading, error } = useGetCategories();
+  // Custom hooks for fetching categories
+  const { isLoading: isLoadingCategories } = useGetCategories();
+
+  // Custom hooks for adding new items
   const {
     addItem,
-    error: itemError,
-    isLoading: itemIsUploading,
+    error: addItemError,
+    isLoading: addingItem,
   } = useAddNewItem();
 
+  // React Hook Form hook for form validation and submission
   const {
     register,
     handleSubmit,
-    reset,
+    reset: resetForm,
     formState: { errors },
   } = useForm();
 
-  const { addCategory } = useAddCategory();
-
+  // Handler for form submission
   const onSubmit = data => {
     if (data.name.length === 0 && selectedCategory.length === 0) return;
-    addItem({ ...data, category: selectedCategory });
-    reset();
-    setSelectedCategory('');
+    // Add the item
+    addItem(
+      { ...data, category: selectedCategory },
+      {
+        onSuccess: () => {
+          // When the item is added successfuly, reset the form and selected category
+          resetForm();
+          setSelectedCategory('');
+          // Navigate out of the current page to display the shopping list
+          onchangePage('shopping-list');
+        },
+      }
+    );
   };
 
-  function onOptionSelect(e) {
-    setSelectedCategory(e.target.innerText);
-    setIsOpen(false);
+  // Handler for selecting a category from the dropdown
+  function handleSelectCategory(category) {
+    setSelectedCategory(category);
   }
 
-  function onSelectOpen() {
-    setIsOpen(!isOpen);
-  }
-
+  // Handler for resetting the form and navigating to the previous page
   function onReset() {
-    reset();
+    // Reset the form and selected category
+    resetForm();
     setSelectedCategory('');
+    // Navigate out of the current page to display the shopping list
     onchangePage('shopping-list');
   }
 
-  function onAddCategoryChange(e) {
-    if (!e) return;
-
-    setAddedCategory(e.target.value);
-  }
-
-  function onAddCategory() {
-    addCategory(addedCategory);
-    setShowCategoryInput(false);
-  }
-
-  if (isLoading) return <p>Loading</p>;
-  if (error) return <p>{error.message}</p>;
+  // Render loading state if categories are still being fetched
+  if (isLoadingCategories) return <Spinner />;
+  // Render error toast if there's an error fetching categories
+  if (addItemError) toast.error(addItemError.message);
 
   return (
     <StyledAddNewItem>
+      {/* Form for adding a new item */}
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title>Add a new item</Title>
-        <InputContainer
-          variants={itemVariantes}
-          initial="initial"
-          animate="final"
-        >
+        {/* Form fields for item details */}
+        <InputContainer>
           <Label>Name</Label>
           <Input
             placeholder="Enter a name"
@@ -377,26 +234,18 @@ function AddNewItem({ onchangePage }) {
             name="name"
             {...register('name', { required: true })}
           />
+          {errors.name && <p>{errors.name.message}</p>}
         </InputContainer>
-        <InputContainer
-          variants={itemVariantes}
-          initial="initial"
-          animate="final"
-          marginbottom="2.43rem"
-        >
+        <InputContainer marginbottom="2.43rem">
           <Label>Note (optional)</Label>
           <TextArea
             placeholder="Enter a note"
             name="note"
             {...register('note')}
           />
+          {errors.note && <p>{errors.note.message}</p>}
         </InputContainer>
-        <InputContainer
-          variants={itemVariantes}
-          initial="initial"
-          animate="final"
-          marginbottom="3.38rem"
-        >
+        <InputContainer marginbottom="3.38rem">
           <Label>Image (optional)</Label>
           <Input
             placeholder="Enter a url"
@@ -404,85 +253,38 @@ function AddNewItem({ onchangePage }) {
             name="image"
             {...register('image')}
           />
+          {errors.image && <p>{errors.image.message}</p>}
         </InputContainer>
-        <InputContainer
-          variants={itemVariantes}
-          initial="initial"
-          animate="final"
-        >
+        {/* Dropdown for selecting item category, this one is not shown */}
+
+        <InputContainer>
           <Label>Category</Label>
-          <StyledSelect
-            name="category"
-            id=""
-            value={selectedCategory}
-            {...register('category', { required: true })}
-          >
-            <option value={null}>no category</option>
-            {categories.map(category => (
-              <option key={`category-${category.id}`} value={category.name}>
-                {category.name}
-              </option>
-            ))}
 
-            {/* get the options from supabase and put them as options */}
-          </StyledSelect>
+          {/* Custom dropdown component */}
 
-          <CustomSelectContainer>
-            <Select
-              role="select"
-              isopen={isOpen ? 'true' : 'false'}
-              onClick={onSelectOpen}
-            >
-              {selectedCategory ? (
-                selectedCategory
-              ) : (
-                <CategoryPlaceHolder>Enter a category</CategoryPlaceHolder>
-              )}
-              <CloseIconContainer
-                onClick={() => {
-                  setIsOpen(false);
-                  setSelectedCategory('');
-                }}
-              >
-                <CloseIcon />
-              </CloseIconContainer>
-            </Select>
-            {isOpen && (
-              <OptionsContainer>
-                <OptionsList>
-                  {categories.map(category => (
-                    <OptionsItem
-                      onClick={onOptionSelect}
-                      value={category.name}
-                      key={`category-item-${category.id}`}
-                    >
-                      {category.name}
-                    </OptionsItem>
-                  ))}
-                </OptionsList>
-              </OptionsContainer>
-            )}
-          </CustomSelectContainer>
+          <CategoryDropdown
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+          />
 
+          {/* Button to show input for adding a new category */}
           <AddCategoryButton
             onClick={() => setShowCategoryInput(!showCategoryInput)}
           >
             Add a new category!
           </AddCategoryButton>
+
+          {/* Input field for adding a new category */}
           {showCategoryInput && (
-            <AddCategoryContainer>
-              <AddCategoryInput
-                onChange={e => onAddCategoryChange(e)}
-                value={addedCategory}
-                placeholder="Add category"
-              />
-              <AddCategoryAdd onClick={onAddCategory}>Add</AddCategoryAdd>
-            </AddCategoryContainer>
+            <AddCategory setShowCategoryInput={setShowCategoryInput} />
           )}
         </InputContainer>
+
+        {/* Form submission buttons */}
+
         <ButtonsContainer>
           <Cancel type="reset" value="cancel" onClick={onReset} />
-          <Save type="submit" value="save" />
+          <Save type="submit" value="save" disabled={addingItem} />
         </ButtonsContainer>
       </Form>
     </StyledAddNewItem>
