@@ -171,7 +171,7 @@ function Items() {
           item.name.toLowerCase().includes(search.toLocaleLowerCase())
         );
 
-  const availableCategories = groupByProperty(filteredItems, 'category');
+  const categorizedItems = groupByProperty(filteredItems, 'category');
 
   return (
     <StyledItems>
@@ -191,11 +191,11 @@ function Items() {
           </SearchInputContainer>
         </HeaderContainer>
 
-        {Object.keys(availableCategories)?.map(key => (
-          <ItemsCategory key={key}>
-            <ItemsCategory.Title>{key}</ItemsCategory.Title>
+        {Object.entries(categorizedItems)?.map(([category, items]) => (
+          <ItemsCategory key={category}>
+            <ItemsCategory.Title>{category}</ItemsCategory.Title>
             <ItemsCategory.Container>
-              {availableCategories[key].map(item => {
+              {items.map(item => {
                 return (
                   <Item
                     onAddItem={addItemToList}

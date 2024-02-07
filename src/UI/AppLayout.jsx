@@ -98,10 +98,7 @@ function AppLayout() {
       >
         {/* show the appropriate component depending on the side page requested by the user */}
         {page === 'shopping-list' && !itemId && (
-          <ShoppingList
-            key={'component-shopping-list'}
-            onchangePage={goTo => handleChangePage(goTo)}
-          />
+          <ShoppingList key={'component-shopping-list'} />
         )}
         {page === 'add-new-item' && !itemId && (
           <AddNewItem

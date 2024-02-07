@@ -15,8 +15,9 @@ const StyledShoppingItem = styled(motion.div)`
   flex-wrap: nowrap;
   flex-grow: 0;
   flex-shrink: 0;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   min-height: 4.4903rem;
+  width: 100%;
 `;
 // item name
 const Name = styled(motion.p)`
