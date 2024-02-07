@@ -186,15 +186,15 @@ function AddNewItem({ onchangePage }) {
   // Handler for form submission
   const onSubmit = data => {
     if (data.name.length === 0 && selectedCategory.length === 0) return;
-    // add the item
+    // Add the item
     addItem(
       { ...data, category: selectedCategory },
       {
         onSuccess: () => {
-          // when the item is added successfuly, reset the form and selected category
+          // When the item is added successfuly, reset the form and selected category
           resetForm();
           setSelectedCategory('');
-          // navigate out of the current page to display the shopping list
+          // Navigate out of the current page to display the shopping list
           onchangePage('shopping-list');
         },
       }
@@ -211,7 +211,7 @@ function AddNewItem({ onchangePage }) {
     // Reset the form and selected category
     resetForm();
     setSelectedCategory('');
-    // navigate out of the current page to display the shopping list
+    // Navigate out of the current page to display the shopping list
     onchangePage('shopping-list');
   }
 

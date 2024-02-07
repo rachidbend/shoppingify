@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useLogin } from '../../Hooks/useLogin';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { FcGoogle } from 'react-icons/fc';
 // import { ImFacebook2 } from 'react-icons/im';
 // import { FaXTwitter } from 'react-icons/fa6';
@@ -205,33 +205,34 @@ const GoogleIcon = styled(FcGoogle)`
   height: 2.4rem;
   width: 2.4rem;
 `;
-// const FacebookIcon = styled(ImFacebook2)`
-//   height: 2.4rem;
-//   width: 2.4rem;
-//   color: #316ff6;
-// `;
 
-// const TwitterIcon = styled(FaXTwitter)`
-//   height: 2.4rem;
-//   width: 2.4rem;
-// `;
-
+// Component for user login with email and password, or through Google authentication.
 function Login() {
+  // Form validation using react-hook-form
   const { register, handleSubmit, reset } = useForm();
+  // Navigation hook for redirection
   const navigate = useNavigate();
+  // Custom hook for email and password login
   const { login, isLoading: isLoggingIn } = useLogin();
+  // Custom hook for Google authentication
   const { signInWithGoogle, error } = useSigninWithGoogle();
 
+  // Form submission handler
   function onSubmit(data) {
     login(data, {
       onSettled: () => {
+        // Reset form after submission
         reset();
       },
     });
   }
 
+  // Display error toast if authentication fails
+  if (error) toast.error(error.message);
+
   return (
     <StyledLogin>
+      {/* Global toast notifications */}
       <Toaster
         position="top-center"
         toastOptions={{
@@ -244,13 +245,16 @@ function Login() {
             },
           },
           error: {
-            duration: 5000,
+            duration: 10000,
           },
         }}
       />
       <Container>
+        {/* Login title */}
         <Title>Login</Title>
+        {/* Login form */}
         <Form onSubmit={handleSubmit(onSubmit)}>
+          {/* Email input */}
           <Label>Email</Label>
           <Input
             type="email"
@@ -260,6 +264,8 @@ function Login() {
               pattern: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
             })}
           />
+
+          {/* Password input */}
           <Label>Password</Label>
           <Input
             type="password"
@@ -271,24 +277,29 @@ function Login() {
             })}
           />
 
+          {/* Login button */}
           <LoginButton disabled={isLoggingIn} type="submit" value="LOGIN" />
         </Form>
+        {/* Forgot password link */}
         <ForgotPasswordContainer>
           <ForgotPassword onClick={() => navigate('/get-email')}>
             Forgot password?
           </ForgotPassword>
         </ForgotPasswordContainer>
 
+        {/* Or sepirator */}
         <OrContainer>
           <OrText>OR</OrText>
         </OrContainer>
 
+        {/* Google login button */}
         <OtherLoginContainer>
           <OtherLogin onClick={signInWithGoogle}>
             <GoogleIcon />
             Google
           </OtherLogin>
         </OtherLoginContainer>
+        {/* Signup link */}
         <SignupText>
           need an account?
           <SignupButton onClick={() => navigate('/signup')}>

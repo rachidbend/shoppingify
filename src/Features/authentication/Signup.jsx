@@ -137,7 +137,7 @@ const SignupButton = styled.button`
   }
 `;
 
-const SignupText = styled.p`
+const LoginText = styled.p`
   font-size: 1.4rem;
   color: var(--color-gray-400);
   font-weight: 500;
@@ -182,22 +182,31 @@ const GoogleIcon = styled(FcGoogle)`
   width: 2.4rem;
 `;
 
+// Component for user registration.
 function Signup() {
+  // Form validation using react-hook-form
   const { register, handleSubmit } = useForm();
+  // Navigation hook for redirection
   const navigate = useNavigate();
+  // Custom hook for user registration
   const { signup, isLoading, error } = useSignup();
-
+  // Custom hook for Google authentication
   const { signInWithGoogle } = useSigninWithGoogle();
 
+  // Form submission handler
   function onSubmit(data) {
+    // Check if password and confirm password match
     if (data.password === data.confirm)
+      // Call signup function if passwords match
       signup(
         { email: data.email, password: data.password },
         {
           onSuccess: () => {
+            // Redirect to confirmation page after successful signup
             navigate('/confirm');
           },
           onError: error => {
+            // Display error toast if signup fails
             toast.error(error.message);
           },
         }
@@ -206,6 +215,7 @@ function Signup() {
 
   return (
     <StyledLogin>
+      {/* Global toast notifications */}
       <Toaster
         position="top-center"
         toastOptions={{
@@ -223,8 +233,12 @@ function Signup() {
         }}
       />
       <Container>
+        {/* Signup title */}
         <Title>Signup</Title>
+
+        {/* Signup form */}
         <Form onSubmit={handleSubmit(onSubmit)}>
+          {/* Email input */}
           <Label>Email</Label>
           <Input
             type="email"
@@ -234,6 +248,8 @@ function Signup() {
               pattern: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
             })}
           />
+
+          {/* Password input */}
           <Label>Password</Label>
           <Input
             type="password"
@@ -245,6 +261,7 @@ function Signup() {
             })}
           />
 
+          {/* Confirm password input */}
           <Label>Confirm password</Label>
           <Input
             type="password"
@@ -255,14 +272,16 @@ function Signup() {
               maxLength: 16,
             })}
           />
-
+          {/* Login button, if user is already signed up */}
           <LoginButton type="submit" value="SIGNUP" />
         </Form>
 
+        {/* Or sepirator */}
         <OrContainer>
           <OrText>OR</OrText>
         </OrContainer>
 
+        {/* Google signup button */}
         <OtherLoginContainer>
           <OtherLogin onClick={signInWithGoogle}>
             <GoogleIcon />
@@ -270,12 +289,14 @@ function Signup() {
           </OtherLogin>
         </OtherLoginContainer>
 
-        <SignupText>
+        {/* Login link */}
+        <LoginText>
           already have an account?
           <SignupButton disabled={isLoading} onClick={() => navigate('/login')}>
             LOGIN
           </SignupButton>
-        </SignupText>
+        </LoginText>
+        {/* Error message display */}
         {error && <p>{error.message}</p>}
       </Container>
     </StyledLogin>
