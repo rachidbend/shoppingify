@@ -83,7 +83,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
       <BrowserRouter>
-        {/* global styles for the app */}
+        {/* app global styles */}
         <GlobalStyle />
 
         {/* the side page provider allows for navigation between the shopping list and item details */}
