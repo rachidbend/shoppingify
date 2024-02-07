@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { MdCreate } from 'react-icons/md';
-import ShoppingItem from '../../UI/ShoppingItem';
+import ShoppingItem from './ShoppingItem';
 import { motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
 import { useState } from 'react';
-import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
 import Spinner from '../../UI/Spinner';
 import { useAddListToHistory } from '../../Hooks/useAddListToHistory';
@@ -265,12 +264,8 @@ function ShoppingList() {
         <ShoppingListInput
           isEmptyList={isEmptyList}
           isModalOpen={isModalOpen}
-          isUpdatingListName={isUpdatingListName}
           shoppingList={shoppingList}
           isLoadingShoppingList={isLoadingShoppingList}
-          // listName={listName}
-          // listNameChangeHandler={listNameChangeHandler}
-          // listNameSaveHandler={listNameSaveHandler}
           onAddList={onAddList}
           onCloseModal={onCloseModal}
           onConfirmModal={onConfirmModal}
