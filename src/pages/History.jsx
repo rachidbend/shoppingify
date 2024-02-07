@@ -70,16 +70,20 @@ const GroupTitle = styled.p`
   margin-bottom: 1.74rem;
 `;
 
+// Component for displaying shopping history.
 function History() {
-  // get all lists ftom the history
+  // Fetch historical shopping lists
   const { history, isLoading, error } = useGetHistory();
 
+  // Show loading spinner while fetching data
   if (isLoading) return <Spinner />;
+
+  // Show error toast if there's an error fetching history
   if (error) toast.error(error.message);
 
-  // re-used the logic from the items category orgoniser function
+  // Group shopping lists by month and year
   const filteredLists = history.reduce((accumulator, list) => {
-    // the grouping is done with the month and year where the lists were created
+    // Grouped by the month and year where they were created
     const { created_at } = list;
     const date = new Date(created_at);
     const month = date.getMonth();
@@ -99,10 +103,11 @@ function History() {
     <StyledHistory>
       <ChildrenContainer>
         <Title>Shopping history</Title>
-
+        {/* Render each group of lists */}
         {Object.keys(filteredLists).map(key => (
           <GroupContainer key={key}>
             <GroupTitle>{key} </GroupTitle>
+            {/* Render each list within the group */}
             <ListContainer>
               {filteredLists[key]?.map(list => (
                 <List list={list} key={list.id} />
@@ -110,7 +115,6 @@ function History() {
             </ListContainer>
           </GroupContainer>
         ))}
-        <Outlet />
       </ChildrenContainer>
     </StyledHistory>
   );

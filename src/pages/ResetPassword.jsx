@@ -132,7 +132,7 @@ function ResetPassword() {
     if (data.password === data.confirm) updateUser({ password: data.password });
   }
 
-  if (isLoading) return <Spinner />;
+  // if (isLoading) return <Spinner />;
 
   return (
     <StyledResetPassword>

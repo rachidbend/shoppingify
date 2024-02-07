@@ -16,11 +16,10 @@ function useUpdateShoppingListName() {
     mutationFn: ({
       userId = user.id,
       shoppingList = shopping,
-      id,
       listName,
       reset,
     }) =>
-      updateShopplingListName({ userId, shoppingList, id, listName, reset }),
+      updateShopplingListName({ userId, shoppingList, id: 1, listName, reset }),
     onSuccess: () => {
       toast.success('Shopping list name updated successfuly!');
     },

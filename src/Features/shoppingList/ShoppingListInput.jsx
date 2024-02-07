@@ -5,6 +5,7 @@ import Modal from '../../UI/Model';
 import { useState } from 'react';
 import { updateShopplingListName } from '../../services/apiItems';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
+import toast from 'react-hot-toast';
 
 const StyledShoppingListInput = styled.div`
   width: 38.9rem;
@@ -115,56 +116,84 @@ const CompleteButton = styled.button`
   }
 `;
 
+// Component responsible for managing input and actions related to the shopping list. (naming the list, completing or canceling it)
 function ShoppingListInput({
   isEmptyList,
-  shoppingList,
+  shoppingListName,
   isLoadingShoppingList,
-  setIsModalOpen,
   onAddList,
-  isModalOpen,
-  onCloseModal,
-  onConfirmModal,
 }) {
+  // State for managing list name input
   const [listName, setListName] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Custom hook for updating list name
   const {
     updateListName,
     isLoading: isUpdatingListName,
     error: listNameError,
   } = useUpdateShoppingListName();
 
-  function listNameChangeHandler(e) {
-    if (!e) return;
-    setListName(e.target.value);
+  // Function to handle changes in the list name input
+  function listNameChangeHandler(event) {
+    if (!event) return;
+    setListName(event.target.value);
   }
 
-  function listNameSaveHandler() {
-    // to make sure we have the id
+  // Function to handle saving the list name
+  function handleListNameSave() {
+    // Ensure shopping list data is loaded
     if (isLoadingShoppingList) return;
-    updateListName({ id: shoppingList.id, listName: listName });
-    setListName('');
+    // Update the list name
+    updateListName(
+      { listName: listName },
+      {
+        onSuccess: () => {
+          // Clear the input field on success
+          setListName('');
+        },
+      }
+    );
   }
+
+  // Function to close the modal
+  function onCloseModal() {
+    setIsModalOpen(false);
+  }
+
+  // Function to confirm modal action and add list to history
+  function onConfirmModal() {
+    setIsModalOpen(false);
+    onAddList(false);
+  }
+
+  // Display error toast if there's an error updating the list name
+  if (listNameError) toast.error(listNameError.message);
+
   return (
     <StyledShoppingListInput>
+      {/* Render illustration if the list is empty */}
       {isEmptyList && <NoItemsIllustration src={noItemsIllustration} />}
-      {shoppingList.name?.length === 0 && (
+      {/* Render input field for list name */}
+      {shoppingListName?.length === 0 && (
         <Container>
           <NameInput
-            disabled={isEmptyList || isUpdatingListName || shoppingList.name}
+            disabled={isEmptyList || isUpdatingListName || shoppingListName}
             type="text"
             placeholder="Enter a name"
             value={listName}
             onChange={listNameChangeHandler}
           />
           <SaveButton
-            onClick={listNameSaveHandler}
-            disabled={isEmptyList || isUpdatingListName || shoppingList.name}
+            onClick={handleListNameSave}
+            disabled={isEmptyList || isUpdatingListName || shoppingListName}
           >
             save
           </SaveButton>
         </Container>
       )}
-      {shoppingList.name?.length > 0 && (
+      {/* Render buttons for completing or cancelling the list */}
+      {shoppingListName?.length > 0 && (
         <ButtonsContainer>
           <CancelButton onClick={() => setIsModalOpen(true)}>
             cancel
@@ -174,6 +203,7 @@ function ShoppingListInput({
           </CompleteButton>
         </ButtonsContainer>
       )}
+      {/* Render modal component if modal is open */}
       {isModalOpen && (
         <Modal onClose={onCloseModal} onConfirm={onConfirmModal} />
       )}

@@ -107,11 +107,16 @@ const ChartContianer = styled.div`
   margin-bottom: 4rem;
 `;
 
+// Component for displaying statistics based on the user's shopping history.
 function Statistics() {
+  // Fetch the user's shopping history
   const { history, isLoading, error } = useGetHistory();
+  // Get mobile context for responsiveness
   const { isMobile } = useMobileSide();
 
+  // Render loading spinner while data is being fetched
   if (isLoading) return <Spinner />;
+  // Render error message if there's an error fetching data
   if (error) return <p>{error.message}</p>;
 
   // getting all the names of the all the items in the history
@@ -124,9 +129,9 @@ function Statistics() {
   const allCategoryNames = extractNamesAndCategories(history, 'category');
   const filteredCategories = generateFilteredLists(allCategoryNames);
 
-  // Convert the object into an array of key-value pairs
+  // Convert object to array of key-value pairs, then
   const convertToObjectArray = inputObject => Object.entries(inputObject);
-  // Sort the array based on the length of each value array and take top N items
+  // Sort the array based on the length of each value array and take top 3 items
   const getTopItems = (array, limit) =>
     array.sort((a, b) => b[1].length - a[1].length).slice(0, limit);
 
@@ -137,6 +142,7 @@ function Statistics() {
       end: new Date(),
     });
 
+    // Organize history by month
     const data = allMonths.map(month => {
       const monthName = format(month, 'MMMM');
       const itemsCount = history
@@ -149,7 +155,7 @@ function Statistics() {
     return data;
   };
 
-  // Get top N items based on their length
+  // Get top 3 items based on their length
   const topItems = getTopItems(convertToObjectArray(filteredNameLists), 3);
   const topCategories = getTopItems(
     convertToObjectArray(filteredCategories),
@@ -162,6 +168,7 @@ function Statistics() {
   return (
     <StyledStatistics>
       <ChildrenContainer>
+        {/* Display top items */}
         <TopContainer>
           <TopItemsContainer>
             <Title>Top items</Title>
@@ -177,6 +184,7 @@ function Statistics() {
               ))}
             </div>
           </TopItemsContainer>
+          {/* Display top categories */}
           <TopCategoriesContainer>
             <Title>Top categories</Title>
             <div>
@@ -192,6 +200,7 @@ function Statistics() {
             </div>
           </TopCategoriesContainer>
         </TopContainer>
+        {/* Display monthly summary chart */}
         <ChartContianer>
           <Title>Monthly Summary</Title>
           <ResponsiveContainer width={'100%'} height={302}>

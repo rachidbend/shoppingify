@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+// Styled component for the container of items within a category
 const StyledItemsCategory = styled.div`
   margin-bottom: ${props =>
     props.marginbottom ? props.marginbottom : '4.6rem'};
@@ -8,6 +9,7 @@ const StyledItemsCategory = styled.div`
   }
 `;
 
+// Styled component for the title of a category
 const Title = styled.h2`
   color: var(--color-black);
   margin-bottom: 1.8rem;
@@ -15,6 +17,7 @@ const Title = styled.h2`
   font-weight: 500;
 `;
 
+// Styled component for the container of items within a category
 const Container = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -29,6 +32,7 @@ const Container = styled.div`
   }
 `;
 
+// Component representing a category of items.
 function ItemsCategory({ children, marginbottom }) {
   return (
     <StyledItemsCategory marginbottom={marginbottom}>
@@ -37,6 +41,7 @@ function ItemsCategory({ children, marginbottom }) {
   );
 }
 
+// Assigning styled components as properties of the ItemsCategory component for reusability and ease of use.
 ItemsCategory.Title = Title;
 ItemsCategory.Container = Container;
 

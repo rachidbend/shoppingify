@@ -114,25 +114,20 @@ const ShoppingListHeader = styled.div`
   }
 `;
 
+//  Component responsible for rendering and managing the shopping list.
 function ShoppingList() {
+  // State for managing edit mode and modal visibility
   const [isEditMode, setIsEditMode] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // get the shopping list data
+  // Custom hooks for fetching shopping list data and managing updates
   const { shoppingList, isLoadingShoppingList, shoppingListError } =
     useGetAppData();
-  // updating the sopping list (increasing/decreasing quantity, and removing items)
   const { updateShoppingList, error: listItemError } = useUpdateShoppingList();
-
-  // adding the shopping list to the history
   const { uploadList } = useAddListToHistory();
-  // used in adding shopping list
   const { history } = useGetHistory();
-
-  // resets the list
   const { resetList } = useResetShoppingList();
 
-  // when a user increases or decreases the quantity of an item
+  // Function to update item quantity in the shopping list
   function updateListItemQuantity(itemId, incease) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
@@ -146,7 +141,7 @@ function ShoppingList() {
     });
   }
 
-  // when the user clicks on the trash icon to remove an item from the list
+  // Function to remove an item from the shopping list
   function onRemoveItem(deleteId) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
@@ -157,7 +152,7 @@ function ShoppingList() {
     });
   }
 
-  // when the user checks an item as purchased, or unchecks it
+  // Function to toggle item purchase state
   function itemPurchaseStatehandler(id, value) {
     if (isLoadingShoppingList) return;
     updateShoppingList({
@@ -170,13 +165,17 @@ function ShoppingList() {
     });
   }
 
+  // Function to toggle between editings and completing modes
   function handeListState() {
     setIsEditMode(!isEditMode);
   }
 
+  // Function to handle adding the shopping list to history
   function onAddList(isCompleted) {
+    // Ensure data exists
     if (isLoadingShoppingList) return;
 
+    // Create the list
     const list = {
       id: new Date(),
       created_at: new Date(),
@@ -186,63 +185,56 @@ function ShoppingList() {
       is_canceled: isCompleted ? false : true,
       completed_at: new Date(),
     };
+    // Upload list to hitory
     uploadList(
       { shoppingHistory: history, list },
       {
         onSuccess: () => {
-          // once the list was added to the history, reset the current list
+          // Reset the current shopping list when upload to history was succussful
           resetList();
         },
       }
     );
   }
 
-  function onCloseModal() {
-    setIsModalOpen(false);
-  }
-  function onConfirmModal() {
-    setIsModalOpen(false);
-    onAddList(false);
-  }
-
-  // show spinner when first loading the shopping list
+  // Show spinner when loading shopping list data
   if (isLoadingShoppingList) return <Spinner />;
 
+  // Show error message if there's an error fetching shopping list data or updating items
   if (shoppingListError) toast.error(shoppingListError.message);
   if (listItemError) toast.error(listItemError.message);
 
-  if (shoppingListError || listItemError) return <p>there was an error</p>;
-
-  // check if the list is empty
+  // Check if the list is empty
   const isEmptyList =
     !shoppingList || !shoppingList.items || shoppingList.items.length === 0;
 
-  // categorise the items in the list
+  // Group items by category
   const categorizedItems = groupByProperty(shoppingList?.items, 'category');
 
   return (
     <StyledShoppingList>
       <ChildrenContainer>
-        {/* add item call to action component */}
+        {/* Call to action component for adding items */}
         <AddItem />
 
-        {/* fi there is no items then this message is shown */}
+        {/* Show message if the list is empty */}
         {isEmptyList && <NoItems>No items</NoItems>}
 
         {!isEmptyList && (
           <>
-            {/* shopping title and  */}
+            {/* Shopping list title and edit mode toggle */}
             <ShoppingListHeader>
               <ListTitle>Shopping list</ListTitle>
               <EditListIcon onClick={handeListState} />
             </ShoppingListHeader>
 
+            {/* Render categorized items */}
             <ShoppingListItems>
               {Object.entries(categorizedItems).map(([category, items]) => (
                 <ListItemsCategory key={`shopping list ${category}`}>
-                  {/* name of the category */}
+                  {/* Category title */}
                   <ListItemsCategory.Title>{category}</ListItemsCategory.Title>
-                  {/* the items that belong to that category */}
+                  {/* Items within the category */}
                   <ListItemsCategory.Container>
                     {items.map(item => (
                       <ShoppingItem
@@ -261,15 +253,12 @@ function ShoppingList() {
           </>
         )}
 
+        {/* Input component for managing list and modal */}
         <ShoppingListInput
           isEmptyList={isEmptyList}
-          isModalOpen={isModalOpen}
-          shoppingList={shoppingList}
+          shoppingListName={shoppingList?.name}
           isLoadingShoppingList={isLoadingShoppingList}
           onAddList={onAddList}
-          onCloseModal={onCloseModal}
-          onConfirmModal={onConfirmModal}
-          setIsModalOpen={setIsModalOpen}
         />
       </ChildrenContainer>
     </StyledShoppingList>

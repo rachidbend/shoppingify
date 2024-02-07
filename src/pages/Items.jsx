@@ -145,25 +145,28 @@ const SearchIcon = styled(MdOutlineSearch)`
   }
 `;
 
+// Component responsible for displaying a list of items with search functionality.
 function Items() {
-  // search input state
+  // State for managing search input
   const [search, setSearch] = useState('');
 
-  // handler when the user inputs a search query
+  // Handler for updating search input
   function handleSearch(e) {
     if (!e) return;
     setSearch(e.target.value);
   }
 
-  // all the items data
+  // Fetch all items data
   const { items, isLoadingAllItems, allItemsError, addItemToList } =
     useGetAppData();
 
+  // Show spinner while loading items
   if (isLoadingAllItems) return <Spinner />;
+
+  // Show error toast if there's an error fetching items
   if (allItemsError) toast.error(allItemsError.message);
-  // filtering for the query
-  // if there is no search query, return all the items
-  // if there is a search query, return the items that have the query in their name
+
+  // Filter items based on search query
   const filteredItems =
     search === ''
       ? items
@@ -171,17 +174,20 @@ function Items() {
           item.name.toLowerCase().includes(search.toLocaleLowerCase())
         );
 
+  // Group filtered items by category
   const categorizedItems = groupByProperty(filteredItems, 'category');
 
   return (
     <StyledItems>
       <ChildrenContainer>
+        {/* Header section */}
         <HeaderContainer>
           <Title>
             <TitleAccent>Shoppingify </TitleAccent>
             allows you take your shopping list wherever you go
           </Title>
           <SearchInputContainer>
+            {/* Search input */}
             <SearchInput
               value={search}
               onChange={handleSearch}
@@ -191,9 +197,12 @@ function Items() {
           </SearchInputContainer>
         </HeaderContainer>
 
+        {/* Render items by category */}
         {Object.entries(categorizedItems)?.map(([category, items]) => (
           <ItemsCategory key={category}>
+            {/* Category title */}
             <ItemsCategory.Title>{category}</ItemsCategory.Title>
+            {/* Render items */}
             <ItemsCategory.Container>
               {items.map(item => {
                 return (

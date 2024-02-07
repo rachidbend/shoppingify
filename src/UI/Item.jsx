@@ -52,15 +52,20 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
+// Component representing an individual item in the items page
 function Item({ itemDetails, onAddItem }) {
   // available variables { id, created_at, name, note, image, category }
+  // Destructure needed item details
   const { id, name } = itemDetails;
 
   return (
     <StyledItem>
+      {/* Link to item details */}
       <StyledLink to={`/items/${id}`}>
+        {/* Item name */}
         <Name>{name}</Name>
       </StyledLink>
+      {/* Icon for adding the item */}
       <div onClick={() => onAddItem(itemDetails)}>
         <Icon />
       </div>

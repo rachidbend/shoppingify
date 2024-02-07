@@ -180,27 +180,33 @@ const ArrowIcon = styled(MdArrowForwardIos)`
   }
 `;
 
+// Component for rendering a single item in the history list.
 function List({ list }) {
+  // Format the date of completion for display
+  const formattedDate = `${
+    daysOfTheWeek[new Date(list.completed_at).getDay()]
+  } ${new Date(list.completed_at).getDate()}.${
+    new Date(list.completed_at).getMonth() + 1
+  }.${new Date(list.completed_at).getFullYear()} `;
+
   return (
     <StyledList to={`/history/${list.id}`} key={list.id}>
+      {/* Display the name of the list */}
       <ListName>{list.name}</ListName>
+      {/* Display the date of completion */}
       <Container>
         <CalendarIcon />
         <DateOfCompletion>
-          <ListDate>
-            {`${daysOfTheWeek[new Date(list.completed_at).getDay()]} ${new Date(
-              list.completed_at
-            ).getDate()}.${
-              new Date(list.completed_at).getMonth() + 1
-            }.${new Date(list.completed_at).getFullYear()} `}
-          </ListDate>
+          <ListDate>{formattedDate}</ListDate>
         </DateOfCompletion>
       </Container>
+      {/* Display the tag indicating completion status */}
       <TagContainer>
         <ListTag iscompleted={list.is_completed ? 'true' : 'false'}>
           {list.is_completed ? 'completed' : 'canceled'}
         </ListTag>
       </TagContainer>
+      {/* Arrow icon for navigation */}
       <ArrowIcon />
     </StyledList>
   );
