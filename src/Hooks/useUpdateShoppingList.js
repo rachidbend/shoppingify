@@ -3,11 +3,23 @@ import { updateShoppingListItems } from '../services/apiItems';
 import { useUser } from './useUser';
 import { useGetShoppingList } from './useGetShoppingList';
 import toast from 'react-hot-toast';
+import {
+  deleteItemFromList,
+  updateListWithNewItem,
+  updatePurchaseStateOfItem,
+  updateQuantityOfItem,
+} from '../helpers/helperFunctions';
 
+// Custom hook to update the shopping list
 function useUpdateShoppingList() {
+  // Initialize QueryClient
   const queryClient = useQueryClient();
+  // Get current user
   const { user } = useUser();
+  // Get shopping list data
   const { shoppingList: shopping } = useGetShoppingList();
+
+  // Mutation function to update the shopping list items
   const {
     mutate: updateShoppingList,
     isLoading,
@@ -31,9 +43,10 @@ function useUpdateShoppingList() {
         itemIsPurchased,
         shoppingList: shopping,
       }),
+
     onMutate: async newData => {
+      // Destructure new data
       const {
-        userId,
         item,
         oldList,
         updateQuantity,
@@ -47,80 +60,31 @@ function useUpdateShoppingList() {
       // Snapshot the previous shopping list data
       const previousShoppingList = queryClient.getQueryData(['shopping_list']);
 
-      // treat the data to prepare it
-      // i get a json object
-      // when an item is added, add the new item to the current list of items
-      let duplicate, newList;
-      // ADD ITEM TO LIST
-      // check if there is a duplicate
+      // Initialize updated list with the existing list or an empty array if no list provided
+      let updatedList = oldList || [];
+
+      // Check for duplicates
       if (item) {
-        duplicate =
-          oldList === undefined || oldList === null
-            ? [false]
-            : oldList.map(oldItem => oldItem.name === item.name);
-
-        // if there is then don't add that item
-        if (duplicate.includes(true)) return;
-        // if there isn't a duplicate item then add it to the list
-        newList =
-          oldList === undefined || oldList === null
-            ? [{ ...item, quantity: 1 }]
-            : [...oldList, { ...item, quantity: 1, isPurchased: false }];
-      } else {
-        newList = oldList;
+        updateListWithNewItem(updatedList, item);
       }
-      // when i want to delete an item, filter the list to get the other items
-      //  when a quantity is updated, change the quantitity
+      // Update quantity
+      if (updateQuantity) {
+        updatedList = updateQuantityOfItem(updatedList, updateQuantity);
+      }
+      // Delete item
+      if (deleteItemId) {
+        updatedList = deleteItemFromList(updatedList, deleteItemId);
+      }
 
-      // when i need to change the quantity, i have the items, and only need to change the quantity of that specific item, i need the id, i need to know by how much to increse or decrease
+      // Update purchase state
+      if (itemIsPurchased) {
+        updatedList = updatePurchaseStateOfItem(updatedList, itemIsPurchased);
+      }
 
-      // UPDATE ITEM QUANTITY
-      // 1. need to know to increase or decrease,
-      let updatedList;
-      // if we want to update the quantity, meaning if updateQuantity exists
-      if (updateQuantity)
-        /* we go through all the items to update the one we need */
-        updatedList = oldList.map(item => {
-          // if the id of the item we wnt to update matches the id of the current item
-          if (updateQuantity.itemId === item.id) {
-            // then we check if we need to increase
-            if (updateQuantity.update === 'increase')
-              return {
-                ...item,
-                quantity: item.quantity + 1,
-              };
-            // or fi we need to decrease its quantity
-            if (updateQuantity.update === 'decrease')
-              return {
-                ...item,
-                quantity: item.quantity === 1 ? 1 : item.quantity - 1,
-              };
-          }
-
-          // if the current item is not the item we want to update, then we return the item
-          return item;
-        });
-
-      // DELETE ITEM FROM LIST
-      // get the id of the item we want to remove
-      // filter out that item form the list
-      if (deleteItemId)
-        newList = oldList.filter(item => deleteItemId !== item.id);
-
-      // Update the purchased state
-      // 1. check if the item purchased state is changed
-      // 2. change the isPurchased for that specific item, and return the list
-      if (itemIsPurchased)
-        updatedList = oldList.map(item => {
-          if (item.id === itemIsPurchased.id)
-            return { ...item, isPurchased: itemIsPurchased.value };
-
-          return item;
-        });
-
+      // Create new shopping list object with updated items
       const newShoppingList = {
         ...shoppingList,
-        items: updatedList ? updatedList : newList,
+        items: updatedList,
       };
       // Optimistically update to the new value
       queryClient.setQueryData(['shopping_list'], newShoppingList);
@@ -128,11 +92,12 @@ function useUpdateShoppingList() {
       return { previousShoppingList, newShoppingList };
     },
 
-    onSuccess: list => {
-      toast.success('Shopping list updated successfully!');
-      console.log(list);
+    onSuccess: () => {
+      // Display success notification
+      toast.success('Shopping list updated!');
     },
     onSettled: () => {
+      // Invalidate the 'items' query to reflect the change in cache
       queryClient.invalidateQueries(['shopping_list']);
     },
     // onError is called if the mutation encounters an error
@@ -142,7 +107,10 @@ function useUpdateShoppingList() {
         ['shoppingList', newData.userId],
         context.previousShoppingList
       );
+
+      // Display error notification
       toast.error(error.message);
+      // Throw error for error boundary or further handling
       throw new Error(error.message);
     },
   });

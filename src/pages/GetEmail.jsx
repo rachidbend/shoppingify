@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useForgotPassword } from '../Hooks/useForgotPassword';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
 const StyledGetEmail = styled.div`
   height: 100vh;
@@ -17,7 +18,7 @@ const StyledGetEmail = styled.div`
 const Container = styled.div`
   background-color: var(--color-white);
   border-radius: 2.4rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-100);
   border: 1px solid var(--color-accent);
   padding: 4rem;
 `;
@@ -35,7 +36,7 @@ const Input = styled.input`
   font-weight: 500;
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
   transition: border 260ms ease-in-out;
   outline: none;
@@ -43,7 +44,7 @@ const Input = styled.input`
   width: 38rem;
 
   &::placeholder {
-    color: var(--color-gray-200);
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
 
@@ -89,6 +90,8 @@ function GetEmail() {
   // Use the useForgotPassword hook to handle forgot password functionality
   const { forgotPassword, error } = useForgotPassword();
 
+  const navigate = useNavigate();
+
   // Function to handle form submission
   function onSubmit(data) {
     // Return if data is empty
@@ -97,7 +100,14 @@ function GetEmail() {
     forgotPassword(data.email, {
       onSuccess: () => {
         // Reset form on success
+        navigate('items');
         reset();
+        toast.success('Check your email!', {
+          duration: 10000,
+          style: {
+            fontSize: '2rem',
+          },
+        });
       },
       onError: error => toast.error(error.message),
     });
