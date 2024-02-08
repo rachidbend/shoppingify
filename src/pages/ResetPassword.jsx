@@ -7,6 +7,7 @@ import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../Hooks/useUser';
 import Spinner from '../UI/Spinner';
+import toast from 'react-hot-toast';
 
 const StyledResetPassword = styled.div`
   height: 100vh;
@@ -22,7 +23,7 @@ const StyledResetPassword = styled.div`
 const Container = styled.div`
   background-color: var(--color-white);
   border-radius: 2.4rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-100);
   border: 1px solid var(--color-accent);
   padding: 4rem;
 `;
@@ -40,7 +41,7 @@ const Input = styled.input`
   font-weight: 500;
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
   transition: border 260ms ease-in-out;
   outline: none;
@@ -48,7 +49,7 @@ const Input = styled.input`
   width: 38rem;
 
   &::placeholder {
-    color: var(--color-gray-200);
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
 
@@ -65,13 +66,13 @@ const IconContainer = styled.div`
   padding: 0.4rem;
 
   &:hover svg {
-    color: var(--color-gray-100);
+    color: var(--color-grey-100);
   }
 `;
 const EyeIcon = styled(MdRemoveRedEye)`
   height: 2.4rem;
   width: 2.4rem;
-  color: var(--color-gray-200);
+  color: var(--color-grey-200);
 `;
 
 const ButtonContainer = styled.div`
@@ -110,7 +111,7 @@ const LoginButton = styled.button`
   border: none;
   cursor: pointer;
   &:hover {
-    color: var(--color-gray-300);
+    color: var(--color-grey-300);
   }
 `;
 
@@ -128,7 +129,7 @@ function ResetPassword() {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
-  const { user, isLoading } = useUser();
+  const { isLoading } = useUser();
 
   const { updateUser } = useUpdateUser();
 
@@ -138,13 +139,26 @@ function ResetPassword() {
     if (!data) return;
     // Check if password matches confirm password
     // If passwords match, update user with new password
-    if (data.password === data.confirm) updateUser({ password: data.password });
+    if (data.password === data.confirm)
+      updateUser(
+        { password: data.password },
+        {
+          onSuccess: () => {
+            // Display success notification
+            toast.success('Password updates!');
+            //  Navigate to 'itmes' page when the password is successfully updates
+            navigate('/items');
+          },
+          onError: error => {
+            // Display error notification
+            toast.error(error.message);
+          },
+        }
+      );
     reset();
   }
 
   if (isLoading) return <Spinner />;
-
-  console.log(user);
 
   return (
     <StyledResetPassword>

@@ -19,6 +19,7 @@ import Account from './pages/Account';
 import ResetPassword from './pages/ResetPassword';
 import GetEmail from './pages/GetEmail';
 import EmailConfirmation from './UI/EmailConfirmation';
+import CheckEmail from './UI/CheckEmail';
 
 const styled = { createGlobalStyle };
 
@@ -116,6 +117,7 @@ function App() {
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/get-email" element={<GetEmail />} />
                 <Route path="/confirm" element={<EmailConfirmation />} />
+                <Route path="/password-check" element={<CheckEmail />} />
               </Routes>
             </MobileSideProvider>
           </AppProvider>
