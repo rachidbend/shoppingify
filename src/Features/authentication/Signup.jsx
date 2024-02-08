@@ -24,7 +24,7 @@ const StyledLogin = styled.div`
 const Container = styled.div`
   background-color: var(--color-white);
   border-radius: 2.4rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-100);
   padding: 4rem;
   width: 38.9rem;
 `;
@@ -44,13 +44,13 @@ const Input = styled.input`
   font-weight: 500;
   background-color: transparent;
   border-radius: 1.2rem;
-  border: 0.2rem solid var(--color-gray-200);
+  border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
   transition: border 260ms ease-in-out;
   outline: none;
   margin-bottom: 1.8rem;
   &::placeholder {
-    color: var(--color-gray-200);
+    color: var(--color-grey-200);
     font-family: var(--font-main);
   }
 
@@ -97,13 +97,13 @@ const Form = styled.form`
 `;
 
 const OrContainer = styled.div`
-  border-bottom: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-grey-200);
   position: relative;
   margin-top: 3.6rem;
   margin-bottom: 4.8rem;
 `;
 const OrText = styled.p`
-  color: var(--color-gray-400);
+  color: var(--color-grey-400);
   font-size: 1.2rem;
   font-weight: 500;
   text-align: center;
@@ -111,7 +111,7 @@ const OrText = styled.p`
   position: absolute;
   bottom: 0;
   padding: 0.4rem;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--color-grey-200);
   border-radius: 0.6rem;
   left: 50%;
   transform: translate(-50%, 50%);
@@ -124,12 +124,12 @@ const SignupButton = styled.button`
   cursor: pointer;
 
   font-size: 1.4rem;
-  color: var(--color-gray-100);
+  color: var(--color-grey-100);
   font-weight: 500;
   text-align: center;
   padding: 0.2rem 0;
   margin-left: 0.4rem;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-grey-100);
   transition: color 200ms ease-out, border 200ms ease-out;
   &:hover {
     color: var(--color-accent);
@@ -139,7 +139,7 @@ const SignupButton = styled.button`
 
 const LoginText = styled.p`
   font-size: 1.4rem;
-  color: var(--color-gray-400);
+  color: var(--color-grey-400);
   font-weight: 500;
   text-align: center;
 
@@ -159,8 +159,8 @@ const OtherLoginContainer = styled.div`
 
 const OtherLogin = styled.div`
   padding: 1.1rem 2.95rem;
-  border: 1px solid var(--color-gray-200);
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--color-grey-200);
+  box-shadow: var(--shadow-100);
   text-align: center;
   width: 20rem;
   border-radius: 1.2rem;
