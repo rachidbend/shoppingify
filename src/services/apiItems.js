@@ -299,10 +299,13 @@ async function getAllAvatars() {
 // Async function to upload user avatar
 async function uploadUserAvatar(file) {
   // Upload the provided file to the 'user_avatar' storage folder
-  console.log(file);
+
+  // get file type to give tha appropriate type to the url
+  const fileType = Object(file).type.split('/')[1];
+
   const { data, error } = await supabase.storage
     .from('user_avatar')
-    .upload(`avatar-${Date.now()}.png`, file);
+    .upload(`avatar-${Date.now()}.${fileType}`, file);
 
   // Check for errors in the response
   if (error) throw new Error(error.message);
