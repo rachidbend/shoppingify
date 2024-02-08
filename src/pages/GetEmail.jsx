@@ -100,7 +100,6 @@ function GetEmail() {
     forgotPassword(data.email, {
       onSuccess: () => {
         // Reset form on success
-        navigate('items');
         reset();
         toast.success('Check your email!', {
           duration: 10000,
@@ -108,6 +107,7 @@ function GetEmail() {
             fontSize: '2rem',
           },
         });
+        navigate('/password-check');
       },
       onError: error => toast.error(error.message),
     });
