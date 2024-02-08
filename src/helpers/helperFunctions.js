@@ -41,3 +41,44 @@ export const generateFilteredLists = values => {
     return accumulator;
   }, {}); // Initialize the accumulator as an empty object
 };
+
+export function updateListWithNewItem(updatedList, item) {
+  // Check for duplicates
+  const isDuplicate = updatedList.some(oldItem => oldItem.name === item.name);
+  if (!isDuplicate) {
+    // If no duplicate was found, add the item to the shopping list
+    updatedList.push({ ...item, quantity: 1, isPurchased: false });
+  }
+
+  // doesn't need to return anything because it mutates the original array, and doesn't create a new array based on the original
+}
+
+export function updateQuantityOfItem(updatedList, updateQuantity) {
+  const { itemId, update } = updateQuantity;
+  updatedList = updatedList.map(item => {
+    if (itemId === item.id) {
+      // Increment or decrement quantity based on update action
+      const updatedQuantity =
+        update === 'increase'
+          ? item.quantity + 1
+          : Math.max(item.quantity - 1, 1);
+      return { ...item, quantity: updatedQuantity };
+    }
+    return item;
+  });
+  return updatedList;
+}
+
+export function deleteItemFromList(updatedList, deleteItemId) {
+  return updatedList.filter(item => item.id !== deleteItemId);
+}
+
+export function updatePurchaseStateOfItem(updatedList, itemIsPurchased) {
+  return updatedList.map(item => {
+    if (item.id === itemIsPurchased.id) {
+      // Update isPurchased property of the item
+      return { ...item, isPurchased: itemIsPurchased.value };
+    }
+    return item;
+  });
+}

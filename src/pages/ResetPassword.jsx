@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router';
 
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useForm } from 'react-hook-form';
+import { useUser } from '../Hooks/useUser';
+import Spinner from '../UI/Spinner';
 
 const StyledResetPassword = styled.div`
   height: 100vh;
@@ -126,6 +128,8 @@ function ResetPassword() {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
+  const { user, isLoading } = useUser();
+
   const { updateUser } = useUpdateUser();
 
   // Function to handle form submission
@@ -137,6 +141,10 @@ function ResetPassword() {
     if (data.password === data.confirm) updateUser({ password: data.password });
     reset();
   }
+
+  if (isLoading) return <Spinner />;
+
+  console.log(user);
 
   return (
     <StyledResetPassword>

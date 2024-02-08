@@ -1,27 +1,38 @@
+import {
+  deleteItemFromList,
+  updateListWithNewItem,
+  updatePurchaseStateOfItem,
+  updateQuantityOfItem,
+} from '../helpers/helperFunctions';
 import { supabase } from './supabase';
 
-// updated for profiles ****
+// Async function to fetch all items from the database
 async function getAllItems() {
+  // Fetch items data from the 'profiles' of the authenticated user
   let { data: items, error } = await supabase.from('profiles').select('items');
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error fetching the items');
-  return items.at(0).items;
+
+  // Return the fetched items
+  return items[0].items;
 }
 
-// updated for profiles ****
+// Async function to fetch the shopping list from the database
 async function getShoppingList() {
+  // Fetch shopping list data from the 'profiles' of the authenticated user
   let { data: shoppingList, error } = await supabase
     .from('profiles')
     .select('shopping_list');
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error fetching the items');
 
-  return shoppingList.at(0).shopping_list;
+  // Return the shopping list
+  return shoppingList[0].shopping_list;
 }
 
-// three thing will need to be updatable
-// 1. when an item is added
-// 2. when an item is removed
-// 3. when the quantity of an item is changed
-// updated for profiles ****
+// Async function to update the shopping list
 async function updateShoppingListItems({
   userId,
   item,
@@ -31,283 +42,295 @@ async function updateShoppingListItems({
   itemIsPurchased,
   shoppingList,
 }) {
-  // i get a json object
-  // when an item is added, add the new item to the current list of items
-  let duplicate, newList;
-  // ADD ITEM TO LIST
-  // check if there is a duplicate
+  // Initialize updated list with the existing list or an empty array if no list provided
+  let updatedList = oldList || [];
+
+  // Check for duplicates
   if (item) {
-    duplicate =
-      oldList === undefined || oldList === null
-        ? [false]
-        : oldList.map(oldItem => oldItem.name === item.name);
-
-    // if there is then don't add that item
-    if (duplicate.includes(true)) return;
-    // if there isn't a duplicate item then add it to the list
-    newList =
-      oldList === undefined || oldList === null
-        ? [{ ...item, quantity: 1 }]
-        : [...oldList, { ...item, quantity: 1, isPurchased: false }];
-  } else {
-    newList = oldList;
+    updateListWithNewItem(updatedList, item);
   }
-  // when i want to delete an item, filter the list to get the other items
-  //  when a quantity is updated, change the quantitity
+  // Update quantity
+  if (updateQuantity) {
+    updatedList = updateQuantityOfItem(updatedList, updateQuantity);
+  }
+  // Delete item
+  if (deleteItemId) {
+    updatedList = deleteItemFromList(updatedList, deleteItemId);
+  }
 
-  // when i need to change the quantity, i have the items, and only need to change the quantity of that specific item, i need the id, i need to know by how much to increse or decrease
+  // Update purchase state
+  if (itemIsPurchased) {
+    updatedList = updatePurchaseStateOfItem(updatedList, itemIsPurchased);
+  }
 
-  // UPDATE ITEM QUANTITY
-  // 1. need to know to increase or decrease,
-  let updatedList;
-  // if we want to update the quantity, meaning if updateQuantity exists
-  if (updateQuantity)
-    /* we go through all the items to update the one we need */
-    updatedList = oldList.map(item => {
-      // if the id of the item we wnt to update matches the id of the current item
-      if (updateQuantity.itemId === item.id) {
-        // then we check if we need to increase
-        if (updateQuantity.update === 'increase')
-          return {
-            ...item,
-            quantity: item.quantity + 1,
-          };
-        // or fi we need to decrease its quantity
-        if (updateQuantity.update === 'decrease')
-          return {
-            ...item,
-            quantity: item.quantity === 1 ? 1 : item.quantity - 1,
-          };
-      }
-
-      // if the current item is not the item we want to update, then we return the item
-      return item;
-    });
-
-  // DELETE ITEM FROM LIST
-  // get the id of the item we want to remove
-  // filter out that item form the list
-  if (deleteItemId) newList = oldList.filter(item => deleteItemId !== item.id);
-
-  // Update the purchased state
-  // 1. check if the item purchased state is changed
-  // 2. change the isPurchased for that specific item, and return the list
-  if (itemIsPurchased)
-    updatedList = oldList.map(item => {
-      if (item.id === itemIsPurchased.id)
-        return { ...item, isPurchased: itemIsPurchased.value };
-
-      return item;
-    });
+  // Update shopping list in the database for the current authenticated user
   const { data, error } = await supabase
     .from('profiles')
     .update({
       shopping_list: {
         ...shoppingList,
-        items: updatedList ? updatedList : newList,
+        items: updatedList,
       },
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error updating your shopping list.');
+
+  // Return the updated data
   return data;
 }
 
-// updated for profiles ****
-async function updateShopplingListName({
-  userId,
-  shoppingList,
-
-  listName,
-  reset = false,
-}) {
-  const shopping = reset ? [] : shoppingList;
+// Async function to update the name of the shopping list
+async function updateShopplingListName({ userId, shoppingList, listName }) {
+  // Update the shopping list name in the database
   const { data, error } = await supabase
     .from('profiles')
     .update({
       shopping_list: {
-        ...shopping,
-        name: listName,
+        ...shoppingList, // Keep existing shopping list data
+        name: listName, // Update the name of the shopping list
       },
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // Check for errors in the response
   if (error)
-    throw new Error(
-      'There was an error updating the name of your shopping list.'
-    );
+    throw new Error('There was an error updating the shopping list name.');
+
+  // Return the updated data
   return data;
 }
 
-// updated for profiles ****
+// Async function to add a new item to the database
 async function addNewItem({ userId, allItems, item }) {
+  // Add new item to the database
   const { data, error } = await supabase
     .from('profiles')
     .update({
+      // Update the 'items' field of the user's profile by appending the new item
       items: [
         {
-          id: `${new Date()}-item`,
-          created_at: new Date(),
-          name: item.name,
-          image: item.image,
-          note: item.note,
-          category: item.category,
+          id: `${new Date()}-item`, // Generate a unique ID for the new item
+          created_at: new Date(), // Timestamp for creation
+          name: item.name, // Name of the item
+          image: item.image, // Image URL of the item
+          note: item.note, // Notes about the item
+          category: item.category, // Category of the item
         },
-        ...allItems,
+        ...allItems, // Spread the existing items after the new item
       ],
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // If there's an error in the response, throw an error
   if (error) throw new Error('There was an error adding the new item.');
 
+  // Return the updated data
   return data;
 }
 
-// updated for profiles ****
+// Async function to fetch all categories from the database
 async function getAllCategories() {
+  // Fetch categories data from the 'profiles' of the authenticated user
   let { data: categories, error } = await supabase
     .from('profiles')
     .select('categories');
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error getting the categories.');
 
-  return categories.at(0).categories;
+  // Return the fetched categories
+  return categories[0].categories;
 }
 
-// updated for profiles ****
+// Async function to fetch details of a specific item from the database
 async function getItemDetails(id) {
+  // Fetch items data from the 'profiles' of the authenticated user
   let { data, error } = await supabase.from('profiles').select('items');
-  const itemDetails = await data
-    .at(0)
-    .items.filter(item => String(item.id) === String(id));
+
+  // Filter the items to find the details of the item with the provided id
+  const itemDetails = data[0].items.filter(
+    item => String(item.id) === String(id)
+  );
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error getting the item details.');
+
+  // Return the item details
   return itemDetails;
 }
 
-// updated for profiles ****
+// Async function to delete an item from the database
 async function deleteItem({ userId, allItems, itemId }) {
-  const newList = allItems.filter(item => String(item.id) !== String(itemId));
+  // Create a new list excluding the item to be deleted
+  const filteredItems = allItems.filter(
+    item => String(item.id) !== String(itemId)
+  );
+  // Update the 'items' field of the user's profile with the new list
+  // that doesn't include the item to be deleted
   const { data, error } = await supabase
     .from('profiles')
     .update({
-      items: [...newList],
+      items: [...filteredItems],
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // If there's an error in the response, throw an error
   if (error) throw new Error('There was an error deleting the item.');
 
+  // Return the updated data
   return data;
 }
 
-// updated for profiles ****
+// Async function to fetch shopping history from the database
 async function getHistory() {
+  // Fetch shopping history data from the 'profiles' of the authenticated user
   let { data: shopping_history, error } = await supabase
     .from('profiles')
     .select('shopping_history');
+
+  // Check for errors in the response
   if (error) throw new Error('There was an error getting the shopping history');
-  return shopping_history.at(0).shopping_history;
+
+  // Return the fetched shopping history
+  return shopping_history[0].shopping_history;
 }
 
-// updated for profiles ****
+// Async function to fetch a specific shopping history list from the database
 async function getHistoryList(id) {
+  // Fetch shopping history data from the 'profiles' of the authenticated user
   let { data, error } = await supabase
     .from('profiles')
     .select('shopping_history');
-  const list = await data
-    .at(0)
-    .shopping_history.filter(list => String(list.id) === String(id));
+
+  // Filter the shopping history to find the list with the provided id
+  const list = data[0]?.shopping_history?.filter(
+    list => String(list.id) === String(id)
+  );
+
+  // Check for errors in the response
   if (error)
     throw new Error(
       'There was an error getting the shopping list you requested.'
     );
+
+  // Return the filtered shopping list
   return list;
 }
 
-// updated for profiles ****
+// Async function to add the current shopping list to the user's history
 async function addListToHistory({ userId, shoppingHistory, list }) {
+  // Update the user's shopping history in the database
   const { data, error } = await supabase
     .from('profiles')
     .update({
-      shopping_history: [list, ...shoppingHistory],
+      shopping_history: [list, ...shoppingHistory], // Add current list to the start of users the history
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // Check for errors in the response
   if (error)
     throw new Error(
       'There was an error adding the shopping list to the history.'
     );
 
+  // Return the updated data
   return data;
 }
-// updated for profiles ****
+
+// Async function to add a new category to the user's profile
 async function addCategory({ userId, allCategories, category }) {
+  // Send update query to Supabase to add the new category
   const { data, error } = await supabase
     .from('profiles')
     .update({
       categories: [
         {
-          id: `${new Date()}-category`,
-          created_at: new Date(),
-          name: category,
+          id: `${new Date()}-category`, // Generate unique ID for the new category
+          created_at: new Date(), // Timestamp for creation
+          name: category, // Name of the category
         },
-        ...allCategories,
+        ...allCategories, // Append existing categories
       ],
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
+  // Check for errors in the response
   if (error) throw new Error('There was an error adding the category.');
 
+  // Return the updated data
   return data;
 }
 
+// Async function to update user avatar
 async function updateAvatar({ userId, url }) {
+  // Update authenticated user's avatar URL in the database
   const { data, error } = await supabase
     .from('profiles')
-    .update({ avatar: url })
-    .eq('id', userId)
+    .update({ avatar: url }) // Set the 'avatar' field to the provided URL
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // Check for errors in the response
   if (error) throw new Error(error.message);
 
+  // Return the updated data
   return data;
 }
 
+// Async function to fetch all avatars from the database
 async function getAllAvatars() {
+  // Fetch avatars data from the 'Avatars' table
   let { data: avatars, error } = await supabase.from('Avatars').select('*');
 
+  // Check for errors in the response
   if (error) throw new Error('Could not get the Avatars');
 
+  // Return the fetched avatars data
   return avatars;
 }
 
+// Async function to upload user avatar
 async function uploadUserAvatar(file) {
+  // Upload the provided file to the 'user_avatar' storage folder
   console.log(file);
   const { data, error } = await supabase.storage
     .from('user_avatar')
     .upload(`avatar-${Date.now()}.png`, file);
 
+  // Check for errors in the response
   if (error) throw new Error(error.message);
 
+  // Return the uploaded data
   return data;
 }
 
+// Async function to reset the shopping list for a specific user
 async function resetShoppingList({ userId }) {
+  // Update the shopping list data in the database for the authenticated user
   const { data, error } = await supabase
     .from('profiles')
     .update({
+      // Reset the shopping list with an empty name and empty items array
       shopping_list: {
+        id: 1,
         name: '',
         items: [],
       },
     })
-    .eq('id', userId)
+    .eq('id', userId) // Match the user ID
     .select();
 
+  // Check for errors in the response
   if (error) throw new Error(error.message);
 
+  // Return the updated data
   return data;
 }
 
