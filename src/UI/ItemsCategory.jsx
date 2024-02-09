@@ -1,7 +1,8 @@
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 // Styled component for the container of items within a category
-const StyledItemsCategory = styled.div`
+const StyledItemsCategory = styled(motion.div)`
   margin-bottom: ${props =>
     props.marginbottom ? props.marginbottom : '4.6rem'};
   @media screen and (max-width: 480px) {
@@ -35,7 +36,7 @@ const Container = styled.div`
 // Component representing a category of items.
 function ItemsCategory({ children, marginbottom }) {
   return (
-    <StyledItemsCategory marginbottom={marginbottom}>
+    <StyledItemsCategory layout marginbottom={marginbottom}>
       {children}
     </StyledItemsCategory>
   );

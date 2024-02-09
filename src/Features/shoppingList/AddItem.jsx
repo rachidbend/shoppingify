@@ -46,7 +46,7 @@ const AddItemButton = styled.button`
 
   border: 0.1rem solid var(--color-white);
 
-  transition: 260ms ease-in-out;
+  transition: var(--transition-button);
 
   &:hover {
     color: var(--color-white);

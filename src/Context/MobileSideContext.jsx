@@ -17,11 +17,16 @@ export default function MobileSideProvider({ children }) {
     isMobile ? setIsOpen(isOpen => !isOpen) : setIsOpen(true);
   }
 
+  function closeMobileSide() {
+    isMobile && setIsOpen(false);
+  }
+
   // Value provided by the context
   const contexValue = {
     isOpen,
     onOpenMobileSide,
     isMobile,
+    closeMobileSide,
   };
 
   return (

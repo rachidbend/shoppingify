@@ -12,8 +12,9 @@ import styled from 'styled-components';
 import { useGetShoppingList } from '../Hooks/useGetShoppingList';
 import { useMobileSide } from '../Context/MobileSideContext';
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { TbTriangleFilled } from 'react-icons/tb';
+import { navHoverVariant } from '../transitions/variants';
 
 const StyledNavSideBar = styled(motion.div)`
   display: flex;
@@ -121,7 +122,7 @@ const SideSpan = styled(motion.span)`
   left: 0;
 `;
 
-const LinkHoverContainer = styled.div`
+const LinkHoverContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,7 +175,7 @@ function NavSideBar() {
   // this is used to display the number of items in the shopping list
   const { shoppingList, isLoading } = useGetShoppingList();
   // this opens and closes the side page on mobile view
-  const { onOpenMobileSide } = useMobileSide();
+  const { onOpenMobileSide, closeMobileSide } = useMobileSide();
 
   // grabbing all the elements needed
   const sideSpanRef = useRef();
@@ -241,60 +242,96 @@ function NavSideBar() {
       <StyledNavLink
         onMouseEnter={() => handleLinkHover('account')}
         onMouseLeave={handleLinkExit}
+        onClick={closeMobileSide}
         ref={accountRef}
         to="/account"
       >
         <Logo src={logo} alt="Shoppingify logo" />
-        {linkHovered === 'account' && (
-          <LinkHoverContainer>
-            <LinkHoverSpan />
-            <LinkHoverText>account</LinkHoverText>
-          </LinkHoverContainer>
-        )}
+        <AnimatePresence>
+          {linkHovered === 'account' && (
+            <LinkHoverContainer
+              variants={navHoverVariant}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={navHoverVariant.transition}
+            >
+              <LinkHoverSpan />
+              <LinkHoverText>account</LinkHoverText>
+            </LinkHoverContainer>
+          )}
+        </AnimatePresence>
       </StyledNavLink>
 
       <NavContainer>
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('items')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={itemsRef}
           to="/items"
         >
           <StyledItemsIcon />
-          {linkHovered === 'items' && (
-            <LinkHoverContainer>
-              <LinkHoverSpan />
-              <LinkHoverText>items</LinkHoverText>
-            </LinkHoverContainer>
-          )}
+          <AnimatePresence>
+            {linkHovered === 'items' && (
+              <LinkHoverContainer
+                variants={navHoverVariant}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                transition={navHoverVariant.transition}
+              >
+                <LinkHoverSpan />
+                <LinkHoverText>items</LinkHoverText>
+              </LinkHoverContainer>
+            )}
+          </AnimatePresence>
         </StyledNavLink>
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('history')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={historyRef}
           to="/history"
         >
           <StyledHistoryIcon />
-          {linkHovered === 'history' && (
-            <LinkHoverContainer>
-              <LinkHoverSpan />
-              <LinkHoverText>history</LinkHoverText>
-            </LinkHoverContainer>
-          )}
+          <AnimatePresence>
+            {linkHovered === 'history' && (
+              <LinkHoverContainer
+                variants={navHoverVariant}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                transition={navHoverVariant.transition}
+              >
+                <LinkHoverSpan />
+                <LinkHoverText>history</LinkHoverText>
+              </LinkHoverContainer>
+            )}
+          </AnimatePresence>
         </StyledNavLink>
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('statistics')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={statisticsRef}
           to="/statistics"
         >
           <StyledStatisticsIcon />
-          {linkHovered === 'statistics' && (
-            <LinkHoverContainer>
-              <LinkHoverSpan />
-              <LinkHoverText>statistics</LinkHoverText>
-            </LinkHoverContainer>
-          )}
+          <AnimatePresence>
+            {linkHovered === 'statistics' && (
+              <LinkHoverContainer
+                variants={navHoverVariant}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                transition={navHoverVariant.transition}
+              >
+                <LinkHoverSpan />
+                <LinkHoverText>statistics</LinkHoverText>
+              </LinkHoverContainer>
+            )}
+          </AnimatePresence>
         </StyledNavLink>
       </NavContainer>
       <ShoppingCartContainer onClick={onOpenMobileSide}>

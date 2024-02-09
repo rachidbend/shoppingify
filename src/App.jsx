@@ -41,6 +41,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --color-nav-background: #fff;
     --color-shopping-list-background: #fff0de;
     --color-shopping-add-item-background: #80485b;
+    --color-backgound-modal-overlay: rgba(0, 0, 0, 0.1);
 
     /* main colors */
     --color-white: #fff;
@@ -62,10 +63,14 @@ export const GlobalStyle = styled.createGlobalStyle`
 
     /* box shadows */
     --shadow-100: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+
     --shadow-item: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
     --shadow-item-hover: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
 
     /* transitions */
+    --transition-input: 0.3s cubic-bezier(0.17, 0.67, 0.9, 0.33);
+    --transition-button: 0.3s cubic-bezier(0.17, 0.67, 0.35, 0.35);
+    --transition-button-text: 0.3s ease;
   }
 `;
 
@@ -100,10 +105,14 @@ function App() {
                 >
                   {/* these are the main routes */}
                   <Route index path="/" element={<Navigate to={'/items'} />} />
-                  <Route path="/items" element={<Items />}>
+                  <Route key={'items-page'} path="/items" element={<Items />}>
                     <Route path="/items/:itemId" element={<EmptyContainer />} />
                   </Route>
-                  <Route path="/history" element={<History />} />
+                  <Route
+                    key={'history-path'}
+                    path="/history"
+                    element={<History />}
+                  />
                   <Route path="/statistics" element={<Statistics />} />
                   <Route path="/account" element={<Account />} />
                   {/* this shows the history list when a specific list is requested */}

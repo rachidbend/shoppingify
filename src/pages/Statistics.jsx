@@ -19,6 +19,10 @@ import {
   extractNamesAndCategories,
   generateFilteredLists,
 } from '../helpers/helperFunctions';
+import {
+  mainPagesChildrenVariants,
+  mainPagesVariants,
+} from '../transitions/variants';
 
 const StyledStatistics = styled(motion.div)`
   padding: 0rem 7.77rem 0rem 11.13rem;
@@ -166,8 +170,18 @@ function Statistics() {
   const data = organizeHistoryByMonth(history, 6);
 
   return (
-    <StyledStatistics>
-      <ChildrenContainer>
+    <StyledStatistics
+      initial="hidden"
+      animate="visible"
+      variants={mainPagesVariants}
+      transition={mainPagesVariants.transition}
+    >
+      <ChildrenContainer
+        initial="hidden"
+        animate="visible"
+        transition={mainPagesChildrenVariants.transition}
+        variants={mainPagesChildrenVariants}
+      >
         {/* Display top items */}
         <TopContainer>
           <TopItemsContainer>

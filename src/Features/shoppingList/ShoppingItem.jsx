@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { memo, useState } from 'react';
 import styled from 'styled-components';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -20,7 +20,7 @@ const ItemName = styled(motion.p)`
   color: var(--color-black);
   font-size: 1.8rem;
   font-weight: 500;
-
+  display: inline-block;
   text-decoration: ${props =>
     props.ischecked === 'true' ? 'line-through' : 'none'};
 
@@ -51,6 +51,7 @@ const Button = styled(motion.button)`
   border: none;
   background: none;
   position: relative;
+  display: inline-block;
 `;
 
 const EditContainer = styled(motion.div)`
@@ -62,6 +63,8 @@ const EditContainer = styled(motion.div)`
   padding-right: 0.4rem;
   border-radius: 1.2rem;
   margin-left: auto;
+
+  transition: background-color 0.6s;
 `;
 
 const IncreaseQuantityButton = styled(Button)``;
@@ -121,7 +124,7 @@ const CheckedIcon = styled(MdCheck)`
   /* opacity: ${props => (props.ischecked === 'true' ? 1 : 0)}; */
 `;
 
-const CheckboxContainer = styled.div`
+const CheckboxContainer = styled(motion.div)`
   position: relative;
 `;
 
@@ -160,60 +163,117 @@ const ShoppingItem = memo(function OriginalShoppingItem({
   }
 
   return (
-    <StyledItemContainer key={`shopping-itel-${item.id}`}>
+    <StyledItemContainer
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      exit={{
+        opacity: 0,
+      }}
+      layout
+      key={`shopping-itel-${item.id}`}
+    >
       {/* Purchased Checkbox */}
-      {!isEditing && (
-        <CheckboxContainer>
-          <CheckboxInput
-            checked={item.isPurchased}
-            onChange={handleCheck}
-            type="checkbox"
-          />
-          <CheckboxCustom>
-            <CheckedIcon ischecked={item.isPurchased ? 'true' : 'false'} />
-          </CheckboxCustom>
-        </CheckboxContainer>
-      )}
-
+      <AnimatePresence>
+        {!isEditing && (
+          <CheckboxContainer
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+              width: 0,
+            }}
+          >
+            <CheckboxInput
+              checked={item.isPurchased}
+              onChange={handleCheck}
+              type="checkbox"
+            />
+            <CheckboxCustom>
+              <CheckedIcon ischecked={item.isPurchased ? 'true' : 'false'} />
+            </CheckboxCustom>
+          </CheckboxContainer>
+        )}
+      </AnimatePresence>
       {/* Item Name */}
-      <ItemName ischecked={item.isPurchased ? 'true' : 'false'}>
+      <ItemName layout ischecked={item.isPurchased ? 'true' : 'false'}>
         {item.name}
       </ItemName>
 
       {/* Item Edit Container */}
       <EditContainer edit={isEditMode}>
-        {/* Delete Item Button */}
-        {isEditMode && (
-          <DeleteButton key={`delete-${item.id}`} onClick={handleDelete}>
-            <TrashIcon />
-          </DeleteButton>
-        )}
+        <AnimatePresence>
+          {/* Delete Item Button */}
+          {isEditMode && (
+            <DeleteButton
+              initial={{ opacity: 0, x: 30 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: {
+                  delay: 0.1,
+                },
+              }}
+              exit={{ opacity: 0, x: 16 }}
+              key={`delete-${item.id}`}
+              onClick={handleDelete}
+            >
+              <TrashIcon />
+            </DeleteButton>
+          )}
 
-        {/* Decrease Quantity Button */}
-        {isEditMode && (
-          <DecreaseQuantityButton
-            key={`decrease-${item.id}`}
-            onClick={() => handleUpdateQuantity(false)}
-          >
-            <DecreaseIcon />
-          </DecreaseQuantityButton>
-        )}
+          {/* Decrease Quantity Button */}
+          {isEditMode && (
+            <DecreaseQuantityButton
+              initial={{ opacity: 0, x: 10 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: {
+                  delay: 0.2,
+                },
+              }}
+              exit={{ opacity: 0, x: 10 }}
+              key={`decrease-${item.id}`}
+              onClick={() => handleUpdateQuantity(false)}
+            >
+              <DecreaseIcon />
+            </DecreaseQuantityButton>
+          )}
 
-        {/* Quantity Button */}
-        <Quantity onClick={handleShowEdit}>
-          {item.quantity}
-          <QuantityPcs> pcs</QuantityPcs>
-        </Quantity>
+          {/* Quantity Button */}
+          <Quantity layout onClick={handleShowEdit}>
+            {item.quantity}
 
-        {/* Increase Quantity Button */}
-        {isEditMode && (
-          <IncreaseQuantityButton
-            key={`increase-${item.id}`}
-            onClick={() => handleUpdateQuantity(true)}
-          >
-            <IncreaseIcon />
-          </IncreaseQuantityButton>
-        )}
+            <QuantityPcs> pcs</QuantityPcs>
+          </Quantity>
+
+          {/* Increase Quantity Button */}
+          {isEditMode && (
+            <IncreaseQuantityButton
+              initial={{ opacity: 0, x: -10 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: {
+                  delay: 0.2,
+                },
+              }}
+              exit={{ opacity: 0, x: -10 }}
+              key={`increase-${item.id}`}
+              onClick={() => handleUpdateQuantity(true)}
+            >
+              <IncreaseIcon />
+            </IncreaseQuantityButton>
+          )}
+        </AnimatePresence>
       </EditContainer>
     </StyledItemContainer>
   );

@@ -46,15 +46,18 @@ const Input = styled.input`
   border-radius: 1.2rem;
   border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
-  transition: border 260ms ease-in-out;
   outline: none;
   margin-bottom: 1.8rem;
+
+  transition: border var(--transition-input);
+
   &::placeholder {
     color: var(--color-grey-200);
     font-family: var(--font-main);
   }
 
-  &:focus {
+  &:focus,
+  &:hover {
     border: 0.2rem solid var(--color-accent);
   }
 
@@ -72,7 +75,7 @@ const Title = styled.h2`
   text-align: center;
 `;
 
-const LoginButton = styled.input`
+const SignupButton = styled.input`
   padding: 1.4rem 2.32rem 1.4rem 2.42rem;
   margin-top: 1.6rem;
   color: var(--color-white);
@@ -84,7 +87,9 @@ const LoginButton = styled.input`
   display: inline-block;
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+  transition: background-color var(--transition-button),
+    color var(--transition-button);
+
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
@@ -117,7 +122,7 @@ const OrText = styled.p`
   transform: translate(-50%, 50%);
 `;
 
-const SignupButton = styled.button`
+const LoginButton = styled.button`
   background: none;
   border: none;
   outline: none;
@@ -130,7 +135,8 @@ const SignupButton = styled.button`
   padding: 0.2rem 0;
   margin-left: 0.4rem;
   border-bottom: 1px solid var(--color-grey-100);
-  transition: color 200ms ease-out, border 200ms ease-out;
+  transition: color var(--transition-button-text);
+
   &:hover {
     color: var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
@@ -274,7 +280,7 @@ function Signup() {
             })}
           />
           {/* Login button, if user is already signed up */}
-          <LoginButton type="submit" value="SIGNUP" />
+          <SignupButton type="submit" value="SIGNUP" />
         </Form>
 
         {/* Or sepirator */}
@@ -293,9 +299,9 @@ function Signup() {
         {/* Login link */}
         <LoginText>
           already have an account?
-          <SignupButton disabled={isLoading} onClick={() => navigate('/login')}>
+          <LoginButton disabled={isLoading} onClick={() => navigate('/login')}>
             LOGIN
-          </SignupButton>
+          </LoginButton>
         </LoginText>
         {/* Error message display */}
         {error && <p>{error.message}</p>}

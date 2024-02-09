@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import { MdCreate } from 'react-icons/md';
 import ShoppingItem from './ShoppingItem';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useGetAppData } from '../../Context/AppContext';
 import { useState } from 'react';
 import { useUpdateShoppingList } from '../../Hooks/useUpdateShoppingList';
@@ -98,6 +98,12 @@ const EditListIcon = styled(MdCreate)`
   height: 2.4rem;
   transform: translateY(0.4rem);
   cursor: pointer;
+
+  transition: color var(--transition-button-text);
+
+  &:hover {
+    color: var(--color-accent);
+  }
 `;
 
 const ShoppingListHeader = styled.div`
@@ -230,25 +236,31 @@ function ShoppingList() {
 
             {/* Render categorized items */}
             <ShoppingListItems>
-              {Object.entries(categorizedItems).map(([category, items]) => (
-                <ListItemsCategory key={`shopping list ${category}`}>
-                  {/* Category title */}
-                  <ListItemsCategory.Title>{category}</ListItemsCategory.Title>
-                  {/* Items within the category */}
-                  <ListItemsCategory.Container>
-                    {items.map(item => (
-                      <ShoppingItem
-                        onUpdateQuantity={updateListItemQuantity}
-                        onDelete={onRemoveItem}
-                        isEditing={isEditMode}
-                        onPurchase={itemPurchaseStatehandler}
-                        key={item.id}
-                        item={item}
-                      />
-                    ))}
-                  </ListItemsCategory.Container>
-                </ListItemsCategory>
-              ))}
+              <AnimatePresence>
+                {Object.entries(categorizedItems).map(([category, items]) => (
+                  <ListItemsCategory key={`shopping list ${category}`}>
+                    {/* Category title */}
+                    <ListItemsCategory.Title layout>
+                      {category}
+                    </ListItemsCategory.Title>
+                    {/* Items within the category */}
+                    <ListItemsCategory.Container>
+                      <AnimatePresence>
+                        {items.map(item => (
+                          <ShoppingItem
+                            onUpdateQuantity={updateListItemQuantity}
+                            onDelete={onRemoveItem}
+                            isEditing={isEditMode}
+                            onPurchase={itemPurchaseStatehandler}
+                            key={item.id}
+                            item={item}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </ListItemsCategory.Container>
+                  </ListItemsCategory>
+                ))}
+              </AnimatePresence>
             </ShoppingListItems>
           </>
         )}

@@ -6,6 +6,9 @@ import { useState } from 'react';
 import { updateShopplingListName } from '../../services/apiItems';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence } from 'framer-motion';
+import ModalWrapper from './ModalWrapper';
 
 const StyledShoppingListInput = styled.div`
   width: 38.9rem;
@@ -123,6 +126,7 @@ function ShoppingListInput({
   isLoadingShoppingList,
   onAddList,
 }) {
+  const queryClient = useQueryClient();
   // State for managing list name input
   const [listName, setListName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -151,6 +155,7 @@ function ShoppingListInput({
         onSuccess: () => {
           // Clear the input field on success
           setListName('');
+          queryClient.invalidateQueries('shopping_list');
         },
       }
     );
@@ -204,9 +209,9 @@ function ShoppingListInput({
         </ButtonsContainer>
       )}
       {/* Render modal component if modal is open */}
-      {isModalOpen && (
+      <ModalWrapper isShowing={isModalOpen}>
         <Modal onClose={onCloseModal} onConfirm={onConfirmModal} />
-      )}
+      </ModalWrapper>
       ;
     </StyledShoppingListInput>
   );

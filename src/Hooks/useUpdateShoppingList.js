@@ -52,7 +52,7 @@ function useUpdateShoppingList() {
         updateQuantity,
         deleteItemId,
         itemIsPurchased,
-        shoppingList,
+        shoppingList = shopping,
       } = newData;
       // Cancel any ongoing refetches to avoid overwriting optimistic update
       await queryClient.cancelQueries({ queryKey: ['shopping_list'] });
@@ -80,7 +80,6 @@ function useUpdateShoppingList() {
       if (itemIsPurchased) {
         updatedList = updatePurchaseStateOfItem(updatedList, itemIsPurchased);
       }
-
       // Create new shopping list object with updated items
       const newShoppingList = {
         ...shoppingList,
@@ -94,11 +93,12 @@ function useUpdateShoppingList() {
 
     onSuccess: () => {
       // Display success notification
-      toast.success('Shopping list updated!');
+      // toast.success('Shopping list updated!');
+      queryClient.invalidateQueries('shopping_list');
     },
     onSettled: () => {
       // Invalidate the 'items' query to reflect the change in cache
-      queryClient.invalidateQueries(['shopping_list']);
+      queryClient.invalidateQueries('shopping_list');
     },
     // onError is called if the mutation encounters an error
     onError: (error, newData, context) => {

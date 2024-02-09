@@ -1,12 +1,15 @@
-import { motion } from 'framer-motion';
+import { motion, stagger, useAnimate } from 'framer-motion';
 import styled from 'styled-components';
 import { useGetHistory } from '../Hooks/useGetHistory';
 import Spinner from '../UI/Spinner';
-
-import { Outlet } from 'react-router-dom';
 import { monthsNames } from '../helpers/helperVariables';
 import List from '../UI/List';
 import toast from 'react-hot-toast';
+import {
+  mainPagesChildrenVariants,
+  mainPagesVariants,
+} from '../transitions/variants';
+import { useEffect } from 'react';
 
 const StyledHistory = styled(motion.div)`
   padding: 0 8rem;
@@ -51,7 +54,7 @@ const Title = styled.h2`
 const GroupContainer = styled.div`
   margin-bottom: 5.39rem;
 `;
-const ListContainer = styled.div`
+const ListContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -70,10 +73,51 @@ const GroupTitle = styled.p`
   margin-bottom: 1.74rem;
 `;
 
+const parentContainerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.6,
+      delay: 0.3,
+      duration: 0.4,
+      staggerChildren: 0.3,
+    },
+  },
+};
+
+const childrenVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+};
+
+const groupChildrenVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 1,
+    },
+  },
+};
+
+const groupParentConainer = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeIn' } },
+};
+
 // Component for displaying shopping history.
 function History() {
   // Fetch historical shopping lists
   const { history, isLoading, error } = useGetHistory();
+
+  // //////////////////////////////////////////////////////////
+  // const staggerListItems = stagger(0.4, { startDelay: 0.2 });
+  // const [scope, animate] = useAnimate();
+  // useEffect(function () {
+  //   animate('li', { opacity: 1 }, { duration: 1, delay: staggerListItems });
+  // });
+  // //////////////////////////////////////////////////////////
 
   // Show loading spinner while fetching data
   if (isLoading) return <Spinner />;
@@ -100,21 +144,52 @@ function History() {
   }, {});
 
   return (
-    <StyledHistory>
-      <ChildrenContainer>
+    <StyledHistory
+      initial="hidden"
+      animate="visible"
+      variants={mainPagesVariants}
+      transition={mainPagesVariants.transition}
+    >
+      <ChildrenContainer
+        initial="hidden"
+        animate="visible"
+        transition={mainPagesChildrenVariants.transition}
+        variants={mainPagesChildrenVariants}
+      >
         <Title>Shopping history</Title>
         {/* Render each group of lists */}
-        {Object.keys(filteredLists).map(key => (
-          <GroupContainer key={key}>
-            <GroupTitle>{key} </GroupTitle>
-            {/* Render each list within the group */}
-            <ListContainer>
-              {filteredLists[key]?.map(list => (
-                <List list={list} key={list.id} />
-              ))}
-            </ListContainer>
-          </GroupContainer>
-        ))}
+        <motion.div
+          variants={groupChildrenVariants}
+          initial="hidden"
+          animate="show"
+        >
+          {Object.keys(filteredLists).map(key => (
+            <motion.div
+              variants={groupParentConainer}
+              key={`${key}-container-div`}
+            >
+              <GroupContainer key={key}>
+                <GroupTitle>{key} </GroupTitle>
+                {/* Render each list within the group */}
+
+                <ListContainer
+                  variants={parentContainerVariants}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {filteredLists[key]?.map(list => (
+                    <motion.div
+                      key={`${key}-container`}
+                      variants={childrenVariants}
+                    >
+                      <List list={list} key={list.id} />
+                    </motion.div>
+                  ))}
+                </ListContainer>
+              </GroupContainer>
+            </motion.div>
+          ))}
+        </motion.div>
       </ChildrenContainer>
     </StyledHistory>
   );
