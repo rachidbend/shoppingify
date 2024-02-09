@@ -52,7 +52,7 @@ function useUpdateShoppingList() {
         updateQuantity,
         deleteItemId,
         itemIsPurchased,
-        shoppingList,
+        shoppingList = shopping,
       } = newData;
       // Cancel any ongoing refetches to avoid overwriting optimistic update
       await queryClient.cancelQueries({ queryKey: ['shopping_list'] });
@@ -80,7 +80,6 @@ function useUpdateShoppingList() {
       if (itemIsPurchased) {
         updatedList = updatePurchaseStateOfItem(updatedList, itemIsPurchased);
       }
-
       // Create new shopping list object with updated items
       const newShoppingList = {
         ...shoppingList,
