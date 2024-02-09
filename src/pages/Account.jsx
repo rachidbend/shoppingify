@@ -18,6 +18,8 @@ import {
   mainPagesChildrenVariants,
   mainPagesVariants,
 } from '../transitions/variants';
+import AvatarUpdateModal from '../UI/AvatarUpdateModal';
+import ModalWrapper from '../Features/shoppingList/ModalWrapper';
 
 const StyledAccount = styled(motion.div)`
   background-color: var(--color-background);
@@ -93,19 +95,34 @@ const Username = styled.span`
 `;
 
 const Avatar = styled.img`
-  width: 6.8rem;
-  height: 6.8rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+  width: 11rem;
+  height: 11rem;
+  /* box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1); */
   overflow: hidden;
   background-color: var(--color-white);
   border-radius: 15rem;
-  margin-bottom: 4.8rem;
+
   object-fit: cover;
+
+  @media screen and (max-width: 1024px) {
+    width: 11rem;
+    height: 11rem;
+  }
+
+  @media screen and (max-width: 780px) {
+    width: 9.2rem;
+    height: 6.8rem;
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 6.8rem;
+    height: 6.8rem;
+  }
 
   /* border: 0.2rem solid var(--color-accent); */
 `;
 const NoAvatar = styled.p`
-  color: var(--color-gray-200);
+  color: var(--color-grey-200);
   font-size: 1.4rem;
   font-weight: 500;
 `;
@@ -128,7 +145,7 @@ const PassWordIcon = styled(MdLock)`
 const EditIcon = styled(MdEditSquare)`
   height: 1.2rem;
   width: auto;
-  color: var(--color-gray-100);
+  color: var(--color-grey-100);
   transform: translateY(-0.8rem);
   cursor: pointer;
 
@@ -145,17 +162,24 @@ const IconContainer = styled.div`
 const Container = styled.div`
   display: flex;
   gap: 1.6rem;
-  margin-bottom: 2.4rem;
   align-items: center;
-  padding-bottom: 1.2rem;
-  border-bottom: 0.1rem solid var(--color-gray-200);
+  border: 0.1rem solid var(--color-grey-200);
+  padding: 2rem 2.8rem;
+  border-radius: 1.4rem;
+  margin-bottom: 2.8rem;
+  /* box-shadow: var(--shadow-100); */
+  /* border-bottom: 0.1rem solid var(--color-grey-200);
+   */
   position: relative;
+
+  background-color: var(--color-background);
+
   @media screen and (max-width: 780px) {
-    width: 80%;
+    padding: 1rem 1.4rem;
   }
 
   @media screen and (max-width: 480px) {
-    width: 100%;
+    padding: 1rem 1.4rem;
   }
 `;
 const Text = styled.p`
@@ -166,20 +190,20 @@ const Text = styled.p`
 
 const ButtonContainer = styled.div`
   margin-top: auto;
-  margin-bottom: 8rem;
+  margin-top: 8rem;
 
   @media screen and (min-width: 1600px) {
-    margin-bottom: 8rem;
+    margin-top: 8rem;
   }
 
   @media screen and (max-width: 780px) {
     width: 80%;
-    margin-bottom: 4.8rem;
+    margin-top: 4.8rem;
   }
 
   @media screen and (max-width: 480px) {
     width: 100%;
-    margin-bottom: 2.8rem;
+    margin-top: 2.8rem;
   }
 `;
 
@@ -207,7 +231,7 @@ const Input = styled.input`
   font-weight: 500;
   width: auto;
   padding: 0.6rem 1.6rem;
-  border: 0.1rem solid var(--color-gray-200);
+  border: 0.1rem solid var(--color-grey-200);
   border-radius: 0.8rem;
   background: transparent;
   outline: none;
@@ -217,44 +241,28 @@ const Input = styled.input`
   }
 `;
 
-const AvatarChooseImage = styled.img`
-  height: 4em;
-  width: auto;
-`;
-
-const AvatarChooseContainer = styled.div`
-  display: flex;
-  gap: 1.2rem;
-  flex-wrap: wrap;
-`;
-const AvatarChangeContainer = styled.div`
-  position: absolute;
-  top: 6rem;
-  width: 36rem;
-  padding: 2.4rem;
+const ChildrenContainer = styled(motion.div)`
+  margin-top: 12rem;
   background-color: var(--color-white);
-  z-index: 9999;
+  padding: 4.8rem;
   border-radius: 2.4rem;
-  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-item);
 
-  input {
-    width: 100%;
+  @media screen and (max-width: 780px) {
+    padding: 2.4rem;
+    padding-top: 3.2rem;
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 1.2rem;
+    padding-top: 2.4rem;
   }
 `;
 
-const TextChoose = styled.p`
-  color: var(--color-title);
-  font-size: 1.4rem;
-  margin-bottom: 1.2rem;
-  margin-top: 1.2rem;
-  font-weight: 500;
-
-  &::first-child {
-    margin-top: 0;
-  }
+const AvatarContainer = styled.div`
+  text-align: center;
+  margin-bottom: 4.8rem;
 `;
-
-const ChildrenContainer = styled(motion.div)``;
 
 const UsernameInput = styled(Input)``;
 const EmailInput = styled(Input)``;
@@ -275,19 +283,11 @@ function Account() {
     isLoading: isLoadingProfile,
     error: profileError,
   } = useGetUserProfile({ userId: user.id });
-  const { updateAvatar, error: avatarError } = useUpdateAvatar();
-  const {
-    avatars,
-    isLoading: isLoadingAvatars,
-    error: getAvatarError,
-  } = useGetAllAvatars();
-  const { uploadAvatar } = useUploadUserAvatar();
 
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
 
   function onHandleUsername(e) {
     setUsername(e.target.value);
@@ -297,13 +297,6 @@ function Account() {
   }
   function onHandlePassword(e) {
     setPassword(e.target.value);
-  }
-  function handleAvatarUrl(e) {
-    setAvatarUrl(e.target.value);
-  }
-  function handleChooseAvatar(url) {
-    updateAvatar({ url: url });
-    setIsOpenAvatar(false);
   }
 
   function onSaveUsername() {
@@ -317,24 +310,14 @@ function Account() {
     if (!password) return;
     updateUser({ password: password });
   }
-  function onSaveAvatarUrl() {
-    updateAvatar({ url: avatarUrl });
-    setIsOpenAvatar(false);
-  }
 
-  function onAvatarUploadChange(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    uploadAvatar(file);
-  }
-
-  if (isLoadingUser || isLoadingProfile || isLoadingAvatars) return <Spinner />;
+  if (isLoadingUser || isLoadingProfile) return <Spinner />;
 
   if (useError) return <p>{useError.message}</p>;
   if (profileError) return <p>{profileError.message}</p>;
   if (logoutError) return <p>{logoutError.message}</p>;
   if (updateUserError) return <p>{updateUserError.message}</p>;
-  if (getAvatarError) return <p>{getAvatarError.message}</p>;
+  // if (getAvatarError) return <p>{getAvatarError.message}</p>;
 
   return (
     <StyledAccount
@@ -349,8 +332,8 @@ function Account() {
         transition={mainPagesChildrenVariants.transition}
         variants={mainPagesChildrenVariants}
       >
-        <Title>Account details</Title>
-        <Container>
+        {/* <Title>Account details</Title> */}
+        <AvatarContainer>
           <Avatar
             src={
               profile?.at(0)?.avatar
@@ -358,46 +341,18 @@ function Account() {
                 : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
             }
           />
-          {isOpenAvatar && (
-            <AvatarChangeContainer>
-              <TextChoose>Put in a URL</TextChoose>
-              <InputContainer>
-                <Input
-                  placeholder="Image URL"
-                  type="text"
-                  value={avatarUrl}
-                  onChange={handleAvatarUrl}
-                />
-                <SaveButton
-                  onClick={() => {
-                    onSaveAvatarUrl();
-                  }}
-                >
-                  Save
-                </SaveButton>
-              </InputContainer>
-              <TextChoose>or upload an image</TextChoose>
-              <input
-                onChange={onAvatarUploadChange}
-                type="file"
-                name="avatar_image"
-              />
-              <TextChoose>or choose an avatart</TextChoose>
-              <AvatarChooseContainer>
-                {avatars.map(avatar => (
-                  <AvatarChooseImage
-                    onClick={() => handleChooseAvatar(avatar.url)}
-                    key={`avatar-${avatar.id}`}
-                    src={avatar.url}
-                  />
-                ))}
-              </AvatarChooseContainer>
-            </AvatarChangeContainer>
-          )}
+
+          <ModalWrapper isShowing={isOpenAvatar}>
+            <AvatarUpdateModal
+              isOpen={isOpenAvatar}
+              handleOpen={setIsOpenAvatar}
+            />
+          </ModalWrapper>
+
           <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
             <EditIcon />
           </IconContainer>
-        </Container>
+        </AvatarContainer>
 
         <Container>
           <UsernameIcon />
@@ -486,11 +441,6 @@ function Account() {
             <EditIcon />
           </IconContainer>
         </Container>
-
-        {/* <>
-        <EmailInput type="email" placeholder="new email" />
-        <PasswordInput type="password" placeholder="new password" />
-      </> */}
 
         {/* Username avatar email change email change password delete account */}
         <ButtonContainer>
