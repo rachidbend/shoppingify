@@ -175,7 +175,7 @@ function NavSideBar() {
   // this is used to display the number of items in the shopping list
   const { shoppingList, isLoading } = useGetShoppingList();
   // this opens and closes the side page on mobile view
-  const { onOpenMobileSide } = useMobileSide();
+  const { onOpenMobileSide, closeMobileSide } = useMobileSide();
 
   // grabbing all the elements needed
   const sideSpanRef = useRef();
@@ -242,6 +242,7 @@ function NavSideBar() {
       <StyledNavLink
         onMouseEnter={() => handleLinkHover('account')}
         onMouseLeave={handleLinkExit}
+        onClick={closeMobileSide}
         ref={accountRef}
         to="/account"
       >
@@ -266,6 +267,7 @@ function NavSideBar() {
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('items')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={itemsRef}
           to="/items"
         >
@@ -288,6 +290,7 @@ function NavSideBar() {
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('history')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={historyRef}
           to="/history"
         >
@@ -310,6 +313,7 @@ function NavSideBar() {
         <StyledNavLink
           onMouseEnter={() => handleLinkHover('statistics')}
           onMouseLeave={handleLinkExit}
+          onClick={closeMobileSide}
           ref={statisticsRef}
           to="/statistics"
         >

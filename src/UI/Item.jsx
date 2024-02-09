@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useMobileSide } from '../Context/MobileSideContext';
 
 const StyledItem = styled(motion.div)`
   display: flex;
@@ -59,6 +60,7 @@ const StyledLink = styled(Link)`
 
 // Component representing an individual item in the items page
 function Item({ itemDetails, onAddItem }) {
+  const { onOpenMobileSide } = useMobileSide();
   // available variables { id, created_at, name, note, image, category }
   // Destructure needed item details
   const { id, name } = itemDetails;
@@ -74,7 +76,7 @@ function Item({ itemDetails, onAddItem }) {
       }}
     >
       {/* Link to item details */}
-      <StyledLink to={`/items/${id}`}>
+      <StyledLink onClick={onOpenMobileSide} to={`/items/${id}`}>
         {/* Item name */}
         <Name>{name}</Name>
       </StyledLink>

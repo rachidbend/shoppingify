@@ -40,8 +40,8 @@ const SideContainer = styled(motion.div)`
   top: 0;
   right: 0;
 
-  /* transition: left 360ms cubic-bezier(0.215, 0.61, 0.355, 1),
-    right 360ms cubic-bezier(0.215, 0.61, 0.355, 1); */
+  transition: left 360ms cubic-bezier(0.215, 0.61, 0.355, 1),
+    right 360ms cubic-bezier(0.215, 0.61, 0.355, 1);
 
   @media screen and (max-width: 1024px) {
     width: 100%;
@@ -97,6 +97,10 @@ function AppLayout() {
 
       {/* Container for side pages */}
       <SideContainer
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+        }}
         isopen={isOpen ? 'true' : isMobile ? 'false' : 'true'}
         ismobile={isMobile ? 'true' : 'false'}
       >
