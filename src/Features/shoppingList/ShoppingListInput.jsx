@@ -7,8 +7,9 @@ import { updateShopplingListName } from '../../services/apiItems';
 import { useUpdateShoppingListName } from '../../Hooks/useUpdateShoppingListName';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ModalWrapper from './ModalWrapper';
+import { css } from 'goober';
 
 const StyledShoppingListInput = styled.div`
   width: 38.9rem;
@@ -31,7 +32,7 @@ const StyledShoppingListInput = styled.div`
   }
 `;
 
-const NoItemsIllustration = styled.img`
+const NoItemsIllustration = styled(motion.img)`
   position: absolute;
   top: -19.1rem;
 
@@ -43,7 +44,7 @@ const NoItemsIllustration = styled.img`
   }
 `;
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   position: relative;
 `;
 
@@ -62,6 +63,8 @@ const NameInput = styled.input`
   font-family: var(--font-main);
   outline: none;
   cursor: ${props => (props.disabled ? 'no-drop' : 'pointer')};
+
+  transition: border var(--transition-input);
 `;
 
 const SaveButton = styled.button`
@@ -72,17 +75,29 @@ const SaveButton = styled.button`
   background-color: ${props =>
     props.disabled ? 'var(--color-grey-300)' : 'var(--color-accent)'};
   border: none;
-  padding: 0 2.42rem 0 2.52rem;
+  padding: 0 2.22rem 0 2.32rem;
   height: 100%;
-
+  border: 0.2rem solid
+    ${props =>
+      props.disabled ? 'var(--color-grey-300)' : 'var(--color-accent)'};
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--color-white);
   border-radius: 1.2rem;
   cursor: ${props => (props.disabled ? 'no-drop' : 'pointer')};
+
+  transition: background-color var(--transition-button),
+    border var(--transition-button), color var(--transition-button);
+
+  &:hover {
+    background-color: ${props =>
+      props.disabled ? 'var(--color-grey-300)' : 'transparent'};
+    color: ${props =>
+      props.disabled ? 'var(--color-white)' : 'var(--color-accent)'};
+  }
 `;
 
-const ButtonsContainer = styled.div`
+const ButtonsContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -178,36 +193,58 @@ function ShoppingListInput({
   return (
     <StyledShoppingListInput>
       {/* Render illustration if the list is empty */}
-      {isEmptyList && <NoItemsIllustration src={noItemsIllustration} />}
+      {isEmptyList && (
+        <NoItemsIllustration
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          src={noItemsIllustration}
+        />
+      )}
       {/* Render input field for list name */}
-      {shoppingListName?.length === 0 && (
-        <Container>
-          <NameInput
-            disabled={isEmptyList || isUpdatingListName || shoppingListName}
-            type="text"
-            placeholder="Enter a name"
-            value={listName}
-            onChange={listNameChangeHandler}
-          />
-          <SaveButton
-            onClick={handleListNameSave}
-            disabled={isEmptyList || isUpdatingListName || shoppingListName}
+      <AnimatePresence>
+        {shoppingListName?.length === 0 && (
+          <Container
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.6,
+            }}
           >
-            save
-          </SaveButton>
-        </Container>
-      )}
-      {/* Render buttons for completing or cancelling the list */}
-      {shoppingListName?.length > 0 && (
-        <ButtonsContainer>
-          <CancelButton onClick={() => setIsModalOpen(true)}>
-            cancel
-          </CancelButton>
-          <CompleteButton onClick={() => onAddList(true)}>
-            Complete
-          </CompleteButton>
-        </ButtonsContainer>
-      )}
+            <NameInput
+              disabled={isEmptyList || isUpdatingListName || shoppingListName}
+              type="text"
+              placeholder="Enter a name"
+              value={listName}
+              onChange={listNameChangeHandler}
+            />
+            <SaveButton
+              onClick={handleListNameSave}
+              disabled={isEmptyList || isUpdatingListName || shoppingListName}
+            >
+              save
+            </SaveButton>
+          </Container>
+        )}
+        {/* Render buttons for completing or cancelling the list */}
+        {shoppingListName?.length > 0 && (
+          <ButtonsContainer
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.6,
+            }}
+          >
+            <CancelButton onClick={() => setIsModalOpen(true)}>
+              cancel
+            </CancelButton>
+            <CompleteButton onClick={() => onAddList(true)}>
+              Complete
+            </CompleteButton>
+          </ButtonsContainer>
+        )}
+      </AnimatePresence>
       {/* Render modal component if modal is open */}
       <ModalWrapper isShowing={isModalOpen}>
         <Modal onClose={onCloseModal} onConfirm={onConfirmModal} />
