@@ -9,6 +9,13 @@ import { daysOfTheWeek } from '../helpers/helperVariables';
 import { groupByProperty } from '../helpers/helperFunctions';
 import ItemsCategory from './ItemsCategory';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import {
+  itemsChildrenVariants,
+  itemsParentContainerVariants,
+  mainPagesChildrenVariants,
+  mainPagesVariants,
+} from '../transitions/variants';
 
 const StyledHistoryList = styled.div`
   padding: 0 8rem;
@@ -60,6 +67,8 @@ const ListDate = styled.span`
   font-weight: 500;
 `;
 
+const ChildrenContainer = styled(motion.div)``;
+
 // HistoryList component displays the details of a specific history list.
 // It retrieves the list details based on the listId parameter from the URL,
 // groups the items based on category, and displays them.
@@ -91,37 +100,62 @@ function HistoryList() {
   }.${listDate.getFullYear()} `;
 
   return (
-    <StyledHistoryList>
-      {/* Render a back button with custom margins */}
-      <BackButton marginTop="3.71rem" marginBottom="3.2rem" />
+    <StyledHistoryList
+      initial="hidden"
+      animate="visible"
+      variants={mainPagesVariants}
+      transition={mainPagesVariants.transition}
+    >
+      <ChildrenContainer
+        initial="hidden"
+        animate="visible"
+        transition={mainPagesChildrenVariants.transition}
+        variants={mainPagesChildrenVariants}
+      >
+        {/* Render a back button with custom margins */}
+        <BackButton marginTop="3.71rem" marginBottom="3.2rem" />
 
-      {/* Display the name of the list */}
-      <Name>{list.at(0).name}</Name>
+        {/* Display the name of the list */}
+        <Name>{list.at(0).name}</Name>
 
-      {/* Display the date of completion */}
-      <DateOfCompletion>
-        <CalendarIcon />
-        <ListDate>{listFullDate}</ListDate>
-      </DateOfCompletion>
+        {/* Display the date of completion */}
+        <DateOfCompletion>
+          <CalendarIcon />
+          <ListDate>{listFullDate}</ListDate>
+        </DateOfCompletion>
 
-      {/* Container to display items grouped by category */}
-      <Container>
-        {/* Iterate over available categories and render items for each */}
-        {Object.keys(availableCategories)?.map(key => (
-          <ItemsCategory marginbottom="6.47rem" key={key}>
-            {/* Render category title */}
+        {/* Container to display items grouped by category */}
+        <Container>
+          {/* Iterate over available categories and render items for each */}
+          {Object.keys(availableCategories)?.map(key => (
+            <ItemsCategory marginbottom="6.47rem" key={key}>
+              {/* Render category title */}
 
-            <ItemsCategory.Title>{key}</ItemsCategory.Title>
+              <ItemsCategory.Title>{key}</ItemsCategory.Title>
 
-            {/* Render items for the current category */}
-            <ItemsCategory.Container>
-              {availableCategories[key].map(item => {
-                return <ListItem itemDetails={item} key={item.id} />;
-              })}
-            </ItemsCategory.Container>
-          </ItemsCategory>
-        ))}
-      </Container>
+              {/* Render items for the current category */}
+              <motion.div
+                variants={itemsParentContainerVariants}
+                initial="hidden"
+                animate="show"
+              >
+                <ItemsCategory.Container>
+                  {availableCategories[key].map(item => {
+                    return (
+                      <motion.div
+                        variants={itemsChildrenVariants}
+                        key={`item-container${item.id}`}
+                      >
+                        <ListItem itemDetails={item} key={item.id} />
+                      </motion.div>
+                    );
+                  })}
+                </ItemsCategory.Container>
+              </motion.div>
+            </ItemsCategory>
+          ))}
+        </Container>
+      </ChildrenContainer>
     </StyledHistoryList>
   );
 }

@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import { groupByProperty } from '../helpers/helperFunctions';
 import ItemsCategory from '../UI/ItemsCategory';
 import {
+  itemsChildrenVariants,
+  itemsParentContainerVariants,
   mainPagesChildrenVariants,
   mainPagesVariants,
 } from '../transitions/variants';
@@ -152,24 +154,6 @@ const SearchIcon = styled(MdOutlineSearch)`
   }
 `;
 
-const parentContainerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.6,
-      delay: 0.3,
-      duration: 0.4,
-      staggerChildren: 0.3,
-    },
-  },
-};
-
-const childrenVariants = {
-  hidden: { opacity: 0, x: 10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeIn' } },
-};
-
 // Component responsible for displaying a list of items with search functionality.
 function Items() {
   // State for managing search input
@@ -240,7 +224,7 @@ function Items() {
             <ItemsCategory.Title>{category}</ItemsCategory.Title>
             {/* Render items */}
             <motion.div
-              variants={parentContainerVariants}
+              variants={itemsParentContainerVariants}
               initial="hidden"
               animate="show"
             >
@@ -248,7 +232,7 @@ function Items() {
                 {items.map(item => {
                   return (
                     <motion.div
-                      variants={childrenVariants}
+                      variants={itemsChildrenVariants}
                       key={`item-container${item.id}`}
                     >
                       <Item

@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const StyledItem = styled.div`
+const StyledItem = styled(motion.div)`
   width: 18.2rem;
   border-radius: 1.2rem;
   background-color: var(--color-white);
@@ -46,7 +47,15 @@ function ListItem({ itemDetails }) {
   // Destructure itemDetails object to extract relevant properties
   const { id, name, quantity } = itemDetails;
   return (
-    <StyledItem>
+    <StyledItem
+      whileHover={{
+        scale: 1.04,
+        transition: {
+          type: 'spring',
+          duration: 0.4,
+        },
+      }}
+    >
       {/* Link to navigate to the item details page */}
       <StyledLink to={`/items/${id}`}>
         {/* Display the name of the item */}

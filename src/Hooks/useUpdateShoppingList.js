@@ -94,7 +94,8 @@ function useUpdateShoppingList() {
 
     onSuccess: () => {
       // Display success notification
-      toast.success('Shopping list updated!');
+      // toast.success('Shopping list updated!');
+      queryClient.invalidateQueries('shopping_list');
     },
     onSettled: () => {
       // Invalidate the 'items' query to reflect the change in cache
