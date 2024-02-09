@@ -6,6 +6,7 @@ import { useDeleteItem } from '../../Hooks/useDeleteItem';
 import { useGetAppData } from '../../Context/AppContext';
 import BackButton from '../../UI/BackButton';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 const StyledItemDetails = styled.div`
   display: grid;
@@ -27,7 +28,7 @@ const StyledItemDetails = styled.div`
   }
 `;
 
-const Image = styled.img`
+const Image = styled(motion.img)`
   width: 100%;
   height: auto;
   border-radius: 2.5rem;
@@ -36,7 +37,7 @@ const Image = styled.img`
   overflow: hidden;
 `;
 
-const ImagePlaceholder = styled.div`
+const ImagePlaceholder = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,34 +53,34 @@ const ImagePlaceholder = styled.div`
   box-shadow: var(--shadow-100);
 `;
 
-const DetailLabel = styled.p`
+const DetailLabel = styled(motion.p)`
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--color-grey-300);
   margin-bottom: 1.15rem;
 `;
 
-const ItemName = styled.p`
+const ItemName = styled(motion.p)`
   font-size: 2.4rem;
   font-weight: 500;
   color: var(--color-black);
   margin-bottom: 3.33rem;
   text-transform: capitalize;
 `;
-const Category = styled.p`
+const Category = styled(motion.p)`
   font-size: 1.8rem;
   font-weight: 500;
   color: var(--color-black);
   margin-bottom: 3.61rem;
 `;
-const Note = styled.p`
+const Note = styled(motion.p)`
   font-size: 1.8rem;
   font-weight: 500;
   color: var(--color-black);
   line-height: normal;
 `;
 
-const DetailsContaner = styled.div`
+const DetailsContaner = styled(motion.div)`
   height: 100%;
   overflow-y: scroll;
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -112,6 +113,8 @@ const DeleteButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+
+  transition: color var(--transition-button-text);
   &:hover {
     color: var(--color-grey-300);
   }
@@ -124,15 +127,39 @@ const AddToListButton = styled.button`
   border-radius: 1.2rem;
   background-color: var(--color-accent);
   text-transform: capitalize;
-
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  /* transition: color 260ms ease-in-out, background 260ms ease-in-out; */
+  transition: color var(--transition-button),
+    background var(--transition-button);
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
   }
 `;
+
+const SpinnerContainer = styled.div`
+  height: 100vh;
+  width: 100%;
+  background-color: var(--color-background);
+`;
+
+const parentContainerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.1,
+      delay: 0.2,
+      duration: 0.2,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const childrenVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+};
 
 function ItemDetails() {
   // Extract itemId from URL parameters
@@ -181,7 +208,12 @@ function ItemDetails() {
   }
 
   // Render spinner while data is loading
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <SpinnerContainer>
+        <Spinner />
+      </SpinnerContainer>
+    );
   // Render error message if there's an error fetching data
   if (itemDetailsError) toast.error(itemDetailsError.message);
   if (deleteError) toast.error(deleteError.message);
@@ -195,22 +227,30 @@ function ItemDetails() {
       {/* Back button component */}
       <BackButton />
       {/* Render item image if available, otherwise show placeholder */}
-      <DetailsContaner>
+      <DetailsContaner
+        variants={parentContainerVariants}
+        initial="hidden"
+        animate="show"
+      >
         {image ? (
-          <Image src={image} />
+          <Image variants={childrenVariants} src={image} />
         ) : (
-          <ImagePlaceholder>No image</ImagePlaceholder>
+          <ImagePlaceholder variants={childrenVariants}>
+            No image
+          </ImagePlaceholder>
         )}
 
         {/* Display item details */}
-        <DetailLabel>name</DetailLabel>
-        <ItemName>{name} </ItemName>
-        <DetailLabel>category</DetailLabel>
-        <Category>{category} </Category>
-        <DetailLabel>note</DetailLabel>
+        <DetailLabel variants={childrenVariants}>name</DetailLabel>
+        <ItemName variants={childrenVariants}>{name}</ItemName>
+        <DetailLabel variants={childrenVariants}>category</DetailLabel>
+        <Category variants={childrenVariants}>{category}</Category>
+        <DetailLabel variants={childrenVariants}>note</DetailLabel>
 
         {/* Show note if available, otherwise display default message */}
-        <Note>{note ? note : 'You left no note, consider adding one!'} </Note>
+        <Note variants={childrenVariants}>
+          {note ? note : 'You left no note, consider adding one!'}
+        </Note>
       </DetailsContaner>
 
       <ButtonsContainer>
