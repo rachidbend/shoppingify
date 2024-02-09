@@ -1,8 +1,9 @@
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const StyledModel = styled.div`
+const StyledModel = styled(motion.div)`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -26,8 +27,8 @@ const StyledModel = styled.div`
   }
 `;
 
-const OverLay = styled.div`
-  background: rgba(0, 0, 0, 0.1);
+const OverLay = styled(motion.div)`
+  background: var(--color-backgound-modal-overlay);
   position: absolute;
   top: 0;
   left: 0;
@@ -38,7 +39,7 @@ const OverLay = styled.div`
 const CloseIcon = styled(MdClose)`
   width: 2.4rem;
   height: 2.4rem;
-  color: var(--color-gray-400);
+  color: var(--color-grey-400);
   cursor: pointer;
 `;
 
@@ -114,7 +115,7 @@ const Cancel = styled.button`
   border: none;
   cursor: pointer;
   &:hover {
-    color: var(--color-gray-300);
+    color: var(--color-grey-300);
   }
 `;
 
@@ -129,11 +130,16 @@ const Break = styled.br`
 // "onConfirm" Function to handle modal confirm action.
 function Modal({ onClose, onConfirm }) {
   // Render the modal using createPortal to ensure it's outside the main DOM hierarchy
-  return createPortal(
-    // Modal overlay to cover the entire viewport
-    <OverLay>
+  return (
+    <OverLay
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{
+        opacity: 0,
+      }}
+    >
       {/* Modal content */}
-      <StyledModel>
+      <StyledModel initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         {/* Container for modal content */}
         <Container>
           {/* Text prompting the user */}
@@ -153,10 +159,11 @@ function Modal({ onClose, onConfirm }) {
           <Confirm onClick={onConfirm}>Yes</Confirm>
         </ButtonContainer>
       </StyledModel>
-    </OverLay>,
+    </OverLay>
+
     // Render the modal as a direct child of the document body
-    document.body
   );
 }
 
 export default Modal;
+// Modal overlay to cover the entire viewport
