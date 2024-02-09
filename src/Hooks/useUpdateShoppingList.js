@@ -98,7 +98,7 @@ function useUpdateShoppingList() {
     },
     onSettled: () => {
       // Invalidate the 'items' query to reflect the change in cache
-      queryClient.invalidateQueries(['shopping_list']);
+      queryClient.invalidateQueries('shopping_list');
     },
     // onError is called if the mutation encounters an error
     onError: (error, newData, context) => {

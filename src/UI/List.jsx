@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MdEventNote } from 'react-icons/md';
 import { daysOfTheWeek } from '../helpers/helperVariables';
 import { MdArrowForwardIos } from 'react-icons/md';
+import { motion } from 'framer-motion';
 
 const StyledList = styled(Link)`
   background-color: var(--color-white);

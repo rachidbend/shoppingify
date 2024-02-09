@@ -13,8 +13,13 @@ import { useUpdateUsername } from '../Hooks/useUpdateUsername';
 import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
 import { useGetAllAvatars } from '../Hooks/useGetAllAvatars';
 import { useUploadUserAvatar } from '../Hooks/useUploadUserAvatar';
+import { motion } from 'framer-motion';
+import {
+  mainPagesChildrenVariants,
+  mainPagesVariants,
+} from '../transitions/variants';
 
-const StyledAccount = styled.div`
+const StyledAccount = styled(motion.div)`
   background-color: var(--color-background);
   height: 100%;
   padding: 0 8rem;
@@ -249,6 +254,8 @@ const TextChoose = styled.p`
   }
 `;
 
+const ChildrenContainer = styled(motion.div)``;
+
 const UsernameInput = styled(Input)``;
 const EmailInput = styled(Input)``;
 const PasswordInput = styled(Input)``;
@@ -330,154 +337,166 @@ function Account() {
   if (getAvatarError) return <p>{getAvatarError.message}</p>;
 
   return (
-    <StyledAccount>
-      <Title>Account details</Title>
-      <Container>
-        <Avatar
-          src={
-            profile?.at(0)?.avatar
-              ? profile?.at(0)?.avatar
-              : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
-          }
-        />
-        {isOpenAvatar && (
-          <AvatarChangeContainer>
-            <TextChoose>Put in a URL</TextChoose>
+    <StyledAccount
+      initial="hidden"
+      animate="visible"
+      variants={mainPagesVariants}
+      transition={mainPagesVariants.transition}
+    >
+      <ChildrenContainer
+        initial="hidden"
+        animate="visible"
+        transition={mainPagesChildrenVariants.transition}
+        variants={mainPagesChildrenVariants}
+      >
+        <Title>Account details</Title>
+        <Container>
+          <Avatar
+            src={
+              profile?.at(0)?.avatar
+                ? profile?.at(0)?.avatar
+                : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
+            }
+          />
+          {isOpenAvatar && (
+            <AvatarChangeContainer>
+              <TextChoose>Put in a URL</TextChoose>
+              <InputContainer>
+                <Input
+                  placeholder="Image URL"
+                  type="text"
+                  value={avatarUrl}
+                  onChange={handleAvatarUrl}
+                />
+                <SaveButton
+                  onClick={() => {
+                    onSaveAvatarUrl();
+                  }}
+                >
+                  Save
+                </SaveButton>
+              </InputContainer>
+              <TextChoose>or upload an image</TextChoose>
+              <input
+                onChange={onAvatarUploadChange}
+                type="file"
+                name="avatar_image"
+              />
+              <TextChoose>or choose an avatart</TextChoose>
+              <AvatarChooseContainer>
+                {avatars.map(avatar => (
+                  <AvatarChooseImage
+                    onClick={() => handleChooseAvatar(avatar.url)}
+                    key={`avatar-${avatar.id}`}
+                    src={avatar.url}
+                  />
+                ))}
+              </AvatarChooseContainer>
+            </AvatarChangeContainer>
+          )}
+          <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
+            <EditIcon />
+          </IconContainer>
+        </Container>
+
+        <Container>
+          <UsernameIcon />
+          {!isOpenUsername && (
+            <Text>
+              {profile?.at(0)?.user_name
+                ? profile?.at(0)?.user_name
+                : 'add a username'}
+            </Text>
+          )}
+
+          {isOpenUsername && (
             <InputContainer>
-              <Input
-                placeholder="Image URL"
+              <UsernameInput
+                value={username}
+                onChange={onHandleUsername}
+                placeholder="username"
                 type="text"
-                value={avatarUrl}
-                onChange={handleAvatarUrl}
               />
               <SaveButton
                 onClick={() => {
-                  onSaveAvatarUrl();
+                  onSaveUsername();
+                  setIsOpenUsername(false);
                 }}
               >
                 Save
               </SaveButton>
             </InputContainer>
-            <TextChoose>or upload an image</TextChoose>
-            <input
-              onChange={onAvatarUploadChange}
-              type="file"
-              name="avatar_image"
-            />
-            <TextChoose>or choose an avatart</TextChoose>
-            <AvatarChooseContainer>
-              {avatars.map(avatar => (
-                <AvatarChooseImage
-                  onClick={() => handleChooseAvatar(avatar.url)}
-                  key={`avatar-${avatar.id}`}
-                  src={avatar.url}
-                />
-              ))}
-            </AvatarChooseContainer>
-          </AvatarChangeContainer>
-        )}
-        <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
-          <EditIcon />
-        </IconContainer>
-      </Container>
+          )}
+          <IconContainer onClick={() => setIsOpenUsername(!isOpenUsername)}>
+            <EditIcon />
+          </IconContainer>
+        </Container>
 
-      <Container>
-        <UsernameIcon />
-        {!isOpenUsername && (
-          <Text>
-            {profile?.at(0)?.user_name
-              ? profile?.at(0)?.user_name
-              : 'add a username'}
-          </Text>
-        )}
+        <Container>
+          <EmailIcon />
+          {!isOpenEmail && <Text>{user?.email} </Text>}
+          {isOpenEmail && (
+            <InputContainer>
+              <EmailInput
+                value={email}
+                onChange={onHandleEmail}
+                type="email"
+                placeholder="new email"
+              />
+              <SaveButton
+                onClick={() => {
+                  onSaveEmail();
+                  isOpenEmail(false);
+                }}
+              >
+                Save
+              </SaveButton>
+            </InputContainer>
+          )}
 
-        {isOpenUsername && (
-          <InputContainer>
-            <UsernameInput
-              value={username}
-              onChange={onHandleUsername}
-              placeholder="username"
-              type="text"
-            />
-            <SaveButton
-              onClick={() => {
-                onSaveUsername();
-                setIsOpenUsername(false);
-              }}
-            >
-              Save
-            </SaveButton>
-          </InputContainer>
-        )}
-        <IconContainer onClick={() => setIsOpenUsername(!isOpenUsername)}>
-          <EditIcon />
-        </IconContainer>
-      </Container>
+          <IconContainer onClick={() => setIsOpenEmail(!isOpenEmail)}>
+            <EditIcon />
+          </IconContainer>
+        </Container>
 
-      <Container>
-        <EmailIcon />
-        {!isOpenEmail && <Text>{user?.email} </Text>}
-        {isOpenEmail && (
-          <InputContainer>
-            <EmailInput
-              value={email}
-              onChange={onHandleEmail}
-              type="email"
-              placeholder="new email"
-            />
-            <SaveButton
-              onClick={() => {
-                onSaveEmail();
-                isOpenEmail(false);
-              }}
-            >
-              Save
-            </SaveButton>
-          </InputContainer>
-        )}
+        <Container>
+          <PassWordIcon />
+          {!isOpenPassword && <Text>*********</Text>}
 
-        <IconContainer onClick={() => setIsOpenEmail(!isOpenEmail)}>
-          <EditIcon />
-        </IconContainer>
-      </Container>
+          {isOpenPassword && (
+            <InputContainer>
+              <PasswordInput
+                value={password}
+                onChange={onHandlePassword}
+                type="password"
+                placeholder="new password"
+              />
+              <SaveButton
+                onClick={() => {
+                  onSavePassword();
+                  isOpenPassword(false);
+                }}
+              >
+                Save
+              </SaveButton>
+            </InputContainer>
+          )}
 
-      <Container>
-        <PassWordIcon />
-        {!isOpenPassword && <Text>*********</Text>}
+          <IconContainer onClick={() => setIsOpenPassword(!isOpenPassword)}>
+            <EditIcon />
+          </IconContainer>
+        </Container>
 
-        {isOpenPassword && (
-          <InputContainer>
-            <PasswordInput
-              value={password}
-              onChange={onHandlePassword}
-              type="password"
-              placeholder="new password"
-            />
-            <SaveButton
-              onClick={() => {
-                onSavePassword();
-                isOpenPassword(false);
-              }}
-            >
-              Save
-            </SaveButton>
-          </InputContainer>
-        )}
-
-        <IconContainer onClick={() => setIsOpenPassword(!isOpenPassword)}>
-          <EditIcon />
-        </IconContainer>
-      </Container>
-
-      {/* <>
+        {/* <>
         <EmailInput type="email" placeholder="new email" />
         <PasswordInput type="password" placeholder="new password" />
       </> */}
 
-      {/* Username avatar email change email change password delete account */}
-      <ButtonContainer>
-        <Logout onClick={logout}>Logout</Logout>
-      </ButtonContainer>
+        {/* Username avatar email change email change password delete account */}
+        <ButtonContainer>
+          <Logout onClick={logout}>Logout</Logout>
+        </ButtonContainer>
+      </ChildrenContainer>
     </StyledAccount>
   );
 }

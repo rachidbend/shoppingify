@@ -22,7 +22,7 @@ function useUpdateUsername() {
     },
     onSettled: () => {
       // Invalidate 'profile' query to refresh user profile data
-      queryClient.invalidateQueries(['profile']);
+      queryClient.invalidateQueries('profile');
     },
     onError: error => {
       // Display error toast notification

@@ -2,8 +2,9 @@
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const StyledItem = styled.div`
+const StyledItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -18,8 +19,10 @@ const StyledItem = styled.div`
 
   transform: scale(100%);
 
+  transition: box-shadow 0.4s ease;
+
   &:hover {
-    transform: scale(102%);
+    /* transform: scale(102%); */
     box-shadow: var(--shadow-item-hover);
   }
 
@@ -42,6 +45,8 @@ const Icon = styled(MdAdd)`
   color: var(--color-grey-100);
   cursor: pointer;
 
+  transition: color 0.3s ease;
+
   &:hover {
     color: var(--color-accent);
   }
@@ -59,7 +64,15 @@ function Item({ itemDetails, onAddItem }) {
   const { id, name } = itemDetails;
 
   return (
-    <StyledItem>
+    <StyledItem
+      whileHover={{
+        scale: 1.04,
+        transition: {
+          type: 'spring',
+          duration: 0.4,
+        },
+      }}
+    >
       {/* Link to item details */}
       <StyledLink to={`/items/${id}`}>
         {/* Item name */}

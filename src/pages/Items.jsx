@@ -8,6 +8,10 @@ import Spinner from '../UI/Spinner';
 import toast from 'react-hot-toast';
 import { groupByProperty } from '../helpers/helperFunctions';
 import ItemsCategory from '../UI/ItemsCategory';
+import {
+  mainPagesChildrenVariants,
+  mainPagesVariants,
+} from '../transitions/variants';
 
 // Page Container
 const StyledItems = styled(motion.div)`
@@ -119,11 +123,14 @@ const SearchInput = styled.input`
   outline: 1px solid transparent;
   box-shadow: var(--shadow-100);
 
+  transition: var(--transition-input);
+
   &::placeholder {
     color: var(--color-grey-200);
     font-family: var(--font-main);
   }
-  &:focus {
+  &:focus,
+  &:hover {
     outline: 1px solid var(--color-accent);
   }
 
@@ -144,6 +151,24 @@ const SearchIcon = styled(MdOutlineSearch)`
     border: 0.1rem solid var(--color-accent);
   }
 `;
+
+const parentContainerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.6,
+      delay: 0.3,
+      duration: 0.4,
+      staggerChildren: 0.3,
+    },
+  },
+};
+
+const childrenVariants = {
+  hidden: { opacity: 0, x: 10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+};
 
 // Component responsible for displaying a list of items with search functionality.
 function Items() {
@@ -178,8 +203,18 @@ function Items() {
   const categorizedItems = groupByProperty(filteredItems, 'category');
 
   return (
-    <StyledItems>
-      <ChildrenContainer>
+    <StyledItems
+      initial="hidden"
+      animate="visible"
+      variants={mainPagesVariants}
+      transition={mainPagesVariants.transition}
+    >
+      <ChildrenContainer
+        initial="hidden"
+        animate="visible"
+        transition={mainPagesChildrenVariants.transition}
+        variants={mainPagesChildrenVariants}
+      >
         {/* Header section */}
         <HeaderContainer>
           <Title>
@@ -198,22 +233,34 @@ function Items() {
         </HeaderContainer>
 
         {/* Render items by category */}
+
         {Object.entries(categorizedItems)?.map(([category, items]) => (
           <ItemsCategory key={category}>
             {/* Category title */}
             <ItemsCategory.Title>{category}</ItemsCategory.Title>
             {/* Render items */}
-            <ItemsCategory.Container>
-              {items.map(item => {
-                return (
-                  <Item
-                    onAddItem={addItemToList}
-                    itemDetails={item}
-                    key={item.id}
-                  />
-                );
-              })}
-            </ItemsCategory.Container>
+            <motion.div
+              variants={parentContainerVariants}
+              initial="hidden"
+              animate="show"
+            >
+              <ItemsCategory.Container>
+                {items.map(item => {
+                  return (
+                    <motion.div
+                      variants={childrenVariants}
+                      key={`item-container${item.id}`}
+                    >
+                      <Item
+                        onAddItem={addItemToList}
+                        itemDetails={item}
+                        key={item.id}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </ItemsCategory.Container>
+            </motion.div>
           </ItemsCategory>
         ))}
       </ChildrenContainer>

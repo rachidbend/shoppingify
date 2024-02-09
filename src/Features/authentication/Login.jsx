@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { useLogin } from '../../Hooks/useLogin';
 import toast, { Toaster } from 'react-hot-toast';
 import { FcGoogle } from 'react-icons/fc';
-// import { ImFacebook2 } from 'react-icons/im';
-// import { FaXTwitter } from 'react-icons/fa6';
 import { useSigninWithGoogle } from '../../Hooks/useSigninWithGoogle';
 
 const StyledLogin = styled.div`
@@ -49,11 +47,15 @@ const Input = styled.input`
   out;
   outline: none;
   margin-bottom: 1.8rem;
+
+  transition: border var(--transition-input);
+
+
   &::placeholder {
     font-family: var(--font-main);
     color: var(--color-grey-200);
   }
-  &:focus {
+  &:focus, &:hover {
     border: 0.2rem solid var(--color-accent);
   }
   &:last-child {
@@ -81,7 +83,9 @@ const LoginButton = styled.input`
   background-color: var(--color-accent);
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
-  out, background 260ms ease-in-out;
+  transition: background-color var(--transition-button),
+    color var(--transition-button);
+
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
@@ -109,6 +113,8 @@ const ForgotPassword = styled.button`
   margin-left: auto;
   padding: 0.4rem 0 0.4rem 0.4rem;
   cursor: pointer;
+
+  transition: color var(--transition-button-text);
   &:hover {
     color: var(--color-accent);
   }
@@ -147,6 +153,9 @@ const SignupButton = styled.button`
   padding: 0.2rem 0;
   margin-left: 0.4rem;
   border-bottom: 1px solid var(--color-grey-100);
+
+  transition: color var(--transition-button-text),
+    border var(--transition-button-text);
   &:hover {
     color: var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
