@@ -71,6 +71,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --transition-input: 0.3s cubic-bezier(0.17, 0.67, 0.9, 0.33);
     --transition-button: 0.3s cubic-bezier(0.17, 0.67, 0.35, 0.35);
     --transition-button-text: 0.3s ease;
+    --transition-simple: 0.3s ease;
   }
 `;
 

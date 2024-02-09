@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useGetCategories } from '../../Hooks/useGetCategories';
 import toast from 'react-hot-toast';
 import Spinner from '../../UI/Spinner';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const CategorySelectBox = styled.div`
   position: relative;
@@ -27,7 +28,7 @@ const Select = styled.div`
         : 'var(--color-grey-200)'};
   padding: 2.16rem 1.76rem;
   outline: none;
-
+  transition: border var(--transition-input);
   &:focus,
   &:hover,
   &:active {
@@ -55,7 +56,7 @@ const CloseIcon = styled(MdClose)`
   cursor: pointer;
 `;
 
-const OptionsContainer = styled.div`
+const OptionsContainer = styled(motion.div)`
   padding: 1.24rem 0.73rem 1.12rem 0.82rem;
   background-color: var(--color-white);
   border-radius: 1.2rem;
@@ -68,21 +69,22 @@ const OptionsContainer = styled.div`
   z-index: 9999;
 `;
 
-const List = styled.ul``;
-const Option = styled.li`
+const List = styled(motion.ul)``;
+const Option = styled(motion.li)`
   font-size: 1.4rem;
   font-weight: 500;
   color: var(--color-title);
   padding: 1.13rem 2.28rem 1.25rem 2.28rem;
   margin-bottom: 0.22rem;
   list-style: none;
-
+  border-radius: 1.2rem;
+  transition: background-color var(--transition-simple);
+  cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }
 
   &:hover {
-    border-radius: 1.2rem;
     background-color: #f2f2f2;
   }
 `;
@@ -116,6 +118,24 @@ function CategoryDropdown({ selectedCategory, onSelectCategory }) {
     setIsDropdownOpen(false);
   }
 
+  const parentContainerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.1,
+        delay: 0.2,
+        duration: 0.2,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const childrenVariants = {
+    hidden: { opacity: 0, y: -10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+  };
+
   // Render loading spinner if categories are still loading
   if (isLoadingCategories) return <Spinner />;
   // Display error message if there's an error fetching categories
@@ -141,22 +161,36 @@ function CategoryDropdown({ selectedCategory, onSelectCategory }) {
         </CloseIconContainer>
       </Select>
       {/* Dropdown options */}
-      {isDropdownOpen && (
-        <OptionsContainer>
-          <List>
-            {/* Render dropdown options for each category */}
-            {categories.map(category => (
-              <Option
-                onClick={() => handleCategorySelect(category.name)}
-                value={category.name}
-                key={`category-item-${category.id}`}
-              >
-                {category.name}
-              </Option>
-            ))}
-          </List>
-        </OptionsContainer>
-      )}
+      <AnimatePresence>
+        {isDropdownOpen && (
+          <OptionsContainer
+            initial={{ opacity: 0, y: -15 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            exit={{ opacity: 0, y: -15 }}
+          >
+            <List
+              variants={parentContainerVariants}
+              initial="hidden"
+              animate="show"
+            >
+              {/* Render dropdown options for each category */}
+              {categories.map(category => (
+                <Option
+                  variants={childrenVariants}
+                  onClick={() => handleCategorySelect(category.name)}
+                  value={category.name}
+                  key={`category-item-${category.id}`}
+                >
+                  {category.name}
+                </Option>
+              ))}
+            </List>
+          </OptionsContainer>
+        )}
+      </AnimatePresence>
     </CategorySelectBox>
   );
 }
