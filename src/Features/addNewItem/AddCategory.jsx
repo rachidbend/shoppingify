@@ -2,8 +2,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useAddCategory } from '../../Hooks/useAddCategory';
+import { motion } from 'framer-motion';
 
-const AddCategoryContainer = styled.div`
+const AddCategoryContainer = styled(motion.div)`
   position: relative;
   margin-top: 2.4rem;
 `;
@@ -17,11 +18,14 @@ const Input = styled.input`
   border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
   outline: none;
+
+  transition: border var(--transition-input);
   &::placeholder {
     font-family: var(--font-main);
     color: var(--color-grey-200);
   }
-  &:focus {
+  &:focus,
+  &:hover {
     border: 0.2rem solid var(--color-accent);
   }
 `;
@@ -41,7 +45,8 @@ const AddCategoryButton = styled.button`
   border: 0.2rem solid var(--color-accent);
   padding: 2.06rem 2.32rem 2.06rem 2.42rem;
   cursor: pointer;
-  transition: color 260ms ease-in-out, background 260ms ease-in-out;
+  transition: color var(--transition-button),
+    background var(--transition-button);
   position: absolute;
   right: 0;
   top: 0;
@@ -80,7 +85,11 @@ function AddCategory({ setShowCategoryInput }) {
   }
 
   return (
-    <AddCategoryContainer>
+    <AddCategoryContainer
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+    >
       {/* Input field for entering the new category */}
       <AddCategoryInput
         onChange={event => handleCategoryChange(event)}

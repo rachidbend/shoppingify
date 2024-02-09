@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useGetCategories } from '../../Hooks/useGetCategories';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAddNewItem } from '../../Hooks/useAddNewItem';
 import Spinner from '../../UI/Spinner';
 import toast from 'react-hot-toast';
@@ -35,7 +35,7 @@ const StyledAddNewItem = styled(motion.div)`
   }
 `;
 
-const Title = styled.h2`
+const Title = styled(motion.h2)`
   font-size: 2.4rem;
   font-weight: 500;
   color: var(--color-black);
@@ -52,11 +52,12 @@ const Form = styled(motion.form)`
   padding-bottom: 3.49rem;
 `;
 
-const Label = styled.label`
+const Label = styled(motion.label)`
   font-size: 1.4rem;
   font-weight: 500;
   color: var(--color-title);
   margin-bottom: 0.61rem;
+  display: inline-block;
 `;
 
 const Input = styled.input`
@@ -69,11 +70,14 @@ const Input = styled.input`
   padding: 2.16rem 1.76rem;
   outline: none;
 
+  transition: border var(--transition-input);
+
   &::placeholder {
     color: var(--color-grey-200);
     font-family: var(--font-main);
   }
-  &:focus {
+  &:focus,
+  &:hover {
     border: 0.2rem solid var(--color-accent);
   }
 `;
@@ -88,12 +92,13 @@ const TextArea = styled.textarea`
   border: 0.2rem solid var(--color-grey-200);
   padding: 2.16rem 1.76rem;
   outline: none;
-
+  transition: border var(--transition-input);
   &::placeholder {
     color: var(--color-grey-200);
     font-family: var(--font-main);
   }
-  &:focus {
+  &:focus,
+  &:hover {
     border: 0.2rem solid var(--color-accent);
   }
 `;
@@ -116,6 +121,8 @@ const Save = styled.input`
   text-transform: capitalize;
   border: 0.2rem solid var(--color-accent);
   cursor: pointer;
+  transition: background var(--transition-button),
+    color var(--transition-button);
   &:hover {
     background-color: transparent;
     color: var(--color-accent);
@@ -130,12 +137,14 @@ const Cancel = styled.input`
   padding: 2.06rem 2.42rem 2.06rem 2.52rem;
   border: none;
   cursor: pointer;
+  transition: background var(--transition-button),
+    color var(--transition-button);
   &:hover {
     color: var(--color-grey-300);
   }
 `;
 
-const ButtonsContainer = styled.div`
+const ButtonsContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,11 +162,36 @@ const AddCategoryButton = styled.button`
   text-align: left;
   text-decoration: none;
   cursor: pointer;
+  transition: color var(--transition-button-text);
   &:hover {
     color: var(--color-blue);
     text-decoration: underline;
   }
 `;
+
+const SpinnerContainer = styled.div`
+  height: 100vh;
+  width: 100%;
+  background-color: var(--color-background);
+`;
+
+const parentContainerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.1,
+      delay: 0.2,
+      duration: 0.2,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const childrenVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+};
 
 // Component for adding a new item to items list
 function AddNewItem({ onchangePage }) {
@@ -216,17 +250,27 @@ function AddNewItem({ onchangePage }) {
   }
 
   // Render loading state if categories are still being fetched
-  if (isLoadingCategories) return <Spinner />;
+  if (isLoadingCategories)
+    return (
+      <SpinnerContainer>
+        <Spinner />
+      </SpinnerContainer>
+    );
   // Render error toast if there's an error fetching categories
   if (addItemError) toast.error(addItemError.message);
 
   return (
     <StyledAddNewItem>
       {/* Form for adding a new item */}
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title>Add a new item</Title>
+      <Form
+        variants={parentContainerVariants}
+        initial="hidden"
+        animate="show"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Title variants={childrenVariants}>Add a new item</Title>
         {/* Form fields for item details */}
-        <InputContainer>
+        <InputContainer variants={childrenVariants}>
           <Label>Name</Label>
           <Input
             placeholder="Enter a name"
@@ -236,7 +280,7 @@ function AddNewItem({ onchangePage }) {
           />
           {errors.name && <p>{errors.name.message}</p>}
         </InputContainer>
-        <InputContainer marginbottom="2.43rem">
+        <InputContainer variants={childrenVariants} marginbottom="2.43rem">
           <Label>Note (optional)</Label>
           <TextArea
             placeholder="Enter a note"
@@ -245,7 +289,7 @@ function AddNewItem({ onchangePage }) {
           />
           {errors.note && <p>{errors.note.message}</p>}
         </InputContainer>
-        <InputContainer marginbottom="3.38rem">
+        <InputContainer variants={childrenVariants} marginbottom="3.38rem">
           <Label>Image (optional)</Label>
           <Input
             placeholder="Enter a url"
@@ -257,7 +301,7 @@ function AddNewItem({ onchangePage }) {
         </InputContainer>
         {/* Dropdown for selecting item category, this one is not shown */}
 
-        <InputContainer>
+        <InputContainer variants={childrenVariants}>
           <Label>Category</Label>
 
           {/* Custom dropdown component */}
@@ -275,14 +319,16 @@ function AddNewItem({ onchangePage }) {
           </AddCategoryButton>
 
           {/* Input field for adding a new category */}
-          {showCategoryInput && (
-            <AddCategory setShowCategoryInput={setShowCategoryInput} />
-          )}
+          <AnimatePresence>
+            {showCategoryInput && (
+              <AddCategory setShowCategoryInput={setShowCategoryInput} />
+            )}
+          </AnimatePresence>
         </InputContainer>
 
         {/* Form submission buttons */}
 
-        <ButtonsContainer>
+        <ButtonsContainer variants={childrenVariants}>
           <Cancel type="reset" value="cancel" onClick={onReset} />
           <Save type="submit" value="save" disabled={addingItem} />
         </ButtonsContainer>

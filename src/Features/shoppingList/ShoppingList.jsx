@@ -53,7 +53,7 @@ const ChildrenContainer = styled(motion.div)`
 `;
 
 // when there are no items
-const NoItems = styled.p`
+const NoItems = styled(motion.p)`
   font-size: 2rem;
   font-weight: 700;
   color: var(--color-title);
@@ -224,7 +224,12 @@ function ShoppingList() {
         <AddItem />
 
         {/* Show message if the list is empty */}
-        {isEmptyList && <NoItems>No items</NoItems>}
+
+        {isEmptyList && (
+          <NoItems initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            No items
+          </NoItems>
+        )}
 
         {!isEmptyList && (
           <>
