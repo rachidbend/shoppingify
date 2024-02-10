@@ -102,7 +102,7 @@ const Avatar = styled.img`
 
   @media screen and (max-width: 780px) {
     width: 9.2rem;
-    height: 6.8rem;
+    height: 9.2rem;
   }
 
   @media screen and (max-width: 480px) {
@@ -142,7 +142,6 @@ const IconContainer = styled(motion.div)`
   display: inline-block;
   font-size: 1.4rem;
   font-weight: 700;
-
   color: var(--color-grey-100);
 `;
 
@@ -150,13 +149,12 @@ const Container = styled(motion.div)`
   display: flex;
   gap: 1.6rem;
   align-items: center;
+  flex-wrap: wrap;
   border: 0.1rem solid var(--color-grey-200);
   padding: 2rem 2.8rem;
   border-radius: 1.4rem;
   margin-bottom: 2.8rem;
-  /* box-shadow: var(--shadow-100); */
-  /* border-bottom: 0.1rem solid var(--color-grey-200);
-   */
+
   position: relative;
 
   background-color: var(--color-background);
@@ -173,6 +171,11 @@ const Text = styled.p`
   font-size: 1.6rem;
   color: var(--color-black);
   font-weight: 500;
+  /* width: 100%; */
+
+  @media screen and (max-width: 480px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -216,7 +219,7 @@ const SaveButton = styled.button`
 const Input = styled(motion.input)`
   font-size: 1.6rem;
   font-weight: 500;
-  width: auto;
+  width: 100%;
 
   padding: 1rem 1.6rem;
   border: 0.1rem solid var(--color-grey-200);
@@ -235,7 +238,7 @@ const ChildrenContainer = styled(motion.div)`
   padding: 4.8rem;
   border-radius: 2.4rem;
   box-shadow: var(--shadow-item);
-
+  max-width: 100%;
   @media screen and (max-width: 780px) {
     padding: 2.4rem;
     padding-top: 3.2rem;
