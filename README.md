@@ -37,14 +37,25 @@
 
 ## Overview
 
-![screenshot](https://user-images.githubusercontent.com/16707738/92399059-5716eb00-f132-11ea-8b14-bcacdc8ec97b.png)
+![screenshot](https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/Screenshot%202024-02-10%20170233.png)
 
-Introduce your projects by taking a screenshot or a gif. Try to tell visitors a story about your project by answering:
+- You can see the demo here:
+  (if it's not function, then supabase paused it)
+  [Demo](https://shoppingify-bay.vercel.app/)
 
-- Where can I see your demo?
-- What was your experience?
-- What have you learned/improved?
-- Your wisdom? :)
+- My experience:
+  This was a fun project to make, it took over 80hours to complete, but i think it wat worth it, even though it got very frustrating sometimes.
+
+- What I learned/improved:
+  This project helped me improve my problem solving abilities, I learned more about how Javascript workd and the various ways it can be used to treat data. as well as improved my proficeny with HTML and CSS specifically because i used styled components which allowed my code to be more dynamic.
+  I learned how Tanstack query works with queries, mutations and cashing, which i used a lot in this project, in combinitaion with custom hooks to make retrieving the data easy.
+  I learned a lot about Supabase, specifically how to deal with user profiles where each user has their own data.
+  I learned user authentication and authorosation with supabase, how to use the forgot password and confirm email functionalities, and a lot more.
+  I learned a way to help me manage the project better with git.
+  and I learned how i can interprit the design to make sure the app looks good and is responsive, even if the original design doesn't give all the views like tablet view.
+
+- My wisdom:
+  This project showed me that if you put in the time to something, you can make it happen and you can learn and do more that you thought you could, so don't stop learning, don't stop creating, don't stop dreaming.
 
 ### Built With
 
@@ -59,8 +70,9 @@ Introduce your projects by taking a screenshot or a gif. Try to tell visitors a 
 - [React-icons](https://react-icons.github.io/react-icons/)
 - [Date-fns](https://date-fns.org/)
 - [Recharts](https://recharts.org/en-US)
+- [React hot toast](https://react-hot-toast.com/)
 
-this tool was used for the backend and database
+- The following tool was used for the backend and database
 
 - [supabase](https://supabase.com/)
 
@@ -73,6 +85,23 @@ This application/site was created as a submission to a [DevChallenges](https://d
 My goal was to create this project with as much attention to details as possible, i wanted the functionality to be complete, the styling to be as close to the original design as possible, and i wanted to add animations to make it feel responsive and dynamic, to give a great feel to the project.
 
 For the styling, i had to take some liberties to make sure it looks good and functions well for all devices (i.e phones, tabletsn small to large laptops, and desktops).
+
+# App features
+
+- Authentication / Authorisation
+- Login / Signup pages
+- Forgot password functionality
+- Confirm email on signup
+- Signup and login with google account
+- Items Tab and Categories View:
+- Add New Item
+- View Item Details
+- List Management: add item, update quantity, remove item from list
+- Edit and Complete States
+- Cancel Active List
+- Shopping History page
+- Statistics and Insights page
+- USer account page
 
 ## How To Use
 
