@@ -10,9 +10,6 @@ import { MdLock } from 'react-icons/md';
 import { MdEditSquare } from 'react-icons/md';
 import { useUpdateUser } from '../Hooks/useUpdateUser';
 import { useUpdateUsername } from '../Hooks/useUpdateUsername';
-import { useUpdateAvatar } from '../Hooks/useUpdateAvatar';
-import { useGetAllAvatars } from '../Hooks/useGetAllAvatars';
-import { useUploadUserAvatar } from '../Hooks/useUploadUserAvatar';
 import { motion } from 'framer-motion';
 import {
   mainPagesChildrenVariants,
@@ -88,12 +85,6 @@ const Logout = styled.button`
   }
 `;
 
-const Username = styled.span`
-  color: var(--color-title);
-  font-size: 1.4rem;
-  font-weight: 500;
-`;
-
 const Avatar = styled.img`
   width: 11rem;
   height: 11rem;
@@ -118,13 +109,6 @@ const Avatar = styled.img`
     width: 6.8rem;
     height: 6.8rem;
   }
-
-  /* border: 0.2rem solid var(--color-accent); */
-`;
-const NoAvatar = styled.p`
-  color: var(--color-grey-200);
-  font-size: 1.4rem;
-  font-weight: 500;
 `;
 
 const UsernameIcon = styled(PiUserCircle)`
@@ -146,10 +130,9 @@ const EditIcon = styled(MdEditSquare)`
   height: 1.2rem;
   width: auto;
   color: var(--color-grey-100);
-  transform: translateY(-0.8rem);
-  cursor: pointer;
+  /* transform: translateY(-0.8rem); */
 
-  position: absolute;
+  /* position: absolute; */
   top: 1rem;
   left: 0;
 `;
@@ -157,6 +140,14 @@ const IconContainer = styled.div`
   position: relative;
   width: auto;
   height: 100%;
+  padding: 0.4rem;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  background-color: var(--color-grey-200);
+  color: var(--color-grey-100);
 `;
 
 const Container = styled.div`
@@ -262,6 +253,55 @@ const ChildrenContainer = styled(motion.div)`
 const AvatarContainer = styled.div`
   text-align: center;
   margin-bottom: 4.8rem;
+  position: relative;
+  display: inline-block;
+
+  &:hover div {
+    opacity: 1;
+  }
+`;
+
+const AvatarEditContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 50%;
+  background-color: rgba(5, 5, 5, 0.5);
+  overflow: hidden;
+
+  transform: translate(-50%, -50%);
+  transition: opacity var(--transition-simple);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    color: var(--color-white);
+    display: inline-block;
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 11rem;
+    height: 11rem;
+  }
+  @media screen and (max-width: 780px) {
+    width: 9.2rem;
+    height: 9.2rem;
+  }
+  @media screen and (max-width: 480px) {
+    width: 6.8rem;
+    height: 6.8rem;
+  }
+`;
+
+const AvatarContentContainer = styled.div`
+  text-align: center;
 `;
 
 const UsernameInput = styled(Input)``;
@@ -273,7 +313,6 @@ function Account() {
   const [isOpenPassword, setIsOpenPassword] = useState(false);
   const [isOpenUsername, setIsOpenUsername] = useState(false);
   const [isOpenAvatar, setIsOpenAvatar] = useState(false);
-  const [isOpenAvatarChoose, setIsOpenAvatarChoose] = useState(false);
 
   const { logout, error: logoutError } = useLogout();
   const { user, error: useError, isLoading: isLoadingUser } = useUser();
@@ -317,7 +356,6 @@ function Account() {
   if (profileError) return <p>{profileError.message}</p>;
   if (logoutError) return <p>{logoutError.message}</p>;
   if (updateUserError) return <p>{updateUserError.message}</p>;
-  // if (getAvatarError) return <p>{getAvatarError.message}</p>;
 
   return (
     <StyledAccount
@@ -332,27 +370,21 @@ function Account() {
         transition={mainPagesChildrenVariants.transition}
         variants={mainPagesChildrenVariants}
       >
-        {/* <Title>Account details</Title> */}
-        <AvatarContainer>
-          <Avatar
-            src={
-              profile?.at(0)?.avatar
-                ? profile?.at(0)?.avatar
-                : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
-            }
-          />
-
-          <ModalWrapper isShowing={isOpenAvatar}>
-            <AvatarUpdateModal
-              isOpen={isOpenAvatar}
-              handleOpen={setIsOpenAvatar}
+        <AvatarContentContainer>
+          <AvatarContainer>
+            <Avatar
+              src={
+                profile?.at(0)?.avatar
+                  ? profile?.at(0)?.avatar
+                  : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
+              }
             />
-          </ModalWrapper>
 
-          <IconContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
-            <EditIcon />
-          </IconContainer>
-        </AvatarContainer>
+            <AvatarEditContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
+              <p>Edit</p>
+            </AvatarEditContainer>
+          </AvatarContainer>
+        </AvatarContentContainer>
 
         <Container>
           <UsernameIcon />
@@ -447,6 +479,9 @@ function Account() {
           <Logout onClick={logout}>Logout</Logout>
         </ButtonContainer>
       </ChildrenContainer>
+      <ModalWrapper isShowing={isOpenAvatar}>
+        <AvatarUpdateModal isOpen={isOpenAvatar} handleOpen={setIsOpenAvatar} />
+      </ModalWrapper>
     </StyledAccount>
   );
 }

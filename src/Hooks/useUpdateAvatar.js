@@ -18,7 +18,7 @@ function useUpdateAvatar() {
 
     // Display success toast notification
     onSuccess: () => {
-      toast.success('Avatar image updated succussfuly!');
+      toast.success('Avatar updated!');
     },
     onSettled: () => {
       // Invalidate all queries to refresh data
