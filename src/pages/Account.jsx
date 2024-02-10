@@ -130,13 +130,10 @@ const EditIcon = styled(MdEditSquare)`
   height: 1.2rem;
   width: auto;
   color: var(--color-grey-100);
-  /* transform: translateY(-0.8rem); */
-
-  /* position: absolute; */
   top: 1rem;
   left: 0;
 `;
-const IconContainer = styled.div`
+const IconContainer = styled(motion.div)`
   position: relative;
   width: auto;
   height: 100%;
@@ -146,11 +143,10 @@ const IconContainer = styled.div`
   font-size: 1.4rem;
   font-weight: 700;
 
-  background-color: var(--color-grey-200);
   color: var(--color-grey-100);
 `;
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   display: flex;
   gap: 1.6rem;
   align-items: center;
@@ -208,20 +204,21 @@ const SaveButton = styled.button`
   top: 0;
   bottom: 0;
 
-  font-size: 1rem;
+  font-size: 1.2rem;
   background-color: var(--color-accent);
   border: 0.1rem solid var(--color-accent);
   border-radius: 0.8rem;
   color: var(--color-white);
-  padding: 0 0.8rem;
+  padding: 0 1.4rem;
   font-weight: 500;
 `;
 
-const Input = styled.input`
-  font-size: 1.4rem;
+const Input = styled(motion.input)`
+  font-size: 1.6rem;
   font-weight: 500;
   width: auto;
-  padding: 0.6rem 1.6rem;
+
+  padding: 1rem 1.6rem;
   border: 0.1rem solid var(--color-grey-200);
   border-radius: 0.8rem;
   background: transparent;
