@@ -326,7 +326,7 @@ function Account() {
 
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
-  const [username, setUsername] = useState(profile[0].user_name);
+  const [username, setUsername] = useState(profile?.at(0)?.user_name);
   const [password, setPassword] = useState('');
 
   function onHandleUsername(e) {
@@ -373,7 +373,7 @@ function Account() {
       >
         <AvatarContentContainer>
           <AvatarContainer>
-            <Avatar src={profile[0]?.avatar} />
+            <Avatar src={profile?.at(0)?.avatar} />
 
             <AvatarEditContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
               <p>Edit</p>
