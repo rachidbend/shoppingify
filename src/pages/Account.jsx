@@ -24,6 +24,8 @@ const StyledAccount = styled(motion.div)`
   padding: 0 8rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   @media screen and (min-width: 1600px) {
     padding: 0 14rem;
@@ -106,8 +108,8 @@ const Avatar = styled.img`
   }
 
   @media screen and (max-width: 480px) {
-    width: 6.8rem;
-    height: 6.8rem;
+    width: 9.2rem;
+    height: 9.2rem;
   }
 `;
 
@@ -193,7 +195,7 @@ const ButtonContainer = styled.div`
 
   @media screen and (max-width: 480px) {
     width: 100%;
-    margin-top: 2.8rem;
+    margin-top: 4.8rem;
   }
 `;
 
@@ -233,12 +235,11 @@ const Input = styled(motion.input)`
 `;
 
 const ChildrenContainer = styled(motion.div)`
-  margin-top: 12rem;
   background-color: var(--color-white);
   padding: 4.8rem;
   border-radius: 2.4rem;
   box-shadow: var(--shadow-item);
-  max-width: 100%;
+  width: 100%;
   @media screen and (max-width: 780px) {
     padding: 2.4rem;
     padding-top: 3.2rem;
@@ -316,7 +317,7 @@ function Account() {
 
   const { logout, error: logoutError } = useLogout();
   const { user, error: useError, isLoading: isLoadingUser } = useUser();
-  const { updateUsername, error: updateUsernameError } = useUpdateUsername();
+  const { updateUsername } = useUpdateUsername();
   const {
     profile,
     isLoading: isLoadingProfile,
@@ -325,7 +326,7 @@ function Account() {
 
   const { updateUser, error: updateUserError } = useUpdateUser();
   const [email, setEmail] = useState(user?.email);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(profile[0].user_name);
   const [password, setPassword] = useState('');
 
   function onHandleUsername(e) {
@@ -372,13 +373,7 @@ function Account() {
       >
         <AvatarContentContainer>
           <AvatarContainer>
-            <Avatar
-              src={
-                profile?.at(0)?.avatar
-                  ? profile?.at(0)?.avatar
-                  : 'https://noghsukxfznxlmhenbko.supabase.co/storage/v1/object/public/defaults/user.png'
-              }
-            />
+            <Avatar src={profile[0]?.avatar} />
 
             <AvatarEditContainer onClick={() => setIsOpenAvatar(!isOpenAvatar)}>
               <p>Edit</p>
@@ -461,7 +456,7 @@ function Account() {
               <SaveButton
                 onClick={() => {
                   onSavePassword();
-                  isOpenPassword(false);
+                  setIsOpenPassword(false);
                 }}
               >
                 Save

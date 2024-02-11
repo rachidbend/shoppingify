@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import { useGetAllItems } from '../Hooks/useGetAllItems';
 import { useGetShoppingList } from '../Hooks/useGetShoppingList';
 import { useUpdateShoppingList } from '../Hooks/useUpdateShoppingList';
+import { useQueryClient } from '@tanstack/react-query';
 
 /* 
 The reason I created this context is to be able to get the item data and the list data to be able to add an item into the shopping list
@@ -11,6 +12,7 @@ const AppContext = createContext();
 
 // Provider component for managing application-wide data.
 export default function AppProvider({ children }) {
+  const queryClient = useQueryClient();
   // Fetching all items data
   const {
     items,
@@ -35,12 +37,20 @@ export default function AppProvider({ children }) {
     if (isLoadingShoppingList || isLoadingAllItems) return;
 
     // Update the shopping list with the new item
-    updateShoppingList({
-      id: shoppingList.id,
-      item: item,
-      oldList: shoppingList.items,
-      shoppingList: shoppingList,
-    });
+    updateShoppingList(
+      {
+        id: shoppingList.id,
+        item: item,
+        oldList: shoppingList.items,
+        shoppingList: shoppingList,
+      },
+      {
+        onSettled: () => {
+          queryClient.invalidateQueries('shopping_list');
+        },
+      }
+    );
+    queryClient.invalidateQueries('shopping_list');
   }
 
   // Value provided by the context

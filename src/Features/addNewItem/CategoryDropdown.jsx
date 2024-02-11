@@ -67,6 +67,20 @@ const OptionsContainer = styled(motion.div)`
   left: 0;
   right: 0;
   z-index: 9999;
+
+  max-height: 25.6rem;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  overflow-y: scroll;
 `;
 
 const List = styled(motion.ul)``;
@@ -80,6 +94,7 @@ const Option = styled(motion.li)`
   border-radius: 1.2rem;
   transition: background-color var(--transition-simple);
   cursor: pointer;
+
   &:last-child {
     margin-bottom: 0;
   }

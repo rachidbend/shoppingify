@@ -218,7 +218,14 @@ function ShoppingList() {
   const categorizedItems = groupByProperty(shoppingList?.items, 'category');
 
   return (
-    <StyledShoppingList>
+    <StyledShoppingList
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+    >
       <ChildrenContainer>
         {/* Call to action component for adding items */}
         <AddItem />

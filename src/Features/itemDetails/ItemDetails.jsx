@@ -8,7 +8,7 @@ import BackButton from '../../UI/BackButton';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
-const StyledItemDetails = styled.div`
+const StyledItemDetails = styled(motion.div)`
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto 1fr auto;
@@ -223,7 +223,14 @@ function ItemDetails() {
   const { id, name, image, note, category } = itemDetails[0];
 
   return (
-    <StyledItemDetails>
+    <StyledItemDetails
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+    >
       {/* Back button component */}
       <BackButton />
       {/* Render item image if available, otherwise show placeholder */}
