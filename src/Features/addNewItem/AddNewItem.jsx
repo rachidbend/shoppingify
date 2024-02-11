@@ -28,7 +28,7 @@ const StyledAddNewItem = styled(motion.div)`
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  overflow-x: hidden;
+  overflow: hidden;
 
   @media screen and (max-width: 480px) {
     padding-bottom: 2rem;
@@ -260,7 +260,14 @@ function AddNewItem({ onchangePage }) {
   if (addItemError) toast.error(addItemError.message);
 
   return (
-    <StyledAddNewItem>
+    <StyledAddNewItem
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+    >
       {/* Form for adding a new item */}
       <Form
         variants={parentContainerVariants}

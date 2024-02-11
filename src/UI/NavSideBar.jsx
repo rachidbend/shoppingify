@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TbTriangleFilled } from 'react-icons/tb';
 import { navHoverVariant } from '../transitions/variants';
+import { useGetAppData } from '../Context/AppContext';
 
 const StyledNavSideBar = styled(motion.div)`
   display: flex;
@@ -134,6 +135,7 @@ const LinkHoverContainer = styled(motion.div)`
   position: absolute;
   left: 8rem;
   top: 50%;
+  z-index: 9999;
 `;
 
 const LinkHoverText = styled.p`
@@ -173,7 +175,7 @@ function NavSideBar() {
   // to make sure that when a link is hovered, we show the appropriate element
   const [linkHovered, setLinkHovered] = useState('');
   // this is used to display the number of items in the shopping list
-  const { shoppingList, isLoading } = useGetShoppingList();
+  const { shoppingList, isLoadingShoppingList } = useGetAppData();
   // this opens and closes the side page on mobile view
   const { onOpenMobileSide, closeMobileSide } = useMobileSide();
 
@@ -204,7 +206,6 @@ function NavSideBar() {
     const historyPosition = getElementPosition(historyRef);
     const statisticsPosition = getElementPosition(statisticsRef);
 
-    // console.log(itemsRef.current.classList.contains('active'));
     // changing the position of the side span depending on which page is active
     // and putting it in the middle of the element, to look like they are aligned in the middle
 
@@ -230,6 +231,9 @@ function NavSideBar() {
   });
 
   function handleLinkHover(name) {
+    // only show the hover element when not in mobile view (phone or tablet)
+    const isMobile = window.innerWidth < 780;
+    if (isMobile) return;
     setLinkHovered(name);
   }
   function handleLinkExit() {
@@ -337,11 +341,11 @@ function NavSideBar() {
       <ShoppingCartContainer onClick={onOpenMobileSide}>
         <ShoppingCart />
         <ShoppingCount>
-          {isLoading
+          {isLoadingShoppingList
             ? 0
-            : shoppingList?.items?.length === 0
-            ? 0
-            : shoppingList?.items?.length}
+            : shoppingList?.items
+            ? shoppingList?.items?.length
+            : 0}
         </ShoppingCount>
       </ShoppingCartContainer>
     </StyledNavSideBar>

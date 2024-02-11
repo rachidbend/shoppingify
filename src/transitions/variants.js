@@ -53,3 +53,21 @@ export const itemsChildrenVariants = {
   hidden: { opacity: 0, x: 10 },
   show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeIn' } },
 };
+
+export const itemsPageParentContainerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      delay: 0.2,
+      duration: 0.2,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+export const itemsPageChildrenVariants = {
+  hidden: { opacity: 0, x: 10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeIn' } },
+};

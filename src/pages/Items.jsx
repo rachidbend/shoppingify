@@ -10,6 +10,8 @@ import { groupByProperty } from '../helpers/helperFunctions';
 import ItemsCategory from '../UI/ItemsCategory';
 import {
   itemsChildrenVariants,
+  itemsPageChildrenVariants,
+  itemsPageParentContainerVariants,
   itemsParentContainerVariants,
   mainPagesChildrenVariants,
   mainPagesVariants,
@@ -224,7 +226,7 @@ function Items() {
             <ItemsCategory.Title>{category}</ItemsCategory.Title>
             {/* Render items */}
             <motion.div
-              variants={itemsParentContainerVariants}
+              variants={itemsPageParentContainerVariants}
               initial="hidden"
               animate="show"
             >
@@ -232,7 +234,7 @@ function Items() {
                 {items.map(item => {
                   return (
                     <motion.div
-                      variants={itemsChildrenVariants}
+                      variants={itemsPageChildrenVariants}
                       key={`item-container${item.id}`}
                     >
                       <Item
