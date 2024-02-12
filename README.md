@@ -31,7 +31,6 @@
 - [Features](#features)
 - [How to use](#how-to-use)
 - [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
 
 <!-- OVERVIEW -->
 
@@ -47,12 +46,13 @@
   This was a fun project to make, it took over 80hours to complete, but i think it wat worth it, even though it got very frustrating sometimes.
 
 - What I learned/improved:
-  This project helped me improve my problem solving abilities, I learned more about how Javascript workd and the various ways it can be used to treat data. as well as improved my proficeny with HTML and CSS specifically because i used styled components which allowed my code to be more dynamic.
-  I learned how Tanstack query works with queries, mutations and cashing, which i used a lot in this project, in combinitaion with custom hooks to make retrieving the data easy.
-  I learned a lot about Supabase, specifically how to deal with user profiles where each user has their own data.
-  I learned user authentication and authorosation with supabase, how to use the forgot password and confirm email functionalities, and a lot more.
-  I learned a way to help me manage the project better with git.
-  and I learned how i can interprit the design to make sure the app looks good and is responsive, even if the original design doesn't give all the views like tablet view.
+
+  - This project helped me improve my problem solving abilities, I learned more about how Javascript workd and the various ways it can be used to treat data. as well as improved my proficeny with HTML and CSS specifically because i used styled components which allowed my code to be more dynamic.
+  - I learned how Tanstack query works with queries, mutations and cashing, which i used a lot in this project, in combinitaion with custom hooks to make retrieving the data easy.
+  - I learned a lot about Supabase, specifically how to deal with user profiles where each user has their own data.
+  - I learned user authentication and authorosation with supabase, how to use the forgot password and confirm email functionalities, and a lot more.
+  - I learned a way to help me manage the project better with git.
+    and I learned how i can interprit the design to make sure the app looks good and is responsive, even if the original design doesn't give all the views like tablet view.
 
 - My wisdom:
   This project showed me that if you put in the time to something, you can make it happen and you can learn and do more that you thought you could, so don't stop learning, don't stop creating, don't stop dreaming.
@@ -84,7 +84,7 @@ This application/site was created as a submission to a [DevChallenges](https://d
 
 My goal was to create this project with as much attention to details as possible, i wanted the functionality to be complete, the styling to be as close to the original design as possible, and i wanted to add animations to make it feel responsive and dynamic, to give a great feel to the project.
 
-For the styling, i had to take some liberties to make sure it looks good and functions well for all devices (i.e phones, tabletsn small to large laptops, and desktops).
+For the styling, i had to use some liberties to make sure it looks good and functions well for all devices (i.e phones, tabletsn small to large laptops, and desktops).
 
 # App features
 
@@ -93,15 +93,16 @@ For the styling, i had to take some liberties to make sure it looks good and fun
 - Forgot password functionality
 - Confirm email on signup
 - Signup and login with google account
-- Items Tab and Categories View:
+- Items Tab and Categories View
 - Add New Item
 - View Item Details
 - List Management: add item, update quantity, remove item from list
 - Edit and Complete States
-- Cancel Active List
+- Cancel Active List with conformation modal
+- Complete Active List
 - Shopping History page
 - Statistics and Insights page
-- USer account page
+- User account page
 
 ## How To Use
 
@@ -111,7 +112,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [N
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/your-user-name/your-project-name
+$ git clone https://github.com/rachidbend/shoppingify
 
 # Install dependencies
 $ npm install
@@ -120,16 +121,7 @@ $ npm install
 $ npm run dev
 ```
 
-## Acknowledgements
-
-<!-- This section should list any articles or add-ons/plugins that helps you to complete the project. This is optional but it will help you in the future. For example -->
-
-- [Steps to replicate a design with only HTML and CSS](https://devchallenges-blogs.web.app/how-to-replicate-design/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-
 ## Contact
 
-- Website [your-website.com](https://{your-web-site-link})
-- GitHub [@your-username](https://{github.com/your-usermame})
-<!-- - Twitter [@your-twitter](https://{twitter.com/your-username}) -->
+- Website [your-website.com](https://rachidbendaghor.vercel.app/)
+- GitHub [@your-username](https://{github.com/rachidbend})
