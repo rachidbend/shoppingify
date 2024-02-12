@@ -206,7 +206,12 @@ const GoogleIcon = styled(FcGoogle)`
 // Component for user login with email and password, or through Google authentication.
 function Login() {
   // Form validation using react-hook-form
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      email: 'example@gmail.com',
+      password: '123456789',
+    },
+  });
   // Navigation hook for redirection
   const navigate = useNavigate();
   // Custom hook for email and password login
