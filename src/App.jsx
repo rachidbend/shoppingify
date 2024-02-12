@@ -91,8 +91,8 @@ function App() {
         <GlobalStyle />
 
         {/* the side page provider allows for navigation between the shopping list and item details */}
-        <SidePageProvider>
-          <AppProvider>
+        <AppProvider>
+          <SidePageProvider>
             {/* the Mobile provider allows for the app to find out if it is being displayed in a mobile device, so that the app can addapt how it shows the main and side pages like the shopping list.  */}
             <MobileSideProvider>
               <Routes location={location} key={location.key}>
@@ -129,8 +129,8 @@ function App() {
                 <Route path="/password-check" element={<CheckEmail />} />
               </Routes>
             </MobileSideProvider>
-          </AppProvider>
-        </SidePageProvider>
+          </SidePageProvider>
+        </AppProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
