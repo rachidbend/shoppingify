@@ -13,7 +13,7 @@ import { Toaster } from 'react-hot-toast';
 const StyledAppLayout = styled(motion.div)`
   display: grid;
   grid-template-columns: 9.3915rem 1fr 38.9rem;
-  height: 100vh;
+  height: 100svh;
   width: 100%;
   overflow: hidden;
 
